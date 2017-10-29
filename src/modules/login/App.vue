@@ -31,7 +31,7 @@ export default {
           { required: true, message: '请输入账号', trigger: 'blur' },
           { min: 2, message: '最少支持2个字符', trigger: 'blur' },
           { max: 20, message: '最多支持20个字符', trigger: 'blur' },
-          { pattern: /^(1(3|4|5|7|8)\d{9})|([a-zA-Z][a-zA-Z0-9-_]*)|((([^<>()[]\\.,;:\s@"]+(\.[^<>()[]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/, message: '请输入合法的用户名、手机号或邮箱', trigger: 'blur' }
+          { pattern: /^(1(3|4|5|7|8)\d{9})|([a-zA-Z][a-zA-Z0-9-_]*)|([\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?)$/, message: '请输入合法的用户名、手机号或邮箱', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
