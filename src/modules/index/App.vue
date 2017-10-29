@@ -16,7 +16,7 @@
     </el-header>
     <el-container class="el-container-inner">
       <el-aside width="200">
-        <el-menu default-active="0-0" class="el-menu-vertical-main" @open="handleOpen" @close="handleClose" @select='handleSelect'>
+        <el-menu default-active="menuActiveIndex" class="el-menu-vertical-main" @open="handleOpen" @close="handleClose" @select='handleSelect'>
           <el-submenu v-for="(submenu, submenuindex) in menu.submenus" :index="submenuindex.toString()" :key="'key_' + submenuindex">
             <template slot="title">
               <i class="el-icon-menu"></i>
@@ -28,7 +28,7 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main><iframe :src='mainFrameURL' class="main-content" scrolling="no"></iframe></el-main>
+      <el-main><iframe :src='mainFrameURL' class="el-main-content" scrolling="no"></iframe></el-main>
     </el-container>
   </el-container>
 </template>
@@ -41,6 +41,7 @@ export default {
       profile: {
         displayName: 'Admin'
       },
+      menuActiveIndex: '0-0',
       menu: {
         title: '主菜单',
         submenus: [
@@ -145,7 +146,7 @@ body {
       }
       .el-main {
         height: 100%;
-        .main-content {
+        .el-main-content {
           border: 0;
           width: 100%;
           height: 100%;
