@@ -2,17 +2,18 @@
   <el-form :model="mainForm" :rules="rules" v-loading.fullscreen.lock="isLoading" ref="mainForm" label-position="left" label-width="0px" class="container">
     <h3 class="title">系统登录</h3>
     <el-form-item prop="account">
-      <el-input type="text" v-model="mainForm.account" auto-complete="off" placeholder="账号(用户名、手机号或邮箱)"></el-input>
+      <el-input type="text" v-model="mainForm.account" auto-complete="on" placeholder="账号(用户名、手机号或邮箱)"></el-input>
     </el-form-item>
     <el-form-item prop="password">
       <el-input type="password" v-model="mainForm.password" auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>    
-    <el-form-item prop="verificationCode" class="verificationCode">
-      <el-input type="txt" v-model="mainForm.verificationCode" auto-complete="off" placeholder="验证码"></el-input>
+    <el-form-item prop="verificationCode">
+      <el-input type="txt" v-model="mainForm.verificationCode" auto-complete="off" placeholder="验证码" class="verificationCode"></el-input>
+      <img src="../detail/images/logo.png" @click="refreshVerificationCode" class="verificationCodeImage">
     </el-form-item>
     <!-- <el-checkbox v-model="isRemberPassword" class="remember">记住密码</el-checkbox> -->
     <el-form-item style="width:100%;">
-      <el-button type="primary" class="login" @click.native.prevent="handleSubmit">登录</el-button>
+      <el-button type="primary" class="login" @click="handleSubmit">登录</el-button>
       <!-- <el-button @click.native.prevent="handleReset">重置</el-button> -->
     </el-form-item>
   </el-form>
@@ -51,7 +52,7 @@ export default {
     }
   },
   methods: {
-    handleReset () {
+    handleReset (e) {
       this.$refs.mainForm.resetFields()
     },
     handleSubmit (e) {
@@ -79,6 +80,9 @@ export default {
           return false
         }
       })
+    },
+    refreshVerificationCode (e) {
+      console.log('refreshVerificationCode')
     }
   }
 }
@@ -106,6 +110,11 @@ export default {
   }
   .verificationCode {
     width: 80px;
+    vertical-align: middle;
+  }
+  .verificationCodeImage {
+    height: 38px;
+    vertical-align: middle;
   }
   .login {
     width: 100%;
