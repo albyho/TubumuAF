@@ -144,7 +144,6 @@ body {
         }
       }
       .el-main {
-        padding: 0;
         height: 100%;
         .main-content {
           border: 0;
