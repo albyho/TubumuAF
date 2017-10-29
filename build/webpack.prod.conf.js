@@ -132,7 +132,7 @@ if (config.build.bundleAnalyzerReport) {
 module.exports = webpackConfig
 
 // 3: 配置 HtmlWebpackPlugin
-function getEntry(globPath) {
+function getEntries(globPath) {
   const entries = {};
 
   if (typeof (globPath) !== "object") {
@@ -153,7 +153,7 @@ function getEntry(globPath) {
   return entries;
 }
 
-const pages = getEntry(['./src/modules/*.html', './src/modules/**/*.html']);
+const pages = getEntries(['./src/modules/*.html', './src/modules/**/*.html']);
 
 for (let pathname in pages) {
   const isRedirectPage = (pathname.indexOf('modules') === -1);

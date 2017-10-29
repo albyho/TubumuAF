@@ -10,7 +10,7 @@ function resolve(dir) {
 }
 
 // 修改1: 获得入口js文件
-const entries = getEntry('./src/modules/**/*.js');
+const entries = getEntries('./src/modules/**/*.js');
 
 module.exports = {
   entry: entries,
@@ -77,7 +77,7 @@ module.exports = {
   }
 }
 
-function getEntry(globPath) {
+function getEntries(globPath) {
   const entries = {};
 
   glob.sync(globPath).forEach(function (entry) {
