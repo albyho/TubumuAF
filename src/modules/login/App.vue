@@ -6,6 +6,9 @@
     </el-form-item>
     <el-form-item prop="password">
       <el-input type="password" v-model="mainForm.password" auto-complete="off" placeholder="密码"></el-input>
+    </el-form-item>    
+    <el-form-item prop="verificationCode" class="verificationCode">
+      <el-input type="txt" v-model="mainForm.verificationCode" auto-complete="off" placeholder="验证码"></el-input>
     </el-form-item>
     <!-- <el-checkbox v-model="isRemberPassword" class="remember">记住密码</el-checkbox> -->
     <el-form-item style="width:100%;">
@@ -24,7 +27,8 @@ export default {
       isLoading: false,
       mainForm: {
         account: '',
-        password: ''
+        password: '',
+        verificationCode: ''
       },
       rules: {
         account: [
@@ -37,6 +41,10 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' },
           { min: 6, message: '最少支持6个字符', trigger: 'blur' },
           { max: 20, message: '最多支持20个字符', trigger: 'blur' }
+        ],
+        verificationCode: [
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { max: 10, message: '最多支持20个字符', trigger: 'blur' }
         ]
       },
       isRemberPassword: true
@@ -95,6 +103,9 @@ export default {
   }
   .remember {
     margin: 0px 0px 35px 0px;
+  }
+  .verificationCode {
+    width: 80px;
   }
   .login {
     width: 100%;
