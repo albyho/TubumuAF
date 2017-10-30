@@ -5,20 +5,20 @@ var instance = axios.create({
   withCredentials: true
 })
 
-let base = 'http://127.0.0.1:9005/manager/api'
+export const baseURL = 'http://127.0.0.1:9005/manager/api'
 
-export const requestLogin = params => { return instance.post(`${base}/admin/login`, qs.stringify(params)).then(res => res.data) }
+export const requestLogin = params => { return instance.post(`${baseURL}/admin/login`, qs.stringify(params)).then(res => res.data) }
 
-export const getUserList = params => { return instance.get(`${base}/users`, { params: params }) }
+export const getUserList = params => { return instance.get(`${baseURL}/users`, { params: params }) }
 
-export const getUserListPage = params => { return instance.get(`${base}/users`, { params: params }) }
+export const getUserListPage = params => { return instance.get(`${baseURL}/users`, { params: params }) }
 
-export const selectUser = params => { return instance.post(`${base}/selects`, qs.stringify(params)).then(res => res.data) }
+export const selectUser = params => { return instance.post(`${baseURL}/selects`, qs.stringify(params)).then(res => res.data) }
 
-export const removeUser = params => { return instance.get(`${base}/user/remove`, { params: params }) }
+export const removeUser = params => { return instance.get(`${baseURL}/user/remove`, { params: params }) }
 
-export const batchRemoveUser = params => { return instance.post(`${base}/batchremove`, qs.stringify(params)).then(res => res.data) }
+export const batchRemoveUser = params => { return instance.post(`${baseURL}/batchremove`, qs.stringify(params)).then(res => res.data) }
 
-export const editUser = params => { return instance.post(`${base}/change`, qs.stringify(params)).then(res => res.data) }
+export const editUser = params => { return instance.post(`${baseURL}/change`, qs.stringify(params)).then(res => res.data) }
 
-export const addUser = params => { return instance.post(`${base}/users/add`, qs.stringify(params)).then(res => res.data) }
+export const addUser = params => { return instance.post(`${baseURL}/users/add`, qs.stringify(params)).then(res => res.data) }

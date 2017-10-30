@@ -20,13 +20,13 @@
 </template>
 
 <script>
-import { requestLogin } from '@/api/api'
+import { baseURL, requestLogin } from '@/api/api'
 
 export default {
   data () {
     return {
       isLoading: false,
-      refreshValidateCodeURLBase: 'http://127.0.0.1:9005/Manager/Api/Admin/GetValidateCode',
+      refreshValidateCodeURLBase: baseURL + '/Admin/GetValidateCode',
       refreshValidateCodeURL: null,
       mainForm: {
         account: '',
