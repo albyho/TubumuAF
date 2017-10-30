@@ -1,13 +1,13 @@
 import axios from 'axios'
 import qs from 'qs'
 var instance = axios.create({
-  headers: {'content-Type': 'application/x-www-form-urlencoded'}
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  withCredentials: true
 })
 
-// instance .post(`url`, qs.stringify(params)).then(res => res.data);
-let base = 'http://127.0.0.1:3006'
+let base = 'http://127.0.0.1:9005/manager/api'
 
-export const requestLogin = params => { return instance.post(`${base}/select`, qs.stringify(params)).then(res => res.data) }
+export const requestLogin = params => { return instance.post(`${base}/admin/login`, qs.stringify(params)).then(res => res.data) }
 
 export const getUserList = params => { return instance.get(`${base}/users`, { params: params }) }
 
