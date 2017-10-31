@@ -17,7 +17,9 @@
     <el-container class="el-container-inner">
       <el-aside width="200">
         <el-menu default-active="menuActiveIndex" class="el-menu-vertical-main" @open="handleOpen" @close="handleClose" @select='handleSelect'>
-          <el-submenu v-for="(submenu, submenuindex) in menu.submenus" :index="submenuindex.toString()" :key="'key_' + submenuindex">
+          <template v-for="(submenu, submenuindex) in menus.submenus">
+
+          <el-submenu v-for="(submenu, submenuindex) in menus.submenus" :index="submenuindex.toString()" :key="'key_' + submenuindex">
             <template slot="title">
               <i class="el-icon-menu"></i>
               <span slot="title">{{ submenu.title }}</span>
@@ -26,6 +28,8 @@
               <span slot="title">{{ menuitem.title }}</span>
             </el-menu-item>
           </el-submenu>
+          
+          </template>
         </el-menu>
       </el-aside>
       <el-main><iframe :src='mainFrameURL' class="el-main-content" scrolling="no"></iframe></el-main>
@@ -45,7 +49,7 @@ export default {
         displayName: 'Admin'
       },
       menuActiveIndex: '0-0',
-      menu: {
+      menus: {
         title: '主菜单',
         submenus: [
           {
@@ -79,7 +83,6 @@ export default {
     }
   },
   mounted: function () {
-    console.log('beforeMount')
     const _this = this
     _this.isLoading = true
     api.getMenus().then(response => {
@@ -104,7 +107,7 @@ export default {
     handleSelect (index, indexPath) {
       const menuIndexes = index.split('-')
       if (menuIndexes.length === 2) {
-        const link = this.menu.submenus[menuIndexes[0]].menuitems[menuIndexes[1]].link
+        const link = this.menus.submenus[menuIndexes[0]].menuitems[menuIndexes[1]].link
         this.mainFrameURL = link
       }
       console.log('select', index, indexPath, this.mainFrameURL)
