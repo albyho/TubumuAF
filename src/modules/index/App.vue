@@ -34,9 +34,12 @@
 </template>
 
 <script>
+import api from '@/utils/api'
+
 export default {
   data () {
     return {
+      isLoading: false,
       mainFrameURL: 'https://www.bing.com',
       profile: {
         displayName: 'Admin'
@@ -74,6 +77,22 @@ export default {
         ]
       }
     }
+  },
+  mounted: function () {
+    console.log('beforeMount')
+    const _this = this
+    _this.isLoading = true
+    api.getMenus().then(response => {
+      _this.isLoading = false
+      console.log(response.data)
+    }, error => {
+      console.log(error)
+      _this.isLoading = false
+      _this.$message({
+        message: error.message,
+        type: 'error'
+      })
+    })
   },
   methods: {
     handleOpen (index, indexPath) {

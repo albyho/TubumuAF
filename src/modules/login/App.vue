@@ -30,8 +30,8 @@ export default {
       refreshValidateCodeURLBase: baseURL + '/Admin/GetValidateCode',
       refreshValidateCodeURL: null,
       mainForm: {
-        account: '',
-        password: '',
+        account: 'system',
+        password: '111111',
         validateCode: ''
       },
       rules: {
@@ -63,11 +63,11 @@ export default {
       this.$refs.mainForm.resetFields()
     },
     handleSubmit (e) {
-      var _this = this
+      const _this = this
       _this.$refs.mainForm.validate(valid => {
         if (valid) {
           _this.isLoading = true
-          var loginParams = {
+          const loginParams = {
             account: _this.mainForm.account,
             password: _this.mainForm.password,
             validateCode: _this.mainForm.validateCode
