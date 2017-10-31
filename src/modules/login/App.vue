@@ -20,7 +20,8 @@
 </template>
 
 <script>
-import { baseURL, requestLogin } from '@/api/api'
+import { baseURL } from '@/utils/config'
+import api from '@/utils/api'
 
 export default {
   data () {
@@ -71,21 +72,19 @@ export default {
             password: _this.mainForm.password,
             validateCode: _this.mainForm.validateCode
           }
-          requestLogin(loginParams).then(data => {
+          api.login(loginParams).then(response => {
             _this.isLoading = false
-            let { code, msg } = data
-            if (code !== 200) {
-              _this.$message({
-                message: msg,
-                type: 'error'
-              })
-              _this.refreshValidateCode(null)
-              return false
-            } else {
-              location.href = 'index.html'
-            }
+            location.href = 'index.html'
+          }, error => {
+            _this.isLoading = false
+            _this.$message({
+              message: error.message,
+              type: 'error'
+            })
+            _this.refreshValidateCode(null)
           })
         } else {
+          // 客户端校验未通过
           _this.isLoading = false
           return false
         }
