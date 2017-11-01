@@ -15,21 +15,9 @@
       </el-row>
     </el-header>
     <el-container class="el-container-inner">
-      <el-aside width="200">
+      <el-aside width="200" v-loading="isGetMenusLoading">
         <el-menu default-active="menuActiveIndex" class="el-menu-vertical-main" @open="handleOpen" @close="handleClose" @select='handleSelect'>
-          <template v-for="(submenu, submenuindex) in menus.submenus">
-
-          <el-submenu v-for="(submenu, submenuindex) in menus.submenus" :index="submenuindex.toString()" :key="'key_' + submenuindex">
-            <template slot="title">
-              <i class="el-icon-menu"></i>
-              <span slot="title">{{ submenu.title }}</span>
-            </template>
-            <el-menu-item v-for="(menuitem, menuitemindex) in submenu.menuitems" :index="submenuindex + '-' + menuitemindex" :key="'key_' + submenuindex + '_' + menuitemindex">
-              <span slot="title">{{ menuitem.title }}</span>
-            </el-menu-item>
-          </el-submenu>
-          
-          </template>
+          <xl-menu v-for="(item, itemindex) in menus" :key="itemindex" :model="item" :index="itemindex.toString()"></xl-menu>
         </el-menu>
       </el-aside>
       <el-main><iframe :src='mainFrameURL' class="el-main-content" scrolling="no"></iframe></el-main>
@@ -43,54 +31,25 @@ import api from '@/utils/api'
 export default {
   data () {
     return {
-      isLoading: false,
+      isGetMenusLoading: false,
       mainFrameURL: 'https://www.bing.com',
       profile: {
         displayName: 'Admin'
       },
       menuActiveIndex: '0-0',
-      menus: {
-        title: '主菜单',
-        submenus: [
-          {
-            title: '导航一',
-            menuitems: [
-              {
-                title: '子菜单1',
-                link: 'login.html'
-              },
-              {
-                title: '子菜单2',
-                link: 'http://bing.com'
-              }
-            ]
-          },
-          {
-            title: '导航二',
-            menuitems: [
-              {
-                title: '子菜单1',
-                link: 'http://baidu.com'
-              },
-              {
-                title: '子菜单2',
-                link: 'http://bing.com'
-              }
-            ]
-          }
-        ]
-      }
+      menus: null
     }
   },
   mounted: function () {
     const _this = this
-    _this.isLoading = true
+    _this.isGetMenusLoading = true
     api.getMenus().then(response => {
-      _this.isLoading = false
+      _this.isGetMenusLoading = false
+      _this.menus = response.data.menus
       console.log(response.data)
     }, error => {
       console.log(error)
-      _this.isLoading = false
+      _this.isGetMenusLoading = false
       _this.$message({
         message: error.message,
         type: 'error'
@@ -106,11 +65,17 @@ export default {
     },
     handleSelect (index, indexPath) {
       const menuIndexes = index.split('-')
-      if (menuIndexes.length === 2) {
-        const link = this.menus.submenus[menuIndexes[0]].menuitems[menuIndexes[1]].link
-        this.mainFrameURL = link
+      let list = this.menus
+      let currentMenu = null
+      for (let i = 0; i < menuIndexes.length; i++) {
+        currentMenu = list[menuIndexes[i]]
+        if (i === menuIndexes.length - 1) {
+          this.mainFrameURL = currentMenu.link
+        } else {
+          list = currentMenu.children
+        }
       }
-      console.log('select', index, indexPath, this.mainFrameURL)
+      console.log('handleSelect', index, indexPath, this.mainFrameURL)
     },
     logout () {
       console.log('logout')

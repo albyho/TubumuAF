@@ -12,13 +12,10 @@ Vue.use(ElementUI)
 Vue.use(HttpClient)
 
 // 全局注册
-// Vue.component('xl-menu', XLMenu)
+Vue.component('xl-menu', XLMenu)
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  render: h => h(App),
-  components: {
-    'xl-menu': XLMenu
-  }
+  render: h => h(App)
 })
