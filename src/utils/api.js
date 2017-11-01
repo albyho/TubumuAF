@@ -4,7 +4,13 @@ export default {
   login (params) {
     return Vue.httpClient.post('/admin/login', params)
   },
+  logout () {
+    return Vue.httpClient.post('/admin/logout')
+  },
+  getProfile () {
+    return Vue.httpClient.get('/admin/getprofile')
+  },
   getMenus () {
-    return Vue.httpClient.post('/admin/getmenus')
+    return Vue.httpClient.get('/admin/getmenus')
   }
 }

@@ -1,14 +1,14 @@
 <template>
-  <el-container>
+  <el-container v-loading.fullscreen.lock="isLoading">
     <el-header>
       <el-row>
         <el-col :span="20">系统管理</el-col>
         <el-col :span="4" class="userinfo">
           <el-dropdown trigger="hover">
-					  <span class="el-dropdown-link userinfo-inner"><img src="./images/avatar.png" /> {{ profile.displayName }}</span>
+					  <span class="el-dropdown-link userinfo-inner"><img :src="profile.HeadURL" v-show="profile.HeadURL" /> {{ profile.DisplayName }}</span>
 					  <el-dropdown-menu slot="dropdown">
-						  <el-dropdown-item>我的消息</el-dropdown-item>
-						  <el-dropdown-item>设置</el-dropdown-item>
+						  <!-- <el-dropdown-item>我的消息</el-dropdown-item>
+						  <el-dropdown-item>设置</el-dropdown-item> -->
 						  <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					  </el-dropdown-menu>
 		      </el-dropdown></el-col>
@@ -31,13 +31,15 @@ import api from '@/utils/api'
 export default {
   data () {
     return {
+      isLoading: false,
       isGetMenusLoading: false,
       mainFrameURL: 'https://www.bing.com',
       profile: {
-        displayName: 'Admin'
+        DisplayName: '',
+        HeadURL: null
       },
-      menuActiveIndex: '0-0',
-      menus: null
+      menus: null,
+      menuActiveIndex: '0-0'
     }
   },
   mounted: function () {
@@ -54,6 +56,12 @@ export default {
         message: error.message,
         type: 'error'
       })
+    })
+    api.getProfile().then(response => {
+      console.log(response.data)
+      _this.profile = response.data.profile
+    }, error => {
+      console.log(error)
     })
   },
   methods: {
@@ -78,7 +86,14 @@ export default {
       console.log('handleSelect', index, indexPath, this.mainFrameURL)
     },
     logout () {
-      console.log('logout')
+      this.isLoading = true
+      api.logout().then(response => {
+        this.isLoading = false
+        location.href = 'login.html'
+      }, error => {
+        console.log(error)
+        this.isLoading = false
+      })
     }
   }
 }

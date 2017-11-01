@@ -67,11 +67,11 @@ httpClient.interceptors.response.use(
       Message({
         // 饿了么的消息弹窗组件
         showClose: true,
-        message: response.data.msg,
+        message: response.data.message,
         type: 'error'
       })
       */
-      return Promise.reject(new ApiError(response.data.msg))
+      return Promise.reject(new ApiError(response.data.message))
     }
     return response
   },
