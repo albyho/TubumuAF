@@ -27,8 +27,8 @@ const webpackConfig = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot,
     // 修改1: 使用 HtmlWebpackPlugin 的 hash
-    //filename: utils.assetsPath('js/[name].[chunkhash].js'),
-    //chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
+    // filename: utils.assetsPath('js/[name].[chunkhash].js'),
+    // chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
     filename: utils.assetsPath('js/[name].js'),
     chunkFilename: utils.assetsPath('js/[id].js')
   },
@@ -47,7 +47,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // extract css into its own file
     new ExtractTextPlugin({
       // 修改2: 使用 HtmlWebpackPlugin 的 hash
-      //filename: utils.assetsPath('css/[name].[contenthash].css')
+      // filename: utils.assetsPath('css/[name].[contenthash].css')
       filename: utils.assetsPath('css/[name].css')
     }),
     // Compress extracted CSS. We are using this plugin so that possible
