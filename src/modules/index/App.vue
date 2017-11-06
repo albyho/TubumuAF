@@ -33,7 +33,7 @@ export default {
     return {
       isLoading: false,
       isGetMenusLoading: false,
-      mainFrameURL: 'https://www.bing.com',
+      mainFrameURL: '',
       profile: {
         DisplayName: '',
         HeadURL: null
@@ -89,7 +89,7 @@ export default {
       this.isLoading = true
       api.logout().then(response => {
         this.isLoading = false
-        location.href = 'login.html'
+        location.href = response.data.url
       }, error => {
         console.log(error)
         this.isLoading = false

@@ -74,7 +74,7 @@ export default {
           }
           api.login(loginParams).then(response => {
             _this.isLoading = false
-            location.href = 'index.html'
+            location.href = response.data.url
           }, error => {
             _this.isLoading = false
             _this.$message({
