@@ -79,7 +79,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.HashedModuleIdsPlugin(),
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
+      name: 'vendorcore',
       minChunks: function (module) {
         // any required modules inside node_modules are extracted to vendor
         return (
@@ -94,8 +94,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     // extract webpack runtime and module manifest to its own file in order to
     // prevent vendor hash from being updated whenever app bundle is updated
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifest',
-      chunks: ['vendor']
+      name: 'manifestcore',
+      chunks: ['vendorcore']
     }),
     // copy custom static assets
     new CopyWebpackPlugin([{
@@ -169,7 +169,7 @@ for (let pathname in pages) {
       if (key === pathname) {
         // necessary to consistently work with multiple chunks via CommonsChunkPlugin
         conf.chunksSortMode = 'dependency'
-        conf.chunks = ['manifest', 'vendor', pathname];
+        conf.chunks = ['manifestcore', 'vendorcore', pathname];
         conf.hash = true;
       }
     }
