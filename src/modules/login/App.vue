@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { baseURL } from '@/utils/config'
+import { baseURL, defaultAccount, defaultPassword } from '@/utils/config'
 import api from '@/utils/api'
 
 export default {
@@ -30,8 +30,8 @@ export default {
       refreshValidateCodeURLBase: baseURL + '/Admin/GetValidateCode',
       refreshValidateCodeURL: null,
       mainForm: {
-        account: 'system',
-        password: '111111',
+        account: defaultAccount,
+        password: defaultPassword,
         validateCode: ''
       },
       rules: {

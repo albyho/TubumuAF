@@ -62,7 +62,9 @@ httpClient.interceptors.request.use(
 httpClient.interceptors.response.use(
   response => {
     // 对响应数据做些事
-    if (response.data && response.data.code !== SuccessCode) {
+    if (response.data && response.data.url) {
+      top.location = response.data.url
+    } else if (response.data && response.data.code !== SuccessCode) {
       /*
       Message({
         // 饿了么的消息弹窗组件

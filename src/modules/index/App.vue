@@ -88,8 +88,7 @@ export default {
     logout () {
       this.isLoading = true
       api.logout().then(response => {
-        this.isLoading = false
-        location.href = response.data.url
+
       }, error => {
         console.log(error)
         this.isLoading = false
