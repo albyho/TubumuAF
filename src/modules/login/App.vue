@@ -74,7 +74,7 @@ export default {
           }
           api.login(loginParams).then(response => {
             _this.isLoading = false
-            location.href = response.data.url
+            // httpClient 对 response.data.url 有拦截处理
           }, error => {
             _this.isLoading = false
             _this.$message({

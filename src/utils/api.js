@@ -12,5 +12,11 @@ export default {
   },
   getMenus () {
     return Vue.httpClient.get('/admin/getmenus')
+  },
+  getPermissions () {
+    return Vue.httpClient.get('/admin/getPermissions')
+  },
+  getRoles () {
+    return Vue.httpClient.get('/admin/getRoles')
   }
 }
