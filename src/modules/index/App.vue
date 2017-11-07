@@ -20,7 +20,7 @@
           <xl-menu v-for="(item, itemindex) in menus" :key="itemindex" :model="item" :index="itemindex.toString()"></xl-menu>
         </el-menu>
       </el-aside>
-      <el-main><iframe :src='mainFrameURL' class="el-main-content" scrolling="no"></iframe></el-main>
+      <el-main><iframe :src='mainFrameURL' class="el-main-content" scrolling="yes"></iframe></el-main>
     </el-container>
   </el-container>
 </template>
@@ -147,12 +147,12 @@ body {
       }
       .el-main {
         height: 100%;
+        padding: 0;
+        overflow: hidden;
         .el-main-content {
           border: 0;
           width: 100%;
           height: 100%;
-          overflow-x: hidden;
-          overflow-y: scrolling;
         }
       }
     }
