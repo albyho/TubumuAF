@@ -15,9 +15,9 @@
   },
   "dependencies": {
     "axios": "^0.17.0",
-    "element-ui": "^2.0.2",
+    "element-ui": "^2.0.3",
     "sortablejs": "^1.6.1",
-    "vue": "^2.5.2",
+    "vue": "^2.5.3",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
@@ -87,7 +87,7 @@
     "url-loader": "^0.5.8",
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",
-    "vue-template-compiler": "^2.5.2",
+    "vue-template-compiler": "^2.5.3",
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-middleware": "^1.12.0",
