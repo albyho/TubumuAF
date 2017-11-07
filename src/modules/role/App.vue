@@ -1,16 +1,18 @@
 <template>
-<div>
-  <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-    <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-    <el-breadcrumb-item>角色列表</el-breadcrumb-item>
-  </el-breadcrumb>
-  <el-table :data="roles" v-loading="isLoading" stripe style="width: 100%">
-    <el-table-column prop="displayOrder" label="#" width="40">
-    </el-table-column>
-    <el-table-column prop="name" label="名称">
-    </el-table-column>
-  </el-table>
-</div>
+<el-container>
+  <el-header class="header">  
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+      <el-breadcrumb-item>角色列表</el-breadcrumb-item>
+    </el-breadcrumb>
+  </el-header>
+  <el-main class="main">  
+    <el-table :data="roles" v-loading="isLoading" stripe size="small" style="width: 100%" :empty-text="emptyText">
+      <el-table-column prop="displayOrder" label="#" width="40"></el-table-column>
+      <el-table-column prop="name" label="名称"></el-table-column>
+    </el-table>
+  </el-main>
+</el-container>
 </template>
 
 <script>
@@ -25,6 +27,11 @@ export default {
   },
   mounted () {
     this.getRoles()
+  },
+  computed: {
+    emptyText: function () {
+      return this.isLoading ? '加载中...' : '暂无数据'
+    }
   },
   methods: {
     getRoles () {
@@ -46,10 +53,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.breadcrumb 
-{
-    margin: 20px 20px 20px 10px;
-}
 
 </style>

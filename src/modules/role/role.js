@@ -2,6 +2,7 @@ import Vue from 'vue'
 import ElementUI from 'element-ui'
 // import { Form, FormItem, Button } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import '../../styles/inner.scss'
 import App from './App.vue'
 import HttpClient from '@/utils/httpclient.js'
 
