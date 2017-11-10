@@ -32,14 +32,14 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="mainFormDialogVisible" @submit.native.prevent :close-on-click-modal="false" width="400px">
+    <el-dialog :visible.sync="formDialogVisible" :close-on-click-modal="false" width="400px">
       <span slot="title">
         {{ editActive ? '编辑' : '添加'}}
       </span>
 
-      <el-form ref="mainForm" :model="mainForm" :rules="rules" label-position="right" label-width="80px" size="small">
+      <el-form ref="form" :model="form" :rules="rules" label-position="right" label-width="80px" size="small">
         <el-form-item label="角色名称" prop="name">
-          <el-input v-model="mainForm.name" auto-complete="off" placeholder="请输入角色名称" ref="name"></el-input>
+          <el-input v-model="form.name" auto-complete="off" placeholder="请输入角色名称" ref="name"></el-input>
         </el-form-item>
 
         <el-form-item label="包含权限">
@@ -56,8 +56,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="handleMainFormSure(false)">取 消</el-button>
-        <el-button type="primary" @click="handleMainFormSure(true)">确 定</el-button>
+        <el-button @click="formDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="formDialogVisible = false">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -83,35 +83,36 @@ export default {
       // 主要数据
       isLoading: false,
       list: null,                   // 主要数据列表
+      permissions: null,            // 权限列表
 
       // 删除
       removeActive: null,           // 暂存删除项
       removeConfirmDialogVisible: false,  // 删除确认对话框是否可见
 
       // 添加/编辑
-      editActive: null,                   // 暂存编辑项，也可用来判断是否添加还是编辑
-      mainFormDialogVisible: false,       // 添加/编辑对话框是否可见
-      mainForm: {
-        roleID: null,
+      editActive: null,             // 暂存编辑项，也可用来判断是否添加还是编辑
+      formDialogVisible: false,     // 添加/编辑对话框是否可见
+      form: {
         name: null,
         permissionIDs: null
       },
       rules: {
         name: [
-          { required: true, message: '请输入角色名称', trigger: 'blur,change' },
-          { max: 50, message: '最多支持50个字符', trigger: 'blur,change' }
+          { required: true, message: '请输入角色名称', trigger: 'blur' },
+          { max: 50, message: '最多支持50个字符', trigger: 'blur' },
+          { pattern: /^[a-zA-Z\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9-_\u4E00-\u9FA5\uF900-\uFA2D]*$/, message: '请输入合法角色名称', trigger: 'blur' }
         ]
       },
       permissionTreeData: null,     // 用于编辑对话框内显示的权限树
       permissionTreeDefaultProps: {
         children: 'children',
-        label: 'name'
+        label: 'label'
       }                             // 用于编辑对话框内显示的权限树
     }
   },
   mounted () {
     this.getList()
-    this.getPermissionTree()
+    this.getPermissions()
   },
   computed: {
     emptyText: function () {
@@ -135,15 +136,43 @@ export default {
         })
       })
     },
-    getPermissionTree () {
-      api.getPermissionTree().then(response => {
-        this.permissionTreeData = response.data.tree
+    getPermissions () {
+      api.getPermissions().then(response => {
+        this.permissions = response.data.permissions
+        this.permissionTreeData = []
+        for (let i = 0; i < this.permissions.length; i++) {
+          const item = this.permissions[i]
+          if (item.level === 1) {
+            const node = {
+              id: item.permissionID,
+              label: item.name
+            }
+            this.permissionTreeData.push(node)
+            this.permissionTreeAddChildren(node, i)
+          }
+        }
       }, error => {
         this.$message({
           message: error.message,
           type: 'error'
         })
       })
+    },
+    permissionTreeAddChildren (node, index) {
+      for (let i = index + 1; i < this.permissions.length; i++) {
+        const item = this.permissions[i]
+        if (item.parentID === node.id) {
+          if (!node.children) {
+            node.children = []
+          }
+          const child = {
+            id: item.permissionID,
+            label: item.name
+          }
+          node.children.push(child)
+          this.permissionTreeAddChildren(child, i)
+        }
+      }
     },
     moveRole (sourceDisplayOrder, targetDisplayOrder) {
       const moveRoleParams = {
@@ -191,99 +220,56 @@ export default {
         })
       })
     },
-    showErrorMessage (message) {
-      this.$message({
-        message: message,
-        type: 'error'
-      })
-    },
     validateBaseData () {
-      if (!this.permissionTreeData) {
-        this.showErrorMessage('基础数据缺失：权限列表')
+      if (!this.permissions) {
+        this.$message({
+          message: '基础数据缺失：权限列表',
+          type: 'error'
+        })
         return false
       }
       return true
     },
     handleAddRole () {
-      if (!this.validateBaseData()) {
-        return
-      }
+      if (!this.validateBaseData()) return
       this.editActive = null
-      this.mainFormDialogVisible = true
-      this.mainForm.roleID = null
-      this.mainForm.name = null
-      this.mainForm.permissionIDs = null
+      this.formDialogVisible = true
+      this.form.name = null
+      this.form.permissionIDs = null
       this.$nextTick(() => {
         this.$refs.permissionTree.setCheckedKeys([], true)
-        this.$refs.name.focus()
       })
     },
     handleEditRole (row) {
-      if (!this.validateBaseData()) {
-        this.showErrorMessage('基础数据缺失：权限列表')
-      }
+      if (!this.validateBaseData()) return
       this.editActive = row
-      this.mainFormDialogVisible = true
-      this.mainForm.roleID = row.roleID
-      this.mainForm.name = row.name
-      this.mainForm.permissionIDs = row.permissions.map(m => m.permissionID)
+      this.formDialogVisible = true
+      this.form.name = row.name
+      this.form.permissionIDs = row.permissions.map(m => m.permissionID)
       this.$nextTick(() => {
-        this.$refs.permissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
+        this.$refs.permissionTree.setCheckedKeys(this.form.permissionIDs, true)
       })
     },
-    handleMainFormSure (sure) {
+    handleFormSure (sure) {
+      this.confirmDialogVisible = false
       if (sure) {
         // 提交数据
-        if (this.editActive) {
-          this.endRole()
-        } else {
-          this.addRole()
-        }
       } else {
-        this.mainFormDialogVisible = false
-        this.editActive = null // 注：添加状态 endActive 本就为 null
+        this.endActive = null // 注：添加状态 endActive 本就为 null
       }
     },
     handlePermissionTreeCheckChange (data, checked, indeterminate) {
       // console.log(data, checked, indeterminate)
-      this.mainForm.permissionIDs = this.$refs.permissionTree.getCheckedKeys()
-      // console.log(this.mainForm.permissionIDs)
+      this.form.permissionIDs = this.$refs.permissionTree.getCheckedKeys()
+      // console.log(this.form.permissionIDs)
     },
     addRole () {
 
     },
     endRole () {
-      if (!this.editActive) {
-        this.showErrorMessage('基础数据缺失：权限列表')
-        return
-      }
-      this.$refs.mainForm.validate(valid => {
-        if (valid) {
-          this.isLoading = true
-          const params = {
-            roleID: this.mainForm.roleID,
-            name: this.mainForm.name,
-            permissionIDs: this.mainForm.permissionIDs
-          }
-          api.editRole(params).then(response => {
-            this.isLoading = false
-            this.editActive = null
-            this.confirmDialogVisible = false
-          }, error => {
-            this.isLoading = false
-            this.$message({
-              message: error.message,
-              type: 'error'
-            })
-          })
-        } else {
-          // 客户端校验未通过
-          return false
-        }
-      })
-    },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
+      if (!this.endActive) return
+
+      this.endActive = null
     },
     setupSortable () {
       const el = document.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]

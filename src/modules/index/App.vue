@@ -43,23 +43,22 @@ export default {
     }
   },
   mounted: function () {
-    const _this = this
-    _this.isGetMenusLoading = true
+    this.isGetMenusLoading = true
     api.getMenus().then(response => {
-      _this.isGetMenusLoading = false
-      _this.menus = response.data.menus
+      this.isGetMenusLoading = false
+      this.menus = response.data.menus
       console.log(response.data)
     }, error => {
       console.log(error)
-      _this.isGetMenusLoading = false
-      _this.$message({
+      this.isGetMenusLoading = false
+      this.$message({
         message: error.message,
         type: 'error'
       })
     })
     api.getProfile().then(response => {
       console.log(response.data)
-      _this.profile = response.data.profile
+      this.profile = response.data.profile
     }, error => {
       console.log(error)
     })
