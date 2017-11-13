@@ -22,6 +22,12 @@ export default {
   editSiteConfig (params) {
     return Vue.httpClient.post('/admin/editsiteconfig', params)
   },
+  getBulletin () {
+    return Vue.httpClient.get('/admin/getbulletin')
+  },
+  editBulletin (params) {
+    return Vue.httpClient.post('/admin/editBulletin', params)
+  },
   getPermissions () {
     return Vue.httpClient.get('/admin/getPermissions')
   },
