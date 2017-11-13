@@ -39,7 +39,7 @@
 
       <el-form ref="mainForm" :model="mainForm" :rules="rules" label-position="right" label-width="80px" size="small">
         <el-form-item label="角色名称" prop="name">
-          <el-input v-model="mainForm.name" auto-complete="off" placeholder="请输入角色名称" ref="name"></el-input>
+          <el-input v-model.trim="mainForm.name" auto-complete="off" placeholder="请输入角色名称" ref="name"></el-input>
         </el-form-item>
 
         <el-form-item label="包含权限">
@@ -250,11 +250,33 @@ export default {
       // console.log(this.mainForm.permissionIDs)
     },
     addRole () {
-
+      this.$refs.mainForm.validate(valid => {
+        if (valid) {
+          this.isLoading = true
+          const params = {
+            name: this.mainForm.name,
+            permissionIDs: this.mainForm.permissionIDs
+          }
+          api.addRole(params).then(response => {
+            this.list.push(response.data.role)
+            this.isLoading = false
+            this.mainFormDialogVisible = false
+          }, error => {
+            this.isLoading = false
+            this.$message({
+              message: error.message,
+              type: 'error'
+            })
+          })
+        } else {
+          // 客户端校验未通过
+          return false
+        }
+      })
     },
     endRole () {
       if (!this.editActive) {
-        this.showErrorMessage('基础数据缺失：权限列表')
+        this.showErrorMessage('异常：无编辑目标')
         return
       }
       this.$refs.mainForm.validate(valid => {
@@ -266,9 +288,10 @@ export default {
             permissionIDs: this.mainForm.permissionIDs
           }
           api.editRole(params).then(response => {
+            this.list.splice(this.list.indexOf(this.editActive), 1, response.data.role)
             this.isLoading = false
             this.editActive = null
-            this.confirmDialogVisible = false
+            this.mainFormDialogVisible = false
           }, error => {
             this.isLoading = false
             this.$message({
