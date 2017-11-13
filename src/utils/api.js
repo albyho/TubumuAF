@@ -13,6 +13,15 @@ export default {
   getMenus () {
     return Vue.httpClient.get('/admin/getmenus')
   },
+  getServerInfo () {
+    return Vue.httpClient.get('/admin/getserverinfo')
+  },
+  getSiteConfig () {
+    return Vue.httpClient.get('/admin/getsiteconfig')
+  },
+  editSiteConfig (params) {
+    return Vue.httpClient.post('/admin/editsiteconfig', params)
+  },
   getPermissions () {
     return Vue.httpClient.get('/admin/getPermissions')
   },

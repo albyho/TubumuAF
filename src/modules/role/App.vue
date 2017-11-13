@@ -258,7 +258,7 @@ export default {
             permissionIDs: this.mainForm.permissionIDs
           }
           api.addRole(params).then(response => {
-            this.list.push(response.data.role)
+            this.list.push(response.data.item)
             this.isLoading = false
             this.mainFormDialogVisible = false
           }, error => {
@@ -288,7 +288,7 @@ export default {
             permissionIDs: this.mainForm.permissionIDs
           }
           api.editRole(params).then(response => {
-            this.list.splice(this.list.indexOf(this.editActive), 1, response.data.role)
+            this.list.splice(this.list.indexOf(this.editActive), 1, response.data.item)
             this.isLoading = false
             this.editActive = null
             this.mainFormDialogVisible = false
