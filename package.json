@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "axios": "^0.17.0",
-    "element-ui": "^2.0.3",
+    "element-ui": "^2.0.4",
     "sortablejs": "^1.6.1",
     "vue": "^2.5.3",
     "vue-router": "^3.0.1"
