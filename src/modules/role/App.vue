@@ -123,7 +123,7 @@ export default {
       this.isLoading = true
       api.getRoles().then(response => {
         this.isLoading = false
-        this.list = response.data.roles
+        this.list = response.data.list
         this.$nextTick(() => {
           this.setupSortable()
         })

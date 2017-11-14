@@ -46,7 +46,7 @@ export default {
     this.isGetMenusLoading = true
     api.getMenus().then(response => {
       this.isGetMenusLoading = false
-      this.menus = response.data.menus
+      this.menus = response.data.list
       console.log(response.data)
     }, error => {
       console.log(error)

@@ -57,5 +57,11 @@ export default {
   },
   editRole (params) {
     return Vue.httpClient.post('/admin/editRole', params)
+  },
+  getGroups () {
+    return Vue.httpClient.get('/admin/getgroups')
+  },
+  getGroupTree () {
+    return Vue.httpClient.get('/admin/getgroupTree')
   }
 }
