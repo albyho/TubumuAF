@@ -290,7 +290,6 @@ export default {
           api.editRole(params).then(response => {
             this.list.splice(this.list.indexOf(this.editActive), 1, response.data.item)
             // Vue.set(this.list, this.list.indexOf(this.editActive), response.data.item)
-
             this.isLoading = false
             this.editActive = null
             this.mainFormDialogVisible = false

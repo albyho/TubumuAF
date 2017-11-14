@@ -1,5 +1,5 @@
 import axios from 'axios'
-import qs from 'qs'
+// import qs from 'qs'
 // import { Message } from 'element-ui'
 import { baseURL } from './config.js'
 
@@ -28,7 +28,8 @@ const httpClient = axios.create({
   responseType: 'json',
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+    // 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+    'Content-Type': 'application/json; charset=utf-8'
   }
 })
 
@@ -42,7 +43,8 @@ httpClient.interceptors.request.use(
       config.method === 'delete'
     ) {
       // 序列化
-      config.data = qs.stringify(config.data)
+      config.data = JSON.stringify(config.data)
+      // config.data = qs.stringify(config.data)
     }
 
     // 若是有做鉴权token , 就给头部带上token
