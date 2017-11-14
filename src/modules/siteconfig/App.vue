@@ -1,5 +1,5 @@
 <template>
- <el-container>
+ <el-container v-loading.fullscreen.lock="isLoading">
   <el-header class="header">  
     <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
       <el-breadcrumb-item>系统管理</el-breadcrumb-item>
@@ -7,7 +7,7 @@
     </el-breadcrumb>
   </el-header>
   <el-main class="main">
-    <el-form ref="mainForm" :model="mainForm" :rules="rules" v-loading.fullscreen.lock="isLoading" label-position="right" label-width="120px" size="small">
+    <el-form ref="mainForm" :model="mainForm" :rules="rules" label-position="right" label-width="120px" size="small">
       <el-form-item label="系统名称" prop="name">
         <el-input v-model.trim="mainForm.name" auto-complete="off" placeholder="请输入系统名称" ref="name"></el-input>
       </el-form-item>

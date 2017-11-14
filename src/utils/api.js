@@ -10,6 +10,12 @@ export default {
   getProfile () {
     return Vue.httpClient.get('/admin/getProfile')
   },
+  changeProfile (params) {
+    return Vue.httpClient.post('/admin/changeProfile', params)
+  },
+  changePassword (params) {
+    return Vue.httpClient.post('/admin/changePassword', params)
+  },
   getMenus () {
     return Vue.httpClient.get('/admin/getMenus')
   },

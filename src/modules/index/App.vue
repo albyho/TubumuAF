@@ -4,11 +4,11 @@
       <el-row>
         <el-col :span="20">系统管理</el-col>
         <el-col :span="4" class="userinfo">
-          <el-dropdown trigger="hover">
-					  <span class="el-dropdown-link userinfo-inner"><img :src="profile.HeadURL" v-show="profile.HeadURL" /> {{ profile.DisplayName }}</span>
+          <el-dropdown trigger="hover" :show-timeout="150">
+					  <span class="el-dropdown-link userinfo-inner"><img :src="profileDisplay.headURL" v-show="profileDisplay.headURL" /> {{ profileDisplay.displayName }}</span>
 					  <el-dropdown-menu slot="dropdown">
-						  <!-- <el-dropdown-item>我的消息</el-dropdown-item>
-						  <el-dropdown-item>设置</el-dropdown-item> -->
+						  <!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
+						  <el-dropdown-item @click.native="profile">我的资料</el-dropdown-item>
 						  <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					  </el-dropdown-menu>
 		      </el-dropdown></el-col>
@@ -34,7 +34,7 @@ export default {
       isLoading: false,
       isGetMenusLoading: false,
       mainFrameURL: '',
-      profile: {
+      profileDisplay: {
         DisplayName: '',
         HeadURL: null
       },
@@ -58,7 +58,7 @@ export default {
     })
     api.getProfile().then(response => {
       console.log(response.data)
-      this.profile = response.data.profile
+      this.profileDisplay = response.data.profile
     }, error => {
       console.log(error)
     })
@@ -83,6 +83,9 @@ export default {
         }
       }
       console.log('handleSelect', index, indexPath, this.mainFrameURL)
+    },
+    profile () {
+      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=profile'
     },
     logout () {
       this.isLoading = true
