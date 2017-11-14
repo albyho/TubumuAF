@@ -8,22 +8,22 @@ export default {
     return Vue.httpClient.post('/admin/logout')
   },
   getProfile () {
-    return Vue.httpClient.get('/admin/getprofile')
+    return Vue.httpClient.get('/admin/getProfile')
   },
   getMenus () {
-    return Vue.httpClient.get('/admin/getmenus')
+    return Vue.httpClient.get('/admin/getMenus')
   },
   getServerInfo () {
-    return Vue.httpClient.get('/admin/getserverinfo')
+    return Vue.httpClient.get('/admin/getServerinfo')
   },
   getSiteConfig () {
-    return Vue.httpClient.get('/admin/getsiteconfig')
+    return Vue.httpClient.get('/admin/getSiteconfig')
   },
   editSiteConfig (params) {
-    return Vue.httpClient.post('/admin/editsiteconfig', params)
+    return Vue.httpClient.post('/admin/editSiteconfig', params)
   },
   getBulletin () {
-    return Vue.httpClient.get('/admin/getbulletin')
+    return Vue.httpClient.get('/admin/getBulletin')
   },
   editBulletin (params) {
     return Vue.httpClient.post('/admin/editBulletin', params)
@@ -59,9 +59,9 @@ export default {
     return Vue.httpClient.post('/admin/editRole', params)
   },
   getGroups () {
-    return Vue.httpClient.get('/admin/getgroups')
+    return Vue.httpClient.get('/admin/getGroups')
   },
   getGroupTree () {
-    return Vue.httpClient.get('/admin/getgroupTree')
+    return Vue.httpClient.get('/admin/getGroupTree')
   }
 }
