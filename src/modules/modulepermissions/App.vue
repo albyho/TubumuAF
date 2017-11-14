@@ -45,7 +45,7 @@ export default {
       this.isLoading = true
       api.getPermissions().then(response => {
         this.isLoading = false
-        this.list = response.data.permissions
+        this.list = response.data.list
       }, error => {
         this.isLoading = false
         this.$message({
