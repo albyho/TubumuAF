@@ -1,25 +1,22 @@
 <template>
-<el-container>
+<el-container v-loading.fullscreen.lock="isLoading">
   <el-header class="header">  
     <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
       <el-breadcrumb-item>模块管理</el-breadcrumb-item>
       <el-breadcrumb-item>权限列表</el-breadcrumb-item>
     </el-breadcrumb>
   </el-header>
-  <el-main class="main">      
-    <el-row>  
-      <el-input placeholder="输入关键字进行过滤" size="small" v-model="filterText"></el-input>  
+  <el-main class="main"> 
+    <el-row>
+      <el-button type="primary" size="mini" icon="el-icon-refresh" @click="handleExtractModulePermissions">提取模块权限</el-button>  
+      <el-button type="primary" size="mini" icon="el-icon-time" @click="handleClearModulePermissions">清理模块权限</el-button>  
     </el-row>
     <el-row>
-      <el-tree
-        :data="treeData" 
-        :props="treeDefaultProps" 
-        :empty-text="emptyText"
-        node-key="id" 
-        ref="tree"
-        :filter-node-method="filterNode"
-        default-expand-all>
-      </el-tree>
+    <el-table :data="list" size="small" style="width: 100%" :empty-text="emptyText">
+      <el-table-column prop="displayOrder" label="#" width="40"></el-table-column>
+      <el-table-column prop="moduleName" label="模块" width="180"></el-table-column>    
+      <el-table-column prop="name" label="名称"></el-table-column>
+    </el-table>
     </el-row>
   </el-main>
 </el-container>
@@ -32,33 +29,23 @@ export default {
   data () {
     return {
       isLoading: false,
-      treeData: null,
-      treeDefaultProps: {
-        children: 'children',
-        label: 'name'
-      },
-      filterText: null
+      list: null
     }
   },
   mounted () {
-    // this.getTree()
+    this.getList()
   },
   computed: {
     emptyText: function () {
       return this.isLoading ? '加载中...' : '暂无数据'
     }
   },
-  watch: {
-    filterText (val) {
-      this.$refs.tree.filter(val)
-    }
-  },
   methods: {
-    getTree () {
+    getList () {
       this.isLoading = true
-      api.getPermissionTree().then(response => {
+      api.getPermissions().then(response => {
         this.isLoading = false
-        this.treeData = response.data.tree
+        this.list = response.data.permissions
       }, error => {
         this.isLoading = false
         this.$message({
@@ -67,16 +54,53 @@ export default {
         })
       })
     },
-    filterNode (value, data) {
-      if (!value) {
-        return true
-      }
-      return data.name.indexOf(value) !== -1
+    handleExtractModulePermissions () {
+      this.isLoading = true
+      api.extractModulePermissions().then(response => {
+        this.isLoading = false
+        this.filterText = null
+        this.getList()
+        this.$message({
+          message: response.data.message,
+          type: 'success'
+        })
+      }, error => {
+        this.isLoading = false
+        this.$message({
+          message: error.message,
+          type: 'error'
+        })
+      })
+    },
+    handleClearModulePermissions () {
+      this.isLoading = true
+      api.clearModulePermissions().then(response => {
+        this.isLoading = false
+        this.filterText = null
+        this.getList()
+        this.$message({
+          message: response.data.message,
+          type: 'success'
+        })
+      }, error => {
+        this.isLoading = false
+        this.$message({
+          message: error.message,
+          type: 'error'
+        })
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+
+.el-row {
+  margin-bottom: 20px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
 
 </style>

@@ -65,7 +65,8 @@ export default {
         ],
         host: [
           { required: true, message: '请输入系统地址', trigger: 'blur,change' },
-          { max: 100, message: '最多支持100个字符', trigger: 'blur,change' }
+          { max: 100, message: '最多支持100个字符', trigger: 'blur,change' },
+          { pattern: /^https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\\.,@?^=%&amp;:/~\\+#]*[\w\-\\@?^=%&amp;/~\\+#])?$/, message: '请输入正确的网址', trigger: 'blur,change' }
         ],
         title: [
           { max: 100, message: '最多支持100个字符', trigger: 'blur,change' }

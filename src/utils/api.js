@@ -34,6 +34,12 @@ export default {
   getPermissionTree () {
     return Vue.httpClient.get('/admin/getPermissionTree')
   },
+  extractModulePermissions () {
+    return Vue.httpClient.get('/admin/extractModulePermissions')
+  },
+  clearModulePermissions () {
+    return Vue.httpClient.get('/admin/clearModulePermissions')
+  },
   getRoles () {
     return Vue.httpClient.get('/admin/getRoles')
   },
