@@ -2,7 +2,6 @@
 <el-container v-loading.fullscreen.lock="isLoading">
   <el-header class="header">  
     <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       <el-breadcrumb-item>我的资料</el-breadcrumb-item>
     </el-breadcrumb>
   </el-header>
