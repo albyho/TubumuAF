@@ -1,4 +1,3 @@
-
 // Development
 export const baseURL = 'http://127.0.0.1:9005/manager/api'
 export const defaultAccount = 'system'

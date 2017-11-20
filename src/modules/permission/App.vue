@@ -32,10 +32,7 @@ export default {
   data () {
     return {
       isLoading: false,
-      treeData: [{
-        id: 0,
-        name: null
-      }],
+      treeData: null,
       treeDefaultProps: {
         children: 'children',
         label: 'name'

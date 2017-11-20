@@ -13,10 +13,22 @@
         <el-input v-model.trim="changeProfileForm.displayName" auto-complete="off" placeholder="请输入昵称" ref="displayName"></el-input>
       </el-form-item>
       <el-form-item label="头像" prop="headURL">
-        <el-input v-model.trim="changeProfileForm.headURL" auto-complete="off" placeholder="请输入头像 URL" ref="headURL"></el-input>
+        <el-col :span="16">
+          <el-input v-model.trim="changeProfileForm.headURL" auto-complete="off" placeholder="请输入头像 URL" ref="headURL"></el-input>
+        </el-col>
+        <el-col class="line" :span="1">&nbsp;</el-col>
+        <el-col :span="7">
+          <el-button type="primary" plain @click="handleChangeHeadURLBrowser">浏览服务器</el-button>
+        </el-col>
       </el-form-item>
       <el-form-item label="Logo" prop="logoURL">
-        <el-input v-model.trim="changeProfileForm.logoURL" auto-complete="off" placeholder="请输入Logo URL" ref="logoURL"></el-input>
+        <el-col :span="16">
+          <el-input v-model.trim="changeProfileForm.logoURL" auto-complete="off" placeholder="请输入Logo URL" ref="logoURL"></el-input>
+        </el-col>
+        <el-col class="line" :span="1">&nbsp;</el-col>
+        <el-col :span="7">
+          <el-button type="primary" plain @click="handleChangeLogoURLBrowser">浏览服务器</el-button>
+        </el-col>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleChangeProfile">修改资料</el-button>
@@ -54,8 +66,8 @@ export default {
       activeTabName: 'first',
       changeProfileForm: {
         displayName: null,
-        head: null,
-        logo: null
+        headURL: null,
+        logoURL: null
       },
       changeProfileRules: {
         displayName: [
@@ -166,6 +178,30 @@ export default {
         } else {
           // 客户端校验未通过
           return false
+        }
+      })
+    },
+    handleChangeHeadURLBrowser () {
+      this.popupCKFinder('headURL')
+    },
+    handleChangeLogoURLBrowser () {
+      this.popupCKFinder('logoURL')
+    },
+    popupCKFinder (name) {
+      const _this = this
+      /* eslint-disable no-undef */
+      CKFinder.popup({
+        chooseFiles: true,
+        width: 800,
+        height: 600,
+        onInit: function (finder) {
+          finder.on('files:choose', function (evt) {
+            const file = evt.data.files.first()
+            _this.changeProfileForm[name] = file.getUrl()
+          })
+          finder.on('file:choose:resizedImage', function (evt) {
+            _this.changeProfileForm[name] = evt.data.resizedUrl
+          })
         }
       })
     }

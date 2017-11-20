@@ -6,7 +6,7 @@
 
 ``` bash
 # install dependencies
-npm install
+npm install --no-optional --registry=https://registry.npm.taobao.org
 
 # serve with hot reload at localhost:8080
 npm run dev

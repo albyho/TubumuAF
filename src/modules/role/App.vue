@@ -9,7 +9,7 @@
   <el-main class="main">
     <el-row>
       <el-col>
-        <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAddRole">添加</el-button>  
+        <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd">添加</el-button>  
       </el-col>
     </el-row>
     <el-table :data="list" v-loading="isLoading" size="small" style="width: 100%" :empty-text="emptyText">
@@ -22,12 +22,12 @@
       </el-table-column>      
       <el-table-column align="center" width="42">
         <template slot-scope="scope">
-          <el-button type="text" size="small" icon="el-icon-edit" @click="handleEditRole(scope.row)" v-if="!scope.row.isSystem"></el-button>
+          <el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)" v-if="!scope.row.isSystem"></el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" width="42">
         <template slot-scope="scope">
-          <el-button type="text" size="small" icon="el-icon-delete" @click="handleRemoveRole(scope.row)" v-if="!scope.row.isSystem"></el-button>
+          <el-button type="text" size="small" icon="el-icon-delete" @click="handleRemove(scope.row)" v-if="!scope.row.isSystem"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -64,8 +64,8 @@
     <el-dialog title="提示" :visible.sync="removeConfirmDialogVisible"  width="320px" center>
       <span>删除该角色后，相关的数据也将被删除。<br/>确定要删除吗？</span>
       <div slot="footer" class="dialog-footer">
-       <el-button @click="handleRemoveRoleSure(false)">取 消</el-button>
-       <el-button type="primary" @click="handleRemoveRoleSure(true)">确 定</el-button>
+       <el-button @click="handleRemoveSure(false)">取 消</el-button>
+       <el-button type="primary" @click="handleRemoveSure(true)">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -145,13 +145,13 @@ export default {
         })
       })
     },
-    moveRole (sourceDisplayOrder, targetDisplayOrder) {
-      const moveRoleParams = {
+    move (sourceDisplayOrder, targetDisplayOrder) {
+      const params = {
         SourceDisplayOrder: sourceDisplayOrder,
         TargetDisplayOrder: targetDisplayOrder
       }
       this.isLoading = true
-      api.moveRole(moveRoleParams).then(response => {
+      api.moveRole(params).then(response => {
         this.isLoading = false
       }, error => {
         this.isLoading = false
@@ -161,23 +161,23 @@ export default {
         })
       })
     },
-    handleRemoveRole (row) {
+    handleRemove (row) {
       this.removeActive = row
       this.removeConfirmDialogVisible = true
     },
-    handleRemoveRoleSure (sure) {
+    handleRemoveSure (sure) {
       this.removeConfirmDialogVisible = false
       if (sure) {
-        this.removeRole()
+        this.remove()
       }
     },
-    removeRole () {
+    remove () {
       if (!this.removeActive) return
-      const removeRoleParams = {
+      const removeParams = {
         RoleID: this.removeActive.roleID
       }
       this.isLoading = true
-      api.removeRole(removeRoleParams).then(response => {
+      api.removeRole(removeParams).then(response => {
         this.isLoading = false
         const index = this.list.indexOf(this.removeActive)
         this.list.splice(index, 1)
@@ -204,7 +204,7 @@ export default {
       }
       return true
     },
-    handleAddRole () {
+    handleAdd () {
       if (!this.validateBaseData()) {
         return
       }
@@ -218,7 +218,7 @@ export default {
         this.$refs.name.focus()
       })
     },
-    handleEditRole (row) {
+    handleEdit (row) {
       if (!this.validateBaseData()) {
         this.showErrorMessage('基础数据缺失：权限列表')
       }
@@ -235,13 +235,13 @@ export default {
       if (sure) {
         // 提交数据
         if (this.editActive) {
-          this.endRole()
+          this.end()
         } else {
-          this.addRole()
+          this.add()
         }
       } else {
         this.mainFormDialogVisible = false
-        this.editActive = null // 注：添加状态 endActive 本就为 null
+        // this.editActive = null // 注：添加状态 endActive 本就为 null
       }
     },
     handlePermissionTreeCheckChange (data, checked, indeterminate) {
@@ -249,7 +249,7 @@ export default {
       this.mainForm.permissionIDs = this.$refs.permissionTree.getCheckedKeys()
       // console.log(this.mainForm.permissionIDs)
     },
-    addRole () {
+    add () {
       this.$refs.mainForm.validate(valid => {
         if (valid) {
           this.isLoading = true
@@ -274,7 +274,7 @@ export default {
         }
       })
     },
-    endRole () {
+    end () {
       if (!this.editActive) {
         this.showErrorMessage('异常：无编辑目标')
         return
@@ -324,7 +324,7 @@ export default {
           const targetDisplayOrder = evt.newIndex + 1
 
           // 服务器同步
-          this.moveRole(sourceDisplayOrder, targetDisplayOrder)
+          this.move(sourceDisplayOrder, targetDisplayOrder)
         }
       })
     }

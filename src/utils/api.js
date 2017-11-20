@@ -49,6 +49,9 @@ export default {
   getRoles () {
     return Vue.httpClient.get('/admin/getRoles')
   },
+  getRoleBases () {
+    return Vue.httpClient.get('/admin/getRoleBases')
+  },
   moveRole (params) {
     return Vue.httpClient.post('/admin/moveRole', params)
   },
