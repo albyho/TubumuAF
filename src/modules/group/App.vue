@@ -123,8 +123,8 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入用户组名称', trigger: 'blur,change' },
-          { max: 50, message: '最多支持50个字符', trigger: 'blur,change' }
+          { required: true, message: '请输入用户组名称', trigger: 'blur' },
+          { max: 50, message: '最多支持50个字符', trigger: 'blur' }
         ]
       },
       permissionTreeData: null,     // 用于编辑对话框内显示的权限树

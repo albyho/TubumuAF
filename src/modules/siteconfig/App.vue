@@ -60,31 +60,31 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入系统名称', trigger: 'blur,change' },
-          { max: 50, message: '最多支持50个字符', trigger: 'blur,change' }
+          { required: true, message: '请输入系统名称', trigger: 'blur' },
+          { max: 50, message: '最多支持50个字符', trigger: 'blur' }
         ],
         host: [
-          { required: true, message: '请输入系统地址', trigger: 'blur,change' },
-          { max: 100, message: '最多支持100个字符', trigger: 'blur,change' },
-          { pattern: /^https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\\.,@?^=%&amp;:/~\\+#]*[\w\-\\@?^=%&amp;/~\\+#])?$/, message: '请输入正确的网址', trigger: 'blur,change' }
+          { required: true, message: '请输入系统地址', trigger: 'blur' },
+          { max: 100, message: '最多支持100个字符', trigger: 'blur' },
+          { pattern: /^https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\\.,@?^=%&amp;:/~\\+#]*[\w\-\\@?^=%&amp;/~\\+#])?$/, message: '请输入正确的网址', trigger: 'blur' }
         ],
         title: [
-          { max: 100, message: '最多支持100个字符', trigger: 'blur,change' }
+          { max: 100, message: '最多支持100个字符', trigger: 'blur' }
         ],
         keywords: [
-          { max: 200, message: '最多支持200个字符', trigger: 'blur,change' }
+          { max: 200, message: '最多支持200个字符', trigger: 'blur' }
         ],
         description: [
-          { max: 500, message: '最多支持500个字符', trigger: 'blur,change' }
+          { max: 500, message: '最多支持500个字符', trigger: 'blur' }
         ],
         copyright: [
-          { max: 1000, message: '最多支持1000个字符', trigger: 'blur,change' }
+          { max: 1000, message: '最多支持1000个字符', trigger: 'blur' }
         ],
         faviconURL: [
-          { max: 100, message: '最多支持100个字符', trigger: 'blur,change' }
+          { max: 100, message: '最多支持100个字符', trigger: 'blur' }
         ],
         pageTitleSeparator: [
-          { max: 50, message: '最多支持50个字符', trigger: 'blur,change' }
+          { max: 50, message: '最多支持50个字符', trigger: 'blur' }
         ]
       }
     }

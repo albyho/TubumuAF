@@ -71,14 +71,14 @@ export default {
       },
       changeProfileRules: {
         displayName: [
-          { max: 20, message: '最多支持20个字符', trigger: 'blur,change' },
-          { pattern: /^[a-zA-Z\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9-_\u4E00-\u9FA5\uF900-\uFA2D]*$/, message: '昵称包含非法字符', trigger: 'blur,change' }
+          { max: 20, message: '最多支持20个字符', trigger: 'blur' },
+          { pattern: /^[a-zA-Z\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9-_\u4E00-\u9FA5\uF900-\uFA2D]*$/, message: '昵称包含非法字符', trigger: 'blur' }
         ],
         head: [
-          { max: 200, message: '最多支持200个字符', trigger: 'blur,change' }
+          { max: 200, message: '最多支持200个字符', trigger: 'blur' }
         ],
         logo: [
-          { max: 200, message: '最多支持200个字符', trigger: 'blur,change' }
+          { max: 200, message: '最多支持200个字符', trigger: 'blur' }
         ]
       },
       changePasswordForm: {
@@ -88,19 +88,19 @@ export default {
       },
       changePasswordRules: {
         currentPassword: [
-          { required: true, message: '请输入当前密码', trigger: 'blur,change' },
-          { min: 20, message: '最少支持6个字符', trigger: 'blur,change' },
-          { max: 20, message: '最多支持20个字符', trigger: 'blur,change' }
+          { required: true, message: '请输入当前密码', trigger: 'blur' },
+          { min: 20, message: '最少支持6个字符', trigger: 'blur' },
+          { max: 20, message: '最多支持20个字符', trigger: 'blur' }
         ],
         newPassword: [
-          { required: true, message: '请输入新密码', trigger: 'blur,change' },
-          { min: 20, message: '最少支持6个字符', trigger: 'blur,change' },
-          { max: 20, message: '最多支持20个字符', trigger: 'blur,change' }
+          { required: true, message: '请输入新密码', trigger: 'blur' },
+          { min: 20, message: '最少支持6个字符', trigger: 'blur' },
+          { max: 20, message: '最多支持20个字符', trigger: 'blur' }
         ],
         newPasswordConfirm: [
-          { required: true, message: '请确认新密码', trigger: 'blur,change' },
-          { min: 20, message: '最少支持6个字符', trigger: 'blur,change' },
-          { max: 20, message: '最多支持20个字符', trigger: 'blur,change' }
+          { required: true, message: '请确认新密码', trigger: 'blur' },
+          { min: 20, message: '最少支持6个字符', trigger: 'blur' },
+          { max: 20, message: '最多支持20个字符', trigger: 'blur' }
         ]
       }
     }

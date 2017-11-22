@@ -52,10 +52,10 @@ export default {
       },
       rules: {
         title: [
-          { max: 200, message: '最多支持200个字符', trigger: 'blur,change' }
+          { max: 200, message: '最多支持200个字符', trigger: 'blur' }
         ],
         content: [
-          { max: 2000, message: '最多支持2000个字符', trigger: 'blur,change' }
+          { max: 2000, message: '最多支持2000个字符', trigger: 'blur' }
         ]
       }
     }

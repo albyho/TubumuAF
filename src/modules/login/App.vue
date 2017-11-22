@@ -36,19 +36,19 @@ export default {
       },
       rules: {
         account: [
-          { required: true, message: '请输入账号', trigger: 'blur,change' },
-          { min: 2, message: '最少支持2个字符', trigger: 'blur,change' },
-          { max: 20, message: '最多支持20个字符', trigger: 'blur,change' },
-          { pattern: /^([a-zA-Z][a-zA-Z0-9-_]*)|(1(3|4|5|7|8)\d{9})|([\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?)$/, message: '请输入合法的用户名、手机号或邮箱', trigger: 'blur,change' }
+          { required: true, message: '请输入账号', trigger: 'blur' },
+          { min: 2, message: '最少支持2个字符', trigger: 'blur' },
+          { max: 20, message: '最多支持20个字符', trigger: 'blur' },
+          { pattern: /^([a-zA-Z][a-zA-Z0-9-_]*)|(1(3|4|5|7|8)\d{9})|([\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?)$/, message: '请输入合法的用户名、手机号或邮箱', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur,change' },
-          { min: 6, message: '最少支持6个字符', trigger: 'blur,change' },
-          { max: 20, message: '最多支持20个字符', trigger: 'blur,change' }
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, message: '最少支持6个字符', trigger: 'blur' },
+          { max: 20, message: '最多支持20个字符', trigger: 'blur' }
         ],
         validateCode: [
-          { required: true, message: '请输入验证码', trigger: 'blur,change' },
-          { max: 20, message: '最多支持20个字符', trigger: 'blur,change' }
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { max: 20, message: '最多支持20个字符', trigger: 'blur' }
         ]
       },
       isRemberPassword: true

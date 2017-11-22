@@ -98,8 +98,8 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入角色名称', trigger: 'blur,change' },
-          { max: 50, message: '最多支持50个字符', trigger: 'blur,change' }
+          { required: true, message: '请输入角色名称', trigger: 'blur' },
+          { max: 50, message: '最多支持50个字符', trigger: 'blur' }
         ]
       },
       permissionTreeData: null,     // 用于编辑对话框内显示的权限树
@@ -213,6 +213,7 @@ export default {
       this.mainForm.roleID = null
       this.mainForm.name = null
       this.mainForm.permissionIDs = null
+      this.clearValidate('mainForm')
       this.$nextTick(() => {
         this.$refs.permissionTree.setCheckedKeys([], true)
         this.$refs.name.focus()
@@ -227,6 +228,7 @@ export default {
       this.mainForm.roleID = row.roleID
       this.mainForm.name = row.name
       this.mainForm.permissionIDs = row.permissions.map(m => m.permissionID)
+      this.clearValidate('mainForm')
       this.$nextTick(() => {
         this.$refs.permissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
       })
@@ -308,6 +310,10 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    clearValidate (formName) {
+      this.$refs[formName].clearValidate()
+      console.log('clearValidate')
     },
     setupSortable () {
       const el = document.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
