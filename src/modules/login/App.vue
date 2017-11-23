@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="mainForm" :rules="rules" v-loading.fullscreen.lock="isLoading" ref="mainForm" label-position="left" label-width="0px" class="container">
+  <el-form :model="mainForm" :rules="mainFormRules" v-loading.fullscreen.lock="isLoading" ref="mainForm" label-position="left" label-width="0px" class="container">
     <h3 class="title">系统登录</h3>
     <el-form-item prop="account">
       <el-input type="text" v-model.trim="mainForm.account" auto-complete="on" placeholder="账号(用户名、手机号或邮箱)" ref="account" autofocus></el-input>
@@ -34,7 +34,7 @@ export default {
         password: defaultPassword,
         validateCode: ''
       },
-      rules: {
+      mainFormRules: {
         account: [
           { required: true, message: '请输入账号', trigger: 'blur' },
           { min: 2, message: '最少支持2个字符', trigger: 'blur' },
@@ -71,7 +71,7 @@ export default {
             validateCode: this.mainForm.validateCode
           }
           api.login(loginParams).then(response => {
-            this.isLoading = false
+            // this.isLoading = false
             // httpClient 对 response.data.url 有拦截处理
           }, error => {
             this.isLoading = false
@@ -88,12 +88,12 @@ export default {
       })
     },
     handleRefreshValidateCode (e) {
+      // console.log('handleRefreshValidateCode')
       this.refreshValidateCodeURL = this.refreshValidateCodeURLBase + '?' + (new Date().getTime())
       this.mainForm.validateCode = ''
       if (e) {
         this.$refs.validateCode.focus()
       }
-      console.log('handleRefreshValidateCode')
     }
   }
 }

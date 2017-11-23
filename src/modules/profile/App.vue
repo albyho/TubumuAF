@@ -8,7 +8,7 @@
   <el-main class="main"> 
   <el-tabs v-model="activeTabName" type="card">
     <el-tab-pane label="修改资料" name="first">
-    <el-form ref="changeProfileForm" :model="changeProfileForm" :rules="changeProfileRules" label-position="right" label-width="120px" size="small">
+    <el-form ref="changeProfileForm" :model="changeProfileForm" :rules="changeProfileFormRules" label-position="right" label-width="120px" size="small">
       <el-form-item label="昵称" prop="displayName">
         <el-input v-model.trim="changeProfileForm.displayName" auto-complete="off" placeholder="请输入昵称" ref="displayName"></el-input>
       </el-form-item>
@@ -36,7 +36,7 @@
     </el-form>
     </el-tab-pane>
     <el-tab-pane label="修改密码" name="second">
-    <el-form ref="changePasswordForm" :model="changePasswordForm" :rules="changePasswordRules" label-position="right" label-width="120px" size="small">
+    <el-form ref="changePasswordForm" :model="changePasswordForm" :rules="changePasswordFormRules" label-position="right" label-width="120px" size="small">
       <el-form-item label="当前密码" prop="currentPassword">
         <el-input type="password" v-model.trim="changePasswordForm.currentPassword" auto-complete="off" placeholder="请输入当前密码" ref="currentPassword"></el-input>
       </el-form-item>
@@ -69,7 +69,7 @@ export default {
         headURL: null,
         logoURL: null
       },
-      changeProfileRules: {
+      changeProfileFormRules: {
         displayName: [
           { max: 20, message: '最多支持20个字符', trigger: 'blur' },
           { pattern: /^[a-zA-Z\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9-_\u4E00-\u9FA5\uF900-\uFA2D]*$/, message: '昵称包含非法字符', trigger: 'blur' }
@@ -86,7 +86,7 @@ export default {
         newPassword: null,
         newPasswordConfirm: null
       },
-      changePasswordRules: {
+      changePasswordFormRules: {
         currentPassword: [
           { required: true, message: '请输入当前密码', trigger: 'blur' },
           { min: 20, message: '最少支持6个字符', trigger: 'blur' },

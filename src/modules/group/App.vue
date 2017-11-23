@@ -28,11 +28,11 @@
       <span slot="title">
         {{ editActive ? '编辑' : '添加'}}
       </span>
-      <el-form ref="mainForm" :model="mainForm" :rules="rules" label-position="right" label-width="100px" size="small">
+      <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="100px" size="small">
         <el-tabs v-model="activeTabName" type="card">
           <el-tab-pane label="基本信息" name="first">
             <el-form-item label="所属分组">
-              <el-cascader :options="editTreeData" :props="editTreeDefaultProps" clearable change-on-select v-model="mainForm.parentIDs"></el-cascader>
+              <el-cascader :options="editParentTreeData" :props="editParentTreeDefaultProps" clearable change-on-select v-model="mainForm.parentIDPath"></el-cascader>
             </el-form-item>
             <el-form-item label="用户组名称" prop="name">
               <el-input v-model.trim="mainForm.name" auto-complete="off" placeholder="请输入用户组名称" ref="name"></el-input>
@@ -41,22 +41,22 @@
           <el-tab-pane label="限制角色" name="second">
             <el-form-item label="限制角色">
               <el-checkbox-group v-model="mainForm.limitRoleIDs">
-                <el-checkbox v-for="role in roleListData" :label="role.roleID" :key="role.roleID">{{ role.name }}</el-checkbox>
+                <el-checkbox v-for="role in editRoleListData" :label="role.roleID" :key="role.roleID">{{ role.name }}</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="包含角色" name="third">
             <el-form-item label="包含角色">
               <el-checkbox-group v-model="mainForm.roleIDs">
-                <el-checkbox v-for="role in roleListData" :label="role.roleID" :key="role.roleID">{{ role.name }}</el-checkbox>
+                <el-checkbox v-for="role in editRoleListData" :label="role.roleID" :key="role.roleID">{{ role.name }}</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="包含权限" name="fourth">
             <el-form-item label="包含权限">
-              <el-tree :data="permissionTreeData" :props="permissionTreeDefaultProps"
+              <el-tree :data="editPermissionTreeData" :props="editPermissionTreeDefaultProps"
                 node-key="id"
-                ref="permissionTree"
+                ref="editPermissionTree"
                 empty-text=""
                 show-checkbox
                 default-expand-all
@@ -88,6 +88,7 @@
 
 <script>
 import api from '@/utils/api'
+import _ from 'lodash'
 
 export default {
   data () {
@@ -103,8 +104,11 @@ export default {
       filterText: null,
 
       // 删除
-      removeActive: null,           // 暂存删除项
+      removeActive: null,                 // 暂存删除项
       removeConfirmDialogVisible: false,  // 删除确认对话框是否可见
+      // 移动
+      moveActive: null,                   // 暂存移动项
+      moveConfirmDialogVisible: false,    // 移动确认对话框是否可见
 
       // 添加/编辑
       editActive: null,                   // 暂存编辑项，也可用来判断是否添加还是编辑
@@ -115,29 +119,27 @@ export default {
         roleIDs: [],                      // Array 不能设置为 null
         permissionIDs: null,              // Array
         limitRoleIDs: [],                 // Array 不能设置为 null
-        parentIDs: null                   // Array 如果 parentIDs 无值则作为顶级节点,否则作为子节点
+        parentIDPath: null,               // Array 如果 parentIDPath 无值则作为顶级节点,否则作为子节点。给 cascader 组件使用。
+        parentID: null                    // String
       },
       moveForm: {
         isChild: null,
         movingLocation: null              // 0: Under, 1: Above 。 作为子节点，总是 Under；作为兄弟节点则可使用两值任一。
       },
-      rules: {
+      mainFormRules: {
         name: [
           { required: true, message: '请输入用户组名称', trigger: 'blur' },
           { max: 50, message: '最多支持50个字符', trigger: 'blur' }
         ]
       },
-      permissionTreeData: null,     // 用于编辑对话框内显示的权限树
-      permissionTreeDefaultProps: {
+      editPermissionTreeData: null,       // 用于编辑对话框内显示的权限树
+      editPermissionTreeDefaultProps: {
         children: 'children',
         label: 'name'
-      },                            // 用于编辑对话框内显示的权限树
-      roleListData: null,           // 用于编辑对话框内显示的角色列表
-      editTreeData: [{
-        id: 0,
-        name: null
-      }],
-      editTreeDefaultProps: {
+      },                                  // 用于编辑对话框内显示的权限树
+      editRoleListData: null,             // 用于编辑对话框内显示的角色列表
+      editParentTreeData: null,           // 用于编辑对话框内显示的父节点
+      editParentTreeDefaultProps: {
         children: 'children',
         value: 'id',
         label: 'name'
@@ -167,10 +169,7 @@ export default {
         this.treeData = response.data.tree
       }, error => {
         this.isLoading = false
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
+        this.showErrorMessage(error.message)
       })
     },
     filterNode (value, data) {
@@ -178,6 +177,151 @@ export default {
         return true
       }
       return data.name.indexOf(value) !== -1
+    },
+    getRoleBases () {
+      api.getRoleBases().then(response => {
+        this.editRoleListData = response.data.list
+      }, error => {
+        this.showErrorMessage(error.message)
+      })
+    },
+    getPermissionTree () {
+      api.getPermissionTree().then(response => {
+        this.editPermissionTreeData = response.data.tree
+      }, error => {
+        this.showErrorMessage(error.message)
+      })
+    },
+    handleAdd (node, data) {
+      console.log('handleAdd', node, data)
+      if (!this.validateBaseData()) {
+        return
+      }
+      let parentIDPath = []
+      if (data) {
+        parentIDPath = data.parentIDPath ? data.parentIDPath : []
+        parentIDPath.push(data.id)
+      }
+      this.activeTabName = 'first'
+      this.editActive = null
+      this.generateParentTree(null)
+      this.mainFormDialogVisible = true
+      this.mainForm.groupID = null
+      this.mainForm.name = null
+      this.mainForm.parentIDPath = parentIDPath
+      this.mainForm.parentID = data ? data.id : null
+      this.mainForm.roleIDs = []       // 不能设置为 null
+      this.mainForm.permissionIDs = null
+      this.mainForm.limitRoleIDs = []  // 不能设置为 null
+      this.$nextTick(() => {
+        this.$refs.editPermissionTree.setCheckedKeys([], true)
+        this.clearValidate('mainForm')
+      })
+    },
+    handleEdit (node, data) {
+      console.log('handleEdit', node, data)
+      if (!this.validateBaseData() || !data) {
+        return
+      }
+      this.activeTabName = 'first'
+      this.editActive = data
+      this.generateParentTree(data)
+      this.mainFormDialogVisible = true
+      this.mainForm.groupID = data.id
+      this.mainForm.name = data.name
+      this.mainForm.parentIDPath = data.parentIDPath
+      this.mainForm.parentID = data.id
+      this.mainForm.roleIDs = data.roles.map(m => m.roleID)
+      this.mainForm.permissionIDs = data.permissions.map(m => m.permissionID)
+      this.mainForm.limitRoleIDs = data.limitRoles.map(m => m.roleID)
+      this.$nextTick(() => {
+        this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
+        this.clearValidate('mainForm')
+      })
+    },
+    handleMainFormSure (sure) {
+      console.log('handleMainFormSure', sure)
+      if (sure) {
+        // 提交数据
+        if (this.editActive) {
+          this.edit()
+        } else {
+          this.add()
+        }
+      } else {
+        this.mainFormDialogVisible = false
+        // this.editActive = null // 注：添加状态 endActive 本就为 null
+      }
+    },
+    handleRemove (node, data) {
+      console.log('handleRemove', node, data)
+    },
+    handleRemoveSure (sure) {
+      console.log('handleRemoveSure', sure)
+    },
+    handleMove (node, data) {
+      console.log('handleMove', node, data)
+    },
+    handleMoveSure (sure) {
+      console.log('handleMoveSure', sure)
+    },
+    validateBaseData () {
+      if (!this.editRoleListData) {
+        this.showErrorMessage('基础数据缺失：角色列表')
+        return false
+      }
+      if (!this.editPermissionTreeData) {
+        this.showErrorMessage('基础数据缺失：权限列表')
+        return false
+      }
+      return true
+    },
+    handlePermissionTreeCheckChange (data, checked, indeterminate) {
+      // console.log(data, checked, indeterminate)
+      this.mainForm.permissionIDs = this.$refs.editPermissionTree.getCheckedKeys()
+      // console.log(this.mainForm.permissionIDs)
+    },
+    generateParentTree (data) {
+      // 在添加或编辑用户组时，需要将系统用户组
+      if (!this.treeData) {
+        // this.treeData 实际上一定有值的
+        this.editParentTreeData = []
+        return
+      }
+      if (!data) {
+        // 添加时，过滤系统用户组
+        this.editParentTreeData = this.treeData.filter((element, index, array) => { return !element.isSystem })
+      } else {
+        // 编辑或移动时，过滤系统用户组和自身树(需递归)
+        this.editParentTreeData = _.cloneDeep(this.treeData)
+        // 系统用户组只在第一级
+        this.editParentTreeData = this.editParentTreeData.filter((element, index, array) => { return !element.isSystem })
+        this.filterTree(this.editParentTreeData, data)
+      }
+    },
+    filterTree (tree, data) {
+      for (let i = 0; i < tree.length; i++) {
+        const item = tree[i]
+        if (item === data) {
+          // 在第一级就找到
+          tree.splice(i, 1)
+          break
+        } else if (item.children) {
+          this.filterTree(item.children, data)
+        }
+      }
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+    },
+    clearValidate (formName) {
+      this.$refs[formName].clearValidate()
+    },
+    showErrorMessage (message) {
+      this.$message({
+        message: message,
+        type: 'error'
+      })
     },
     renderContent (h, { node, data, store }) {
       return (
@@ -213,109 +357,6 @@ export default {
             }}>删除</el-button>
           </span>
         </span>)
-    },
-    getRoleBases () {
-      api.getRoleBases().then(response => {
-        this.roleListData = response.data.list
-      }, error => {
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
-      })
-    },
-    getPermissionTree () {
-      api.getPermissionTree().then(response => {
-        this.permissionTreeData = response.data.tree
-      }, error => {
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
-      })
-    },
-    validateBaseData () {
-      if (!this.roleListData) {
-        this.showErrorMessage('基础数据缺失：角色列表')
-        return false
-      }
-      if (!this.permissionTreeData) {
-        this.showErrorMessage('基础数据缺失：权限列表')
-        return false
-      }
-      return true
-    },
-    handlePermissionTreeCheckChange (data, checked, indeterminate) {
-      // console.log(data, checked, indeterminate)
-      this.mainForm.permissionIDs = this.$refs.permissionTree.getCheckedKeys()
-      // console.log(this.mainForm.permissionIDs)
-    },
-    handleMainFormSure (sure) {
-      console.log(this.mainForm)
-    },
-    handleAdd (node, data) {
-      console.log('handleAdd', node, data)
-      if (!this.validateBaseData()) {
-        return
-      }
-      this.editActive = null
-      this.filterGroup(null)
-      this.mainFormDialogVisible = true
-      this.mainForm.groupID = null
-      this.mainForm.name = null
-      this.mainForm.parentIDs = data ? [data.id] : []
-      this.mainForm.roleIDs = []       // 不能设置为 null
-      this.mainForm.permissionIDs = null
-      this.mainForm.limitRoleIDs = []  // 不能设置为 null
-      this.$nextTick(() => {
-        this.$refs.permissionTree.setCheckedKeys([], true)
-        this.$refs.name.focus()
-      })
-    },
-    handleEdit (node, data) {
-      console.log('handleEdit', node, data)
-      if (!this.validateBaseData()) {
-        return
-      }
-      this.editActive = data
-      this.generateNewTree(data.id)
-      this.mainFormDialogVisible = true
-      this.mainForm.groupID = data.id
-      this.mainForm.name = data.name
-      this.mainForm.parentIDs = [data.id]
-      this.mainForm.roleIDs = data.roles.map(m => m.roleID)
-      this.mainForm.permissionIDs = data.permissions.map(m => m.permissionID)
-      this.mainForm.limitRoleIDs = data.limitRoles.map(m => m.roleID)
-      this.$nextTick(() => {
-        this.$refs.permissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
-      })
-    },
-    handleMove (node, data) {
-
-    },
-    handleRemove (node, data) {
-      console.log('handleRemove', node, data)
-      this.getTree()
-    },
-    generateNewTree (id) {
-      if (!this.treeData) {
-        // this.treeData 实际上一定有值的
-        this.editTreeData = []
-        return
-      }
-      if (!id) {
-        // 添加时，过滤系统用户组
-        this.editTreeData = this.treeData.filter((element, index, array) => { return !element.isSystem })
-      } else {
-        // 编辑或移动时，过滤系统用户组和自身树
-        this.editTreeData = []
-      }
-    },
-    generateIDPath (id) {
-      if (!this.treeData) {
-        // this.treeData 实际上一定有值的
-        this.editTreeData = []
-      }
     }
   }
 }

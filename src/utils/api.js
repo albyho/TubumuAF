@@ -19,6 +19,7 @@ export default {
   getMenus () {
     return Vue.httpClient.get('/admin/getMenus')
   },
+  // 系统管理
   getServerInfo () {
     return Vue.httpClient.get('/admin/getServerinfo')
   },
@@ -37,29 +38,15 @@ export default {
   getPermissions () {
     return Vue.httpClient.get('/admin/getPermissions')
   },
-  getPermissionTree () {
-    return Vue.httpClient.get('/admin/getPermissionTree')
-  },
   extractModulePermissions () {
     return Vue.httpClient.get('/admin/extractModulePermissions')
   },
   clearModulePermissions () {
     return Vue.httpClient.get('/admin/clearModulePermissions')
   },
+  // 角色
   getRoles () {
     return Vue.httpClient.get('/admin/getRoles')
-  },
-  getRoleBases () {
-    return Vue.httpClient.get('/admin/getRoleBases')
-  },
-  moveRole (params) {
-    return Vue.httpClient.post('/admin/moveRole', params)
-  },
-  removeRole (params) {
-    return Vue.httpClient.post('/admin/removeRole', params)
-  },
-  saveRoleName (params) {
-    return Vue.httpClient.post('/admin/saveRoleName', params)
   },
   addRole (params) {
     return Vue.httpClient.post('/admin/addRole', params)
@@ -67,10 +54,40 @@ export default {
   editRole (params) {
     return Vue.httpClient.post('/admin/editRole', params)
   },
+  removeRole (params) {
+    return Vue.httpClient.post('/admin/removeRole', params)
+  },
+  moveRole (params) {
+    return Vue.httpClient.post('/admin/moveRole', params)
+  },
+  saveRoleName (params) {
+    return Vue.httpClient.post('/admin/saveRoleName', params)
+  },
+  // 用户组
+  getGroupTree () {
+    return Vue.httpClient.get('/admin/getGroupTree')
+  },
+  addGroup (params) {
+    return Vue.httpClient.post('/admin/addGroup', params)
+  },
+  editGroup (params) {
+    return Vue.httpClient.post('/admin/editGroup', params)
+  },
+  removeGroup (params) {
+    return Vue.httpClient.post('/admin/removeGroup', params)
+  },
+  moveGroup (params) {
+    return Vue.httpClient.post('/admin/moveGroup', params)
+  },
+  // 暂未使用
   getGroups () {
     return Vue.httpClient.get('/admin/getGroups')
   },
-  getGroupTree () {
-    return Vue.httpClient.get('/admin/getGroupTree')
+  // 基础数据
+  getRoleBases () {
+    return Vue.httpClient.get('/admin/getRoleBases')
+  },
+  getPermissionTree () {
+    return Vue.httpClient.get('/admin/getPermissionTree')
   }
 }

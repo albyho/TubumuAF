@@ -12,7 +12,7 @@
         <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd">添加</el-button>  
       </el-col>
     </el-row>
-    <el-table :data="list" v-loading="isLoading" size="small" style="width: 100%" :empty-text="emptyText">
+    <el-table :data="list" v-loading="isLoading" size="medium" style="width: 100%" :empty-text="emptyText">
       <el-table-column prop="name" label="名称"></el-table-column>
       <el-table-column align="center" width="42">
         <template slot-scope="scope">
@@ -37,15 +37,15 @@
         {{ editActive ? '编辑' : '添加'}}
       </span>
 
-      <el-form ref="mainForm" :model="mainForm" :rules="rules" label-position="right" label-width="80px" size="small">
+      <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="80px" size="small">
         <el-form-item label="角色名称" prop="name">
           <el-input v-model.trim="mainForm.name" auto-complete="off" placeholder="请输入角色名称" ref="name"></el-input>
         </el-form-item>
 
         <el-form-item label="包含权限">
-          <el-tree :data="permissionTreeData" :props="permissionTreeDefaultProps"
+          <el-tree :data="editPermissionTreeData" :props="editPermissionTreeDefaultProps"
             node-key="id"
-            ref="permissionTree"
+            ref="editPermissionTree"
             empty-text=""
             show-checkbox
             default-expand-all
@@ -96,14 +96,14 @@ export default {
         name: null,
         permissionIDs: null
       },
-      rules: {
+      mainFormRules: {
         name: [
           { required: true, message: '请输入角色名称', trigger: 'blur' },
           { max: 50, message: '最多支持50个字符', trigger: 'blur' }
         ]
       },
-      permissionTreeData: null,     // 用于编辑对话框内显示的权限树
-      permissionTreeDefaultProps: {
+      editPermissionTreeData: null,     // 用于编辑对话框内显示的权限树
+      editPermissionTreeDefaultProps: {
         children: 'children',
         label: 'name'
       }                             // 用于编辑对话框内显示的权限树
@@ -129,80 +129,15 @@ export default {
         })
       }, error => {
         this.isLoading = false
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
+        this.showErrorMessage(error.message)
       })
     },
     getPermissionTree () {
       api.getPermissionTree().then(response => {
-        this.permissionTreeData = response.data.tree
+        this.editPermissionTreeData = response.data.tree
       }, error => {
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
+        this.showErrorMessage(error.message)
       })
-    },
-    move (sourceDisplayOrder, targetDisplayOrder) {
-      const params = {
-        SourceDisplayOrder: sourceDisplayOrder,
-        TargetDisplayOrder: targetDisplayOrder
-      }
-      this.isLoading = true
-      api.moveRole(params).then(response => {
-        this.isLoading = false
-      }, error => {
-        this.isLoading = false
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
-      })
-    },
-    handleRemove (row) {
-      this.removeActive = row
-      this.removeConfirmDialogVisible = true
-    },
-    handleRemoveSure (sure) {
-      this.removeConfirmDialogVisible = false
-      if (sure) {
-        this.remove()
-      }
-    },
-    remove () {
-      if (!this.removeActive) return
-      const removeParams = {
-        RoleID: this.removeActive.roleID
-      }
-      this.isLoading = true
-      api.removeRole(removeParams).then(response => {
-        this.isLoading = false
-        const index = this.list.indexOf(this.removeActive)
-        this.list.splice(index, 1)
-        this.removeActive = null
-      }, error => {
-        this.isLoading = false
-        this.removeActive = null
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
-      })
-    },
-    showErrorMessage (message) {
-      this.$message({
-        message: message,
-        type: 'error'
-      })
-    },
-    validateBaseData () {
-      if (!this.permissionTreeData) {
-        this.showErrorMessage('基础数据缺失：权限列表')
-        return false
-      }
-      return true
     },
     handleAdd () {
       if (!this.validateBaseData()) {
@@ -213,10 +148,10 @@ export default {
       this.mainForm.roleID = null
       this.mainForm.name = null
       this.mainForm.permissionIDs = null
-      this.clearValidate('mainForm')
       this.$nextTick(() => {
-        this.$refs.permissionTree.setCheckedKeys([], true)
+        this.$refs.editPermissionTree.setCheckedKeys([], true)
         this.$refs.name.focus()
+        this.clearValidate('mainForm')
       })
     },
     handleEdit (row) {
@@ -228,16 +163,16 @@ export default {
       this.mainForm.roleID = row.roleID
       this.mainForm.name = row.name
       this.mainForm.permissionIDs = row.permissions.map(m => m.permissionID)
-      this.clearValidate('mainForm')
       this.$nextTick(() => {
-        this.$refs.permissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
+        this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
+        this.clearValidate('mainForm')
       })
     },
     handleMainFormSure (sure) {
       if (sure) {
         // 提交数据
         if (this.editActive) {
-          this.end()
+          this.edit()
         } else {
           this.add()
         }
@@ -246,10 +181,15 @@ export default {
         // this.editActive = null // 注：添加状态 endActive 本就为 null
       }
     },
-    handlePermissionTreeCheckChange (data, checked, indeterminate) {
-      // console.log(data, checked, indeterminate)
-      this.mainForm.permissionIDs = this.$refs.permissionTree.getCheckedKeys()
-      // console.log(this.mainForm.permissionIDs)
+    handleRemove (row) {
+      this.removeActive = row
+      this.removeConfirmDialogVisible = true
+    },
+    handleRemoveSure (sure) {
+      this.removeConfirmDialogVisible = false
+      if (sure) {
+        this.remove()
+      }
     },
     add () {
       this.$refs.mainForm.validate(valid => {
@@ -265,10 +205,7 @@ export default {
             this.mainFormDialogVisible = false
           }, error => {
             this.isLoading = false
-            this.$message({
-              message: error.message,
-              type: 'error'
-            })
+            this.showErrorMessage(error.message)
           })
         } else {
           // 客户端校验未通过
@@ -276,7 +213,7 @@ export default {
         }
       })
     },
-    end () {
+    edit () {
       if (!this.editActive) {
         this.showErrorMessage('异常：无编辑目标')
         return
@@ -297,10 +234,7 @@ export default {
             this.mainFormDialogVisible = false
           }, error => {
             this.isLoading = false
-            this.$message({
-              message: error.message,
-              type: 'error'
-            })
+            this.showErrorMessage(error.message)
           })
         } else {
           // 客户端校验未通过
@@ -308,12 +242,59 @@ export default {
         }
       })
     },
+    remove () {
+      if (!this.removeActive) return
+      const removeParams = {
+        RoleID: this.removeActive.roleID
+      }
+      this.isLoading = true
+      api.removeRole(removeParams).then(response => {
+        this.isLoading = false
+        const index = this.list.indexOf(this.removeActive)
+        this.list.splice(index, 1)
+        this.removeActive = null
+      }, error => {
+        this.isLoading = false
+        this.removeActive = null
+        this.showErrorMessage(error.message)
+      })
+    },
+    move (sourceDisplayOrder, targetDisplayOrder) {
+      const params = {
+        SourceDisplayOrder: sourceDisplayOrder,
+        TargetDisplayOrder: targetDisplayOrder
+      }
+      this.isLoading = true
+      api.moveRole(params).then(response => {
+        this.isLoading = false
+      }, error => {
+        this.isLoading = false
+        this.showErrorMessage(error.message)
+      })
+    },
+    validateBaseData () {
+      if (!this.editPermissionTreeData) {
+        this.showErrorMessage('基础数据缺失：权限列表')
+        return false
+      }
+      return true
+    },
+    handlePermissionTreeCheckChange (data, checked, indeterminate) {
+      // console.log(data, checked, indeterminate)
+      this.mainForm.permissionIDs = this.$refs.editPermissionTree.getCheckedKeys()
+      // console.log(this.mainForm.permissionIDs)
+    },
     resetForm (formName) {
       this.$refs[formName].resetFields()
     },
     clearValidate (formName) {
       this.$refs[formName].clearValidate()
-      console.log('clearValidate')
+    },
+    showErrorMessage (message) {
+      this.$message({
+        message: message,
+        type: 'error'
+      })
     },
     setupSortable () {
       const el = document.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]

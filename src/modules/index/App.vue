@@ -47,9 +47,9 @@ export default {
     api.getMenus().then(response => {
       this.isGetMenusLoading = false
       this.menus = response.data.list
-      console.log(response.data)
+      // console.log(response.data)
     }, error => {
-      console.log(error)
+      // console.log(error)
       this.isGetMenusLoading = false
       this.$message({
         message: error.message,
@@ -57,18 +57,22 @@ export default {
       })
     })
     api.getProfile().then(response => {
-      console.log(response.data)
+      // console.log(response.data)
       this.profileDisplay = response.data.profile
     }, error => {
-      console.log(error)
+      // console.log(error)
+      this.$message({
+        message: error.message,
+        type: 'error'
+      })
     })
   },
   methods: {
     handleOpen (index, indexPath) {
-      console.log('open', index, indexPath)
+      // console.log('open', index, indexPath)
     },
     handleClose (index, indexPath) {
-      console.log('close', index, indexPath)
+      // console.log('close', index, indexPath)
     },
     handleSelect (index, indexPath) {
       const menuIndexes = index.split('-')
@@ -82,7 +86,7 @@ export default {
           list = currentMenu.children
         }
       }
-      console.log('handleSelect', index, indexPath, this.mainFrameURL)
+      // console.log('handleSelect', index, indexPath, this.mainFrameURL)
     },
     profile () {
       this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=profile&Compents=ckfinder'
@@ -90,9 +94,14 @@ export default {
     logout () {
       this.isLoading = true
       api.logout().then(response => {
-
+        // this.isLoading = false
+        // httpClient 对 response.data.url 有拦截处理
       }, error => {
-        console.log(error)
+        // console.log(error)
+        this.$message({
+          message: error.message,
+          type: 'error'
+        })
         this.isLoading = false
       })
     }
