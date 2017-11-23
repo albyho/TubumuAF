@@ -20,7 +20,7 @@
         ref="tree"
         :filter-node-method="filterNode"
         :render-content="renderContent"
-        default-expand-all>
+        :default-expand-all="false">
       </el-tree>
     </el-row>
 
@@ -37,6 +37,12 @@
             <el-form-item label="用户组名称" prop="name">
               <el-input v-model.trim="mainForm.name" auto-complete="off" placeholder="请输入用户组名称" ref="name"></el-input>
             </el-form-item>
+            <el-form-item label="是否包含用户">
+              <el-switch v-model="mainForm.isIncludeUser"></el-switch>
+            </el-form-item>
+            <el-form-item label="是否停用">
+              <el-switch v-model="mainForm.isDisabled"></el-switch>
+            </el-form-item>            
           </el-tab-pane>
           <el-tab-pane label="限制角色" name="second">
             <el-form-item label="限制角色">
@@ -120,7 +126,9 @@ export default {
         permissionIDs: null,              // Array
         limitRoleIDs: [],                 // Array 不能设置为 null
         parentIDPath: null,               // Array 如果 parentIDPath 无值则作为顶级节点,否则作为子节点。给 cascader 组件使用。
-        parentID: null                    // String
+        parentID: null,                   // String
+        isIncludeUser: null,              // Bool 是否包含用户
+        isDisabled: null                  // Bool 是否停用
       },
       moveForm: {
         isChild: null,
@@ -210,9 +218,11 @@ export default {
       this.mainForm.name = null
       this.mainForm.parentIDPath = parentIDPath
       this.mainForm.parentID = data ? data.id : null
-      this.mainForm.roleIDs = []       // 不能设置为 null
+      this.mainForm.roleIDs = []            // 不能设置为 null
       this.mainForm.permissionIDs = null
-      this.mainForm.limitRoleIDs = []  // 不能设置为 null
+      this.mainForm.limitRoleIDs = []       // 不能设置为 null
+      this.mainForm.isIncludeUser = true    // 默认 true
+      this.mainForm.isDisabled = false      // 默认 false
       this.$nextTick(() => {
         this.$refs.editPermissionTree.setCheckedKeys([], true)
         this.clearValidate('mainForm')
@@ -234,6 +244,8 @@ export default {
       this.mainForm.roleIDs = data.roles.map(m => m.roleID)
       this.mainForm.permissionIDs = data.permissions.map(m => m.permissionID)
       this.mainForm.limitRoleIDs = data.limitRoles.map(m => m.roleID)
+      this.mainForm.isIncludeUser = data.isIncludeUser
+      this.mainForm.isDisabled = data.isDisabled
       this.$nextTick(() => {
         this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
         this.clearValidate('mainForm')
@@ -254,16 +266,100 @@ export default {
       }
     },
     handleRemove (node, data) {
-      console.log('handleRemove', node, data)
+      this.removeActive = data
+      this.removeConfirmDialogVisible = true
     },
     handleRemoveSure (sure) {
-      console.log('handleRemoveSure', sure)
+      this.removeConfirmDialogVisible = false
+      if (sure) {
+        this.remove()
+      }
     },
     handleMove (node, data) {
       console.log('handleMove', node, data)
     },
     handleMoveSure (sure) {
       console.log('handleMoveSure', sure)
+    },
+    add () {
+      this.$refs.mainForm.validate(valid => {
+        if (valid) {
+          this.isLoading = true
+          const params = {
+            groupID: null,                                  // String
+            name: this.mainForm.name,                       // String
+            roleIDs: this.mainForm.roleIDs,                 // Array
+            permissionIDs: this.mainForm.permissionIDs,     // Array
+            limitRoleIDs: this.mainForm.limitRoleIDs,       // Array
+            parentID: this.mainForm.parentIDPath && this.mainForm.parentIDPath.length
+            ? this.mainForm.parentIDPath[this.mainForm.parentIDPath.length - 1]
+            : null
+          }
+          api.addGroup(params).then(response => {
+            this.isLoading = false
+            this.mainFormDialogVisible = false
+            this.getTree()
+          }, error => {
+            this.isLoading = false
+            this.showErrorMessage(error.message)
+          })
+        } else {
+          // 客户端校验未通过
+          return false
+        }
+      })
+    },
+    edit () {
+      if (!this.editActive) {
+        this.showErrorMessage('异常：无编辑目标')
+        return
+      }
+      this.$refs.mainForm.validate(valid => {
+        if (valid) {
+          this.isLoading = true
+          const params = {
+            groupID: this.mainForm.groupID,                 // String
+            name: this.mainForm.name,                       // String
+            roleIDs: this.mainForm.roleIDs,                 // Array
+            permissionIDs: this.mainForm.permissionIDs,     // Array
+            limitRoleIDs: this.mainForm.limitRoleIDs,       // Array
+            parentID: this.mainForm.parentIDPath && this.mainForm.parentIDPath.length
+            ? this.mainForm.parentIDPath[this.mainForm.parentIDPath.length - 1]
+            : null,
+            isIncludeUser: this.mainForm.isIncludeUser,
+            isDisabled: this.mainForm.isDisabled
+          }
+          api.editGroup(params).then(response => {
+            this.isLoading = false
+            this.editActive = null
+            this.mainFormDialogVisible = false
+            this.getTree()
+          }, error => {
+            this.isLoading = false
+            this.showErrorMessage(error.message)
+          })
+        } else {
+          // 客户端校验未通过
+          return false
+        }
+      })
+    },
+    remove () {
+      if (!this.removeActive) return
+      const params = {
+        groupID: this.removeActive.id
+      }
+      this.isLoading = true
+      api.removeGroup(params).then(response => {
+        this.isLoading = false
+        this.mainFormDialogVisible = false
+        this.removeActive = null
+        this.getTree()
+      }, error => {
+        this.isLoading = false
+        this.removeActive = null
+        this.showErrorMessage(error.message)
+      })
     },
     validateBaseData () {
       if (!this.editRoleListData) {
@@ -302,7 +398,8 @@ export default {
     filterTree (tree, data) {
       for (let i = 0; i < tree.length; i++) {
         const item = tree[i]
-        if (item === data) {
+        // tree 通过 clone 而来，不能直接比较对象
+        if (item.id === data.id) {
           // 在第一级就找到
           tree.splice(i, 1)
           break

@@ -244,11 +244,11 @@ export default {
     },
     remove () {
       if (!this.removeActive) return
-      const removeParams = {
-        RoleID: this.removeActive.roleID
+      const params = {
+        roleID: this.removeActive.roleID
       }
       this.isLoading = true
-      api.removeRole(removeParams).then(response => {
+      api.removeRole(params).then(response => {
         this.isLoading = false
         const index = this.list.indexOf(this.removeActive)
         this.list.splice(index, 1)
@@ -261,8 +261,8 @@ export default {
     },
     move (sourceDisplayOrder, targetDisplayOrder) {
       const params = {
-        SourceDisplayOrder: sourceDisplayOrder,
-        TargetDisplayOrder: targetDisplayOrder
+        sourceDisplayOrder: sourceDisplayOrder,
+        targetDisplayOrder: targetDisplayOrder
       }
       this.isLoading = true
       api.moveRole(params).then(response => {
