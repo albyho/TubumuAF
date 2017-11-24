@@ -88,6 +88,30 @@
       </div>
     </el-dialog>
 
+    <el-dialog :visible.sync="moveFormDialogVisible" @submit.native.prevent :close-on-click-modal="false" width="600px">
+      <span slot="title">
+        移动节点: {{ moveActive ? moveActive.name : null }}
+      </span>
+      <el-form ref="moveForm" :model="moveForm" :rules="moveFormRules" label-position="right" label-width="100px" size="small">
+        <el-form-item label="目标节点" prop="targetIDPath">
+          <el-cascader :options="editParentTreeData" :props="editParentTreeDefaultProps" clearable change-on-select v-model="moveForm.targetIDPath"></el-cascader>
+        </el-form-item>
+        <el-form-item label="位置">
+          <template>
+            <el-radio v-model="moveForm.movingLocation" :label="0" border>目标之下</el-radio>
+            <el-radio v-model="moveForm.movingLocation" :label="1" border>目标之上</el-radio>
+          </template>
+        </el-form-item>
+        <el-form-item label="作为子节点" v-if="moveForm.movingLocation === 0">
+          <el-switch v-model="moveForm.isChild"></el-switch>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="handleMoveFormSure(false)">取 消</el-button>
+        <el-button type="primary" @click="handleMoveFormSure(true)">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </el-main>
 </el-container>
 </template>
@@ -114,7 +138,7 @@ export default {
       removeConfirmDialogVisible: false,  // 删除确认对话框是否可见
       // 移动
       moveActive: null,                   // 暂存移动项
-      moveConfirmDialogVisible: false,    // 移动确认对话框是否可见
+      moveFormDialogVisible: false,       // 移动对话框是否可见
 
       // 添加/编辑
       editActive: null,                   // 暂存编辑项，也可用来判断是否添加还是编辑
@@ -125,19 +149,27 @@ export default {
         roleIDs: [],                      // Array 不能设置为 null
         permissionIDs: null,              // Array
         limitRoleIDs: [],                 // Array 不能设置为 null
-        parentIDPath: null,               // Array 如果 parentIDPath 无值则作为顶级节点,否则作为子节点。给 cascader 组件使用。
+        parentIDPath: [],                 // Array 不能设置为 null 如果 parentIDPath 无值则作为顶级节点,否则作为子节点。给 cascader 组件使用。
         parentID: null,                   // String
         isIncludeUser: null,              // Bool 是否包含用户
         isDisabled: null                  // Bool 是否停用
       },
       moveForm: {
-        isChild: null,
-        movingLocation: null              // 0: Under, 1: Above 。 作为子节点，总是 Under；作为兄弟节点则可使用两值任一。
+        sourceID: null,
+        targetIDPath: null,               // Array 必须选择。给 cascader 组件使用。
+        targetID: null,
+        isChild: false,
+        movingLocation: 0                 // 0: Under, 1: Above 。 作为子节点，总是 Under；作为兄弟节点则可使用两值任一。
       },
       mainFormRules: {
         name: [
           { required: true, message: '请输入用户组名称', trigger: 'blur' },
           { max: 50, message: '最多支持50个字符', trigger: 'blur' }
+        ]
+      },
+      moveFormRules: {
+        targetIDPath: [
+          { required: true, type: 'array', message: '请选择目标节点', trigger: 'change' }
         ]
       },
       editPermissionTreeData: null,       // 用于编辑对话框内显示的权限树
@@ -273,40 +305,59 @@ export default {
       this.removeConfirmDialogVisible = false
       if (sure) {
         this.remove()
+      } else {
+        this.removeActive = null
       }
     },
     handleMove (node, data) {
       console.log('handleMove', node, data)
+      if (!this.validateBaseData() || !data) {
+        return
+      }
+      this.moveActive = data
+      this.generateParentTree(data)
+      this.moveFormDialogVisible = true
+      this.moveForm.sourceID = data.id
+      this.moveForm.targetIDPath = []
+      this.moveForm.movingLocation = 0
+      this.moveForm.isChild = false
+      this.$nextTick(() => {
+        this.clearValidate('moveForm')
+      })
     },
-    handleMoveSure (sure) {
-      console.log('handleMoveSure', sure)
+    handleMoveFormSure (sure) {
+      console.log('handleMoveFormSure', sure)
+      if (sure) {
+        this.move()
+      } else {
+        this.moveFormDialogVisible = false
+        this.moveActive = null
+      }
     },
     add () {
       this.$refs.mainForm.validate(valid => {
-        if (valid) {
-          this.isLoading = true
-          const params = {
-            groupID: null,                                  // String
-            name: this.mainForm.name,                       // String
-            roleIDs: this.mainForm.roleIDs,                 // Array
-            permissionIDs: this.mainForm.permissionIDs,     // Array
-            limitRoleIDs: this.mainForm.limitRoleIDs,       // Array
-            parentID: this.mainForm.parentIDPath && this.mainForm.parentIDPath.length
-            ? this.mainForm.parentIDPath[this.mainForm.parentIDPath.length - 1]
-            : null
-          }
-          api.addGroup(params).then(response => {
-            this.isLoading = false
-            this.mainFormDialogVisible = false
-            this.getTree()
-          }, error => {
-            this.isLoading = false
-            this.showErrorMessage(error.message)
-          })
-        } else {
-          // 客户端校验未通过
-          return false
+        if (!valid) return false // 客户端校验未通过
+        this.isLoading = true
+        const params = {
+          groupID: null,                                  // String
+          name: this.mainForm.name,                       // String
+          roleIDs: this.mainForm.roleIDs,                 // Array
+          permissionIDs: this.mainForm.permissionIDs,     // Array
+          limitRoleIDs: this.mainForm.limitRoleIDs,       // Array
+          parentID: this.mainForm.parentIDPath && this.mainForm.parentIDPath.length
+          ? this.mainForm.parentIDPath[this.mainForm.parentIDPath.length - 1]
+          : null,
+          isIncludeUser: this.mainForm.isIncludeUser,
+          isDisabled: this.mainForm.isDisabled
         }
+        api.addGroup(params).then(response => {
+          this.isLoading = false
+          this.mainFormDialogVisible = false
+          this.getTree()
+        }, error => {
+          this.isLoading = false
+          this.showErrorMessage(error.message)
+        })
       })
     },
     edit () {
@@ -315,33 +366,29 @@ export default {
         return
       }
       this.$refs.mainForm.validate(valid => {
-        if (valid) {
-          this.isLoading = true
-          const params = {
-            groupID: this.mainForm.groupID,                 // String
-            name: this.mainForm.name,                       // String
-            roleIDs: this.mainForm.roleIDs,                 // Array
-            permissionIDs: this.mainForm.permissionIDs,     // Array
-            limitRoleIDs: this.mainForm.limitRoleIDs,       // Array
-            parentID: this.mainForm.parentIDPath && this.mainForm.parentIDPath.length
-            ? this.mainForm.parentIDPath[this.mainForm.parentIDPath.length - 1]
-            : null,
-            isIncludeUser: this.mainForm.isIncludeUser,
-            isDisabled: this.mainForm.isDisabled
-          }
-          api.editGroup(params).then(response => {
-            this.isLoading = false
-            this.editActive = null
-            this.mainFormDialogVisible = false
-            this.getTree()
-          }, error => {
-            this.isLoading = false
-            this.showErrorMessage(error.message)
-          })
-        } else {
-          // 客户端校验未通过
-          return false
+        if (!valid) return false // 客户端校验未通过
+        this.isLoading = true
+        const params = {
+          groupID: this.mainForm.groupID,                 // String
+          name: this.mainForm.name,                       // String
+          roleIDs: this.mainForm.roleIDs,                 // Array
+          permissionIDs: this.mainForm.permissionIDs,     // Array
+          limitRoleIDs: this.mainForm.limitRoleIDs,       // Array
+          parentID: this.mainForm.parentIDPath && this.mainForm.parentIDPath.length
+          ? this.mainForm.parentIDPath[this.mainForm.parentIDPath.length - 1]
+          : null,
+          isIncludeUser: this.mainForm.isIncludeUser,
+          isDisabled: this.mainForm.isDisabled
         }
+        api.editGroup(params).then(response => {
+          this.isLoading = false
+          this.editActive = null
+          this.mainFormDialogVisible = false
+          this.getTree()
+        }, error => {
+          this.isLoading = false
+          this.showErrorMessage(error.message)
+        })
       })
     },
     remove () {
@@ -352,13 +399,34 @@ export default {
       this.isLoading = true
       api.removeGroup(params).then(response => {
         this.isLoading = false
-        this.mainFormDialogVisible = false
         this.removeActive = null
         this.getTree()
       }, error => {
         this.isLoading = false
-        this.removeActive = null
         this.showErrorMessage(error.message)
+      })
+    },
+    move () {
+      if (!this.moveActive) return
+      this.$refs.moveForm.validate(valid => {
+        if (!valid) return false // 客户端校验未通过
+        const params = {
+          sourceID: this.moveActive.id,
+          targetID: this.moveForm.targetIDPath[this.moveForm.targetIDPath.length - 1],
+          isChild: this.moveForm.movingLocation === 0 ? this.moveForm.isChild : null,
+          movingLocation: this.moveForm.movingLocation
+        }
+        console.log(this.moveForm)
+        this.isLoading = true
+        api.moveGroup(params).then(response => {
+          this.isLoading = false
+          this.moveFormDialogVisible = false
+          this.moveActive = null
+          this.getTree()
+        }, error => {
+          this.isLoading = false
+          this.showErrorMessage(error.message)
+        })
       })
     },
     validateBaseData () {

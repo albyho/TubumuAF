@@ -71,10 +71,7 @@ export default {
         this.mainForm = response.data.item
       }, error => {
         this.isLoading = false
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
+        this.showErrorMessage(error.message)
       })
     },
     handleEditBulletin () {
@@ -82,32 +79,31 @@ export default {
     },
     editSiteConfig () {
       this.$refs.mainForm.validate(valid => {
-        if (valid) {
-          this.isLoading = true
-          // 独立的参数目的在于保持干净的提交
-          const params = {
-            title: this.mainForm.title,
-            content: this.mainForm.content,
-            publishDate: this.mainForm.publishDate,
-            isShow: this.mainForm.isShow
-          }
-          api.editBulletin(params).then(response => {
-            this.isLoading = false
-            this.$message({
-              message: response.data.message,
-              type: 'success'
-            })
-          }, error => {
-            this.isLoading = false
-            this.$message({
-              message: error.message,
-              type: 'error'
-            })
-          })
-        } else {
-          // 客户端校验未通过
-          return false
+        if (!valid) return false // 客户端校验未通过
+        this.isLoading = true
+        // 独立的参数目的在于保持干净的提交
+        const params = {
+          title: this.mainForm.title,
+          content: this.mainForm.content,
+          publishDate: this.mainForm.publishDate,
+          isShow: this.mainForm.isShow
         }
+        api.editBulletin(params).then(response => {
+          this.isLoading = false
+          this.$message({
+            message: response.data.message,
+            type: 'success'
+          })
+        }, error => {
+          this.isLoading = false
+          this.showErrorMessage(error.message)
+        })
+      })
+    },
+    showErrorMessage (message) {
+      this.$message({
+        message: message,
+        type: 'error'
       })
     }
   }

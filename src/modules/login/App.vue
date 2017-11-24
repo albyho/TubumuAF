@@ -63,28 +63,24 @@ export default {
     },
     handleSubmit (e) {
       this.$refs.mainForm.validate(valid => {
-        if (valid) {
-          this.isLoading = true
-          const loginParams = {
-            account: this.mainForm.account,
-            password: this.mainForm.password,
-            validateCode: this.mainForm.validateCode
-          }
-          api.login(loginParams).then(response => {
-            // this.isLoading = false
-            // httpClient 对 response.data.url 有拦截处理
-          }, error => {
-            this.isLoading = false
-            this.$message({
-              message: error.message,
-              type: 'error'
-            })
-            this.handleRefreshValidateCode(null)
-          })
-        } else {
-          // 客户端校验未通过
-          return false
+        if (!valid) return false // 客户端校验未通过
+        this.isLoading = true
+        const loginParams = {
+          account: this.mainForm.account,
+          password: this.mainForm.password,
+          validateCode: this.mainForm.validateCode
         }
+        api.login(loginParams).then(response => {
+          // this.isLoading = false
+          // httpClient 对 response.data.url 有拦截处理
+        }, error => {
+          this.isLoading = false
+          this.$message({
+            message: error.message,
+            type: 'error'
+          })
+          this.handleRefreshValidateCode(null)
+        })
       })
     },
     handleRefreshValidateCode (e) {

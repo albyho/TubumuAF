@@ -189,28 +189,26 @@ export default {
       this.removeConfirmDialogVisible = false
       if (sure) {
         this.remove()
+      } else {
+        this.removeActive = null
       }
     },
     add () {
       this.$refs.mainForm.validate(valid => {
-        if (valid) {
-          this.isLoading = true
-          const params = {
-            name: this.mainForm.name,
-            permissionIDs: this.mainForm.permissionIDs
-          }
-          api.addRole(params).then(response => {
-            this.list.push(response.data.item)
-            this.isLoading = false
-            this.mainFormDialogVisible = false
-          }, error => {
-            this.isLoading = false
-            this.showErrorMessage(error.message)
-          })
-        } else {
-          // 客户端校验未通过
-          return false
+        if (!valid) return false // 客户端校验未通过
+        this.isLoading = true
+        const params = {
+          name: this.mainForm.name,
+          permissionIDs: this.mainForm.permissionIDs
         }
+        api.addRole(params).then(response => {
+          this.list.push(response.data.item)
+          this.isLoading = false
+          this.mainFormDialogVisible = false
+        }, error => {
+          this.isLoading = false
+          this.showErrorMessage(error.message)
+        })
       })
     },
     edit () {
@@ -219,27 +217,23 @@ export default {
         return
       }
       this.$refs.mainForm.validate(valid => {
-        if (valid) {
-          this.isLoading = true
-          const params = {
-            roleID: this.mainForm.roleID,
-            name: this.mainForm.name,
-            permissionIDs: this.mainForm.permissionIDs
-          }
-          api.editRole(params).then(response => {
-            this.list.splice(this.list.indexOf(this.editActive), 1, response.data.item)
-            // Vue.set(this.list, this.list.indexOf(this.editActive), response.data.item)
-            this.isLoading = false
-            this.editActive = null
-            this.mainFormDialogVisible = false
-          }, error => {
-            this.isLoading = false
-            this.showErrorMessage(error.message)
-          })
-        } else {
-          // 客户端校验未通过
-          return false
+        if (!valid) return false // 客户端校验未通过
+        this.isLoading = true
+        const params = {
+          roleID: this.mainForm.roleID,
+          name: this.mainForm.name,
+          permissionIDs: this.mainForm.permissionIDs
         }
+        api.editRole(params).then(response => {
+          this.list.splice(this.list.indexOf(this.editActive), 1, response.data.item)
+          // Vue.set(this.list, this.list.indexOf(this.editActive), response.data.item)
+          this.isLoading = false
+          this.editActive = null
+          this.mainFormDialogVisible = false
+        }, error => {
+          this.isLoading = false
+          this.showErrorMessage(error.message)
+        })
       })
     },
     remove () {
@@ -255,7 +249,6 @@ export default {
         this.removeActive = null
       }, error => {
         this.isLoading = false
-        this.removeActive = null
         this.showErrorMessage(error.message)
       })
     },

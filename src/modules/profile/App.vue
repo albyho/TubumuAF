@@ -127,58 +127,50 @@ export default {
     },
     handleChangeProfile () {
       this.$refs.changeProfileForm.validate(valid => {
-        if (valid) {
-          this.isLoading = true
-          const params = {
-            displayName: this.changeProfileForm.displayName,
-            headURL: this.changeProfileForm.headURL,
-            logoURL: this.changeProfileForm.logoURL
-          }
-          api.changeProfile(params).then(response => {
-            this.isLoading = false
-            this.$message({
-              message: response.data.message,
-              type: 'success'
-            })
-          }, error => {
-            this.isLoading = false
-            this.$message({
-              message: error.message,
-              type: 'error'
-            })
-          })
-        } else {
-          // 客户端校验未通过
-          return false
+        if (!valid) return false // 客户端校验未通过
+        this.isLoading = true
+        const params = {
+          displayName: this.changeProfileForm.displayName,
+          headURL: this.changeProfileForm.headURL,
+          logoURL: this.changeProfileForm.logoURL
         }
+        api.changeProfile(params).then(response => {
+          this.isLoading = false
+          this.$message({
+            message: response.data.message,
+            type: 'success'
+          })
+        }, error => {
+          this.isLoading = false
+          this.$message({
+            message: error.message,
+            type: 'error'
+          })
+        })
       })
     },
     handleChangePassword () {
       this.$refs.changePasswordForm.validate(valid => {
-        if (valid) {
-          this.isLoading = true
-          const params = {
-            currentPassword: this.changePasswordForm.currentPassword,
-            newPassword: this.changePasswordForm.newPassword,
-            newPasswordConfirm: this.changePasswordForm.newPasswordConfirm
-          }
-          api.changePassword(params).then(response => {
-            this.isLoading = false
-            this.$message({
-              message: response.data.message,
-              type: 'success'
-            })
-          }, error => {
-            this.isLoading = false
-            this.$message({
-              message: error.message,
-              type: 'error'
-            })
-          })
-        } else {
-          // 客户端校验未通过
-          return false
+        if (!valid) return false // 客户端校验未通过
+        this.isLoading = true
+        const params = {
+          currentPassword: this.changePasswordForm.currentPassword,
+          newPassword: this.changePasswordForm.newPassword,
+          newPasswordConfirm: this.changePasswordForm.newPasswordConfirm
         }
+        api.changePassword(params).then(response => {
+          this.isLoading = false
+          this.$message({
+            message: response.data.message,
+            type: 'success'
+          })
+        }, error => {
+          this.isLoading = false
+          this.$message({
+            message: error.message,
+            type: 'error'
+          })
+        })
       })
     },
     handleChangeHeadURLBrowser () {
