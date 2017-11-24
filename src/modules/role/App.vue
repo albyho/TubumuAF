@@ -32,7 +32,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible="mainFormDialogVisible" @submit.native.prevent :close-on-click-modal="false" width="400px">
+    <el-dialog :visible.sync="mainFormDialogVisible" @submit.native.prevent :close-on-click-modal="false" width="400px">
       <span slot="title">
         {{ editActive ? '编辑' : '添加'}}
       </span>
@@ -61,7 +61,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="提示" :visible="removeConfirmDialogVisible"  width="320px" center>
+    <el-dialog title="提示" :visible.sync="removeConfirmDialogVisible"  width="320px" center>
       <span>删除该角色后，相关的数据也将被删除。<br/>确定要删除吗？</span>
       <div slot="footer" class="dialog-footer">
        <el-button @click="handleRemoveSure(false)">取 消</el-button>
