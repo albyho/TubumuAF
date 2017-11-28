@@ -14,9 +14,9 @@
       <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd()">添加</el-button>  
     </el-row>
     <el-row>
-    <el-table :data="page.list" size="small" style="width: 100%" :empty-text="emptyText">
-      <el-table-column prop="UserID" label="#" width="60"></el-table-column>
-      <el-table-column prop="Username" label="用户名" width="100"></el-table-column>
+    <el-table :data="page.list" size="small" style="width: 100%" :empty-text="emptyText" @sort-change="sortChange">
+      <el-table-column prop="UserID" label="#" width="60" sortable="custom"></el-table-column>
+      <el-table-column prop="Username" label="用户名" width="100" sortable="custom"></el-table-column>
       <el-table-column prop="Group.Name" label="用户组" width="160"></el-table-column>
       <el-table-column prop="RealName" label="真实名称" width="100"></el-table-column>
       <el-table-column prop="DisplayName" label="昵称" width="100"></el-table-column>
@@ -59,10 +59,10 @@
 			        </el-radio-group>
             </el-form-item>
           <el-form-item label="登录密码" prop="password" :required="!this.editActive">
-            <el-input v-model="mainForm.password" type='password'></el-input>
+            <el-input v-model="mainForm.password" type='password' :placeholder="this.editActive ? '如果不修改密码，请保持为空' : '请输入登录密码'"></el-input>
           </el-form-item>
           <el-form-item label="确认密码" prop="passwordConfirm" :required="!this.editActive">
-            <el-input v-model="mainForm.passwordConfirm" type='password'></el-input>
+            <el-input v-model="mainForm.passwordConfirm" type='password' :placeholder="this.editActive ? '如果不修改密码，请保持为空' : '请输入确认密码'"></el-input>
           </el-form-item>
           <el-form-item label="昵称">
             <el-input v-model="mainForm.displayName" type='text'></el-input>
@@ -87,6 +87,16 @@
           </el-form-item>
           <el-form-item label="描述">
             <el-input v-model="mainForm.description" type='text'></el-input>
+          </el-form-item>
+          <el-form-item label="头像" prop="headURL">
+            <el-input v-model.trim="mainForm.headURL" auto-complete="off" placeholder="请输入头像 URL" ref="headURL">
+              <el-button slot="append" icon="el-icon-search" @click="handleChangeHeadURLBrowser"></el-button>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="Logo" prop="logoURL">
+            <el-input v-model.trim="mainForm.logoURL" auto-complete="off" placeholder="请输入Logo URL" ref="logoURL">
+              <el-button slot="append" icon="el-icon-search" @click="handleChangeLogoURLBrowser"></el-button>
+            </el-input>
           </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="特定角色" name="second">
@@ -194,7 +204,11 @@ export default {
       pagingInfoForm: {
         pageNumber: 1,
         pageSize: 1,
-        isExcludeMetaData: false
+        isExcludeMetaData: false,
+        sortInfo: {
+          sort: 'UserID',
+          sortDir: 'ASC'
+        }
       },
       // 删除
       removeActive: null,                 // 暂存删除项
@@ -220,7 +234,9 @@ export default {
         permissionIDs: null,              // Array
         password: null,
         passwordConfirm: null,
-        description: null
+        description: null,
+        headURL: null,
+        logoURL: null
       },
       mainFormRules: {
         username: [
@@ -350,6 +366,8 @@ export default {
       this.mainForm.password = null
       this.mainForm.passwordConfirm = null
       this.mainForm.description = null
+      this.mainForm.headURL = null
+      this.mainForm.logoURL = null
       this.$nextTick(() => {
         this.$refs.editPermissionTree.setCheckedKeys([], true)
         this.clearValidate('mainForm')
@@ -381,6 +399,8 @@ export default {
       this.mainForm.password = null
       this.mainForm.passwordConfirm = null
       this.mainForm.description = row.Description
+      this.mainForm.headURL = row.headURL
+      this.mainForm.logoURL = row.logoURL
       this.$nextTick(() => {
         this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
         this.clearValidate('mainForm')
@@ -507,6 +527,36 @@ export default {
       this.$message({
         message: message,
         type: 'error'
+      })
+    },
+    sortChange (v) {
+      this.pagingInfoForm.sortInfo.sort = v.prop
+      this.pagingInfoForm.sortInfo.sortDir = v.order === 'descending' ? 'DESC' : 'ASC'
+      this.pagingInfoForm.pageNumber = 1
+      this.getPage()
+    },
+    handleChangeHeadURLBrowser () {
+      this.popupCKFinder('headURL')
+    },
+    handleChangeLogoURLBrowser () {
+      this.popupCKFinder('logoURL')
+    },
+    popupCKFinder (name) {
+      const _this = this
+      /* eslint-disable no-undef */
+      CKFinder.popup({
+        chooseFiles: true,
+        width: 800,
+        height: 600,
+        onInit: function (finder) {
+          finder.on('files:choose', function (evt) {
+            const file = evt.data.files.first()
+            _this.changeProfileForm[name] = file.getUrl()
+          })
+          finder.on('file:choose:resizedImage', function (evt) {
+            _this.changeProfileForm[name] = evt.data.resizedUrl
+          })
+        }
       })
     }
   }

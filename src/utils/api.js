@@ -81,7 +81,8 @@ export default {
   },
   // 用户
   getUsers (params) {
-    return Vue.httpClient.get('/admin/getUsers', { params: params })
+    // return Vue.httpClient.get('/admin/getUsers', { params: params })
+    return Vue.httpClient.post('/admin/getUsers', params)
   },
   addUser (params) {
     return Vue.httpClient.post('/admin/addUser', params)
