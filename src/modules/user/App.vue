@@ -9,7 +9,7 @@
   <el-main class="main"> 
     <el-row>
       <el-input placeholder="输入关键字进行搜索" size="mini" v-model="searchCriteriaForm.keyword" class="filterText"></el-input>
-      <el-cascader :options="editGroupTreeData" size="mini" :props="editGroupTreeDefaultProps" clearable change-on-select v-model="searchCriteriaForm.groupIDPath"></el-cascader>
+      <el-cascader :options="editGroupTreeData" size="mini" :props="editGroupTreeDefaultProps" clearable change-on-select filterable placeholder="试试搜索" v-model="searchCriteriaForm.groupIDPath"></el-cascader>
       <el-button type="primary" size="mini" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
       <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd()">添加</el-button>  
     </el-row>
@@ -45,7 +45,7 @@
         <el-tabs v-model="activeTabName" type="card">
           <el-tab-pane label="基本信息" name="first">
             <el-form-item label="所属分组" prop="groupIDPath">
-              <el-cascader :options="editGroupTreeData" :props="editGroupTreeDefaultProps" clearable change-on-select v-model="mainForm.groupIDPath"></el-cascader>
+              <el-cascader :options="editGroupTreeData" :props="editGroupTreeDefaultProps" clearable filterable placeholder="试试搜索" change-on-select v-model="mainForm.groupIDPath"></el-cascader>
             </el-form-item>
             <el-form-item label="用户名" prop="username">
               <el-input v-model.trim="mainForm.username" auto-complete="off" placeholder="请输入用户名" ref="username"></el-input>
@@ -361,7 +361,7 @@ export default {
       this.mainForm.mobileIsValid = null
       this.mainForm.groupIDPath = []
       this.mainForm.groupID = null
-      this.mainForm.roleIDs = []            // 不能设置为 null
+      this.mainForm.roleIDs = []                // 不能设置为 null
       this.mainForm.permissionIDs = null
       this.mainForm.password = null
       this.mainForm.passwordConfirm = null
