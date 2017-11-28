@@ -1,5 +1,5 @@
 <template>
-<el-container>
+<el-container v-loading.fullscreen.lock="isLoading">
   <el-header class="header">  
     <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
       <el-breadcrumb-item>用户管理</el-breadcrumb-item>
@@ -12,14 +12,14 @@
         <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd">添加</el-button>  
       </el-col>
     </el-row>
-    <el-table :data="list" v-loading="isLoading" size="medium" style="width: 100%" :empty-text="emptyText">
+    <el-table :data="list" size="medium" style="width: 100%" :empty-text="emptyText">
       <el-table-column prop="name" label="名称"></el-table-column>
       <el-table-column align="center" width="42">
         <template slot-scope="scope">
           <!-- 禁止拖动：不使用 v-show 和 :class，而是直接使用 v-if 也可行 -->
           <el-button type="text" size="small" icon="el-icon-rank" :class="{ 'ignore-elements': scope.row.isSystem }" v-show="!scope.row.isSystem"></el-button>
         </template>
-      </el-table-column>      
+      </el-table-column>
       <el-table-column align="center" width="42">
         <template slot-scope="scope">
           <el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)" v-if="!scope.row.isSystem"></el-button>
@@ -102,11 +102,11 @@ export default {
           { max: 50, message: '最多支持50个字符', trigger: 'blur' }
         ]
       },
-      editPermissionTreeData: null,     // 用于编辑对话框内显示的权限树
+      editPermissionTreeData: null,       // 用于编辑对话框内显示的权限树
       editPermissionTreeDefaultProps: {
         children: 'children',
         label: 'name'
-      }                             // 用于编辑对话框内显示的权限树
+      }
     }
   },
   mounted () {

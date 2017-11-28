@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import qs from 'qs'
+import qs from 'qs'
 // import { Message } from 'element-ui'
 import { baseURL } from './config.js'
 
@@ -24,13 +24,9 @@ ApiError.prototype.constructor = ApiError
 const httpClient = axios.create({
   baseURL: baseURL,
   timeout: 10000,
-  // 响应的数据格式 json / blob /document / arraybuffer / text / stream
+  // 响应的数据格式 json / blob / document / arraybuffer / text / stream
   responseType: 'json',
-  withCredentials: true,
-  headers: {
-    // 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
-    'Content-Type': 'application/json; charset=utf-8'
-  }
+  withCredentials: true
 })
 
 // POST传参序列化(添加请求拦截器)
@@ -40,11 +36,25 @@ httpClient.interceptors.request.use(
     if (
       config.method === 'post' ||
       config.method === 'put' ||
-      config.method === 'delete'
+      config.method === 'patch'
     ) {
+      // Content-Type 对于 POST、PUT 和 PATCH 才有意义
+      config.headers = {
+        // 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+        'Content-Type': 'application/json; charset=utf-8'
+      }
       // 序列化
       config.data = JSON.stringify(config.data)
-      // config.data = qs.stringify(config.data)
+    } else if (
+      config.method === 'delete' ||
+      config.method === 'get' ||
+      config.method === 'head'
+    ) {
+      // QueryString 序列化器
+      config.paramsSerializer = function (params) {
+        // arrayFormat: indices brackets repeat
+        return qs.stringify(params, { arrayFormat: 'indices' })
+      }
     }
 
     // 若是有做鉴权token , 就给头部带上token
@@ -67,14 +77,6 @@ httpClient.interceptors.response.use(
     if (response.data && response.data.url) {
       top.location = response.data.url
     } else if (response.data && response.data.code !== SuccessCode) {
-      /*
-      Message({
-        // 饿了么的消息弹窗组件
-        showClose: true,
-        message: response.data.message,
-        type: 'error'
-      })
-      */
       return Promise.reject(new ApiError(response.data.message))
     }
     return response

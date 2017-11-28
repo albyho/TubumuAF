@@ -79,6 +79,19 @@ export default {
   moveGroup (params) {
     return Vue.httpClient.post('/admin/moveGroup', params)
   },
+  // 用户
+  getUsers (params) {
+    return Vue.httpClient.get('/admin/getUsers', { params: params })
+  },
+  addUser (params) {
+    return Vue.httpClient.post('/admin/addUser', params)
+  },
+  editUser (params) {
+    return Vue.httpClient.post('/admin/editUser', params)
+  },
+  removeUser (params) {
+    return Vue.httpClient.post('/admin/removeUser', params)
+  },
   // 暂未使用
   getGroups () {
     return Vue.httpClient.get('/admin/getGroups')

@@ -13,22 +13,14 @@
         <el-input v-model.trim="changeProfileForm.displayName" auto-complete="off" placeholder="请输入昵称" ref="displayName"></el-input>
       </el-form-item>
       <el-form-item label="头像" prop="headURL">
-        <el-col :span="16">
-          <el-input v-model.trim="changeProfileForm.headURL" auto-complete="off" placeholder="请输入头像 URL" ref="headURL"></el-input>
-        </el-col>
-        <el-col class="line" :span="1">&nbsp;</el-col>
-        <el-col :span="7">
-          <el-button type="primary" plain @click="handleChangeHeadURLBrowser">浏览服务器</el-button>
-        </el-col>
+        <el-input v-model.trim="changeProfileForm.headURL" auto-complete="off" placeholder="请输入头像 URL" ref="headURL">
+          <el-button slot="append" icon="el-icon-search" @click="handleChangeHeadURLBrowser"></el-button>
+        </el-input>
       </el-form-item>
       <el-form-item label="Logo" prop="logoURL">
-        <el-col :span="16">
-          <el-input v-model.trim="changeProfileForm.logoURL" auto-complete="off" placeholder="请输入Logo URL" ref="logoURL"></el-input>
-        </el-col>
-        <el-col class="line" :span="1">&nbsp;</el-col>
-        <el-col :span="7">
-          <el-button type="primary" plain @click="handleChangeLogoURLBrowser">浏览服务器</el-button>
-        </el-col>
+        <el-input v-model.trim="changeProfileForm.logoURL" auto-complete="off" placeholder="请输入Logo URL" ref="logoURL">
+          <el-button slot="append" icon="el-icon-search" @click="handleChangeLogoURLBrowser"></el-button>
+        </el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleChangeProfile">修改资料</el-button>
@@ -200,3 +192,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+
+.main {
+  .el-tab-pane {
+    width: 600px;
+ }
+}
+
+</style>

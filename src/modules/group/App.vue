@@ -20,7 +20,7 @@
         ref="tree"
         :filter-node-method="filterNode"
         :render-content="renderContent"
-        :default-expand-all="false">
+        :default-expand-all="true">
       </el-tree>
     </el-row>
 
@@ -176,7 +176,7 @@ export default {
       editPermissionTreeDefaultProps: {
         children: 'children',
         label: 'name'
-      },                                  // 用于编辑对话框内显示的权限树
+      },
       editRoleListData: null,             // 用于编辑对话框内显示的角色列表
       editParentTreeData: null,           // 用于编辑对话框内显示的父节点
       editParentTreeDefaultProps: {
@@ -531,7 +531,7 @@ export default {
 
 .filterText {
   width: 200px;
-  margin-right: 20px;
+  margin-right: 12px;
 }
 .el-row {
   margin-bottom: 20px;
@@ -539,10 +539,12 @@ export default {
     margin-bottom: 0;
   }
 }
+// 角色
 .el-checkbox {
   display: block;
   margin: 0;
 }
+// 用户组
 .el-cascader {
   width: 100%;
 }
