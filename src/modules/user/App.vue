@@ -373,8 +373,9 @@ export default {
       this.mainForm.emailIsValid = row.EmailIsValid
       this.mainForm.mobile = row.Mobile
       this.mainForm.mobileIsValid = row.MobileIsValid
-      this.mainForm.groupIDPath = []
-      this.mainForm.groupID = row.GroupID
+      // this.mainForm.groupIDPath = []
+      this.getGroupIDPath(this.editGroupTreeData, row.Group.GroupID)
+      this.mainForm.groupID = row.Group.GroupID
       this.mainForm.roleIDs = row.Roles.map(m => m.roleID)
       this.mainForm.permissionIDs = row.Permissions.map(m => m.permissionID)
       this.mainForm.password = null
@@ -483,6 +484,18 @@ export default {
       // console.log(data, checked, indeterminate)
       this.mainForm.permissionIDs = this.$refs.editPermissionTree.getCheckedKeys()
       // console.log(this.mainForm.permissionIDs)
+    },
+    getGroupIDPath (tree, id) {
+      if (!tree) return
+      for (let node of tree) {
+        if (node.id === id) {
+          this.mainForm.groupIDPath = node.parentIDPath ? node.parentIDPath.concat() : []
+          this.mainForm.groupIDPath.push(id)
+          break
+        } else {
+          this.getGroupIDPath(node.children, id)
+        }
+      }
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
