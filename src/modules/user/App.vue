@@ -8,9 +8,10 @@
   </el-header>
   <el-main class="main"> 
     <el-row>
-      <el-input placeholder="输入关键字进行搜索" size="mini" v-model="searchCriteriaForm.keyword" class="filterText"></el-input>
-      <el-cascader :options="editGroupTreeData" size="mini" :props="editGroupTreeDefaultProps" clearable change-on-select filterable placeholder="试试搜索" v-model="searchCriteriaForm.groupIDPath"></el-cascader>
-      <el-button type="primary" size="mini" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
+      <el-input placeholder="关键字" size="mini" v-model="searchCriteriaForm.keyword" class="filterText"></el-input>
+      <el-cascader :options="editGroupTreeData" size="mini" :props="editGroupTreeDefaultProps" clearable change-on-select filterable placeholder="用户组" v-model="searchCriteriaForm.groupIDPath"></el-cascader>
+      <el-button size="mini" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
+      <el-button size="mini" icon="el-icon-search" @click="handleSearchAll()">全部</el-button>
       <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd()">添加</el-button>  
     </el-row>
     <el-row>
@@ -86,7 +87,7 @@
             <el-switch v-model="mainForm.mobileIsValid"></el-switch>
           </el-form-item>
           <el-form-item label="描述">
-            <el-input v-model="mainForm.description" type='text'></el-input>
+            <el-input type="textarea" :rows="2" v-model.trim="mainForm.description"></el-input>
           </el-form-item>
           <el-form-item label="头像" prop="headURL">
             <el-input v-model.trim="mainForm.headURL" auto-complete="off" placeholder="请输入头像 URL" ref="headURL">
@@ -334,6 +335,13 @@ export default {
       }, error => {
         this.showErrorMessage(error.message)
       })
+    },
+    handleSearchAll () {
+      this.pagingInfoForm.pageNumber = 1
+      this.searchCriteriaForm.keyword = null
+      this.searchCriteriaForm.groupID = null
+      this.searchCriteriaForm.groupIDPath = []
+      this.getPage()
     },
     handleSearch () {
       this.pagingInfoForm.pageNumber = 1
