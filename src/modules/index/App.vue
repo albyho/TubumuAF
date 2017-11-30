@@ -2,10 +2,10 @@
   <el-container v-loading.fullscreen.lock="isLoading">
     <el-header>
       <el-row>
-        <el-col :span="20">系统管理</el-col>
-        <el-col :span="4" class="userinfo">
+        <el-col :span="16">系统管理</el-col>
+        <el-col :span="8" class="userinfo">
           <el-dropdown trigger="hover" :show-timeout="150">
-					  <span class="el-dropdown-link userinfo-inner"><img :src="profileDisplay.headURL" v-show="profileDisplay.headURL" /> {{ profileDisplay.displayName }}</span>
+					  <span class="el-dropdown-link userinfo-inner"><img :src="profileDisplay.headURL" v-show="profileDisplay.headURL" /> [ {{ profileDisplay.groups.map(m => m.name).join(' - ') }} ] {{ profileDisplay.displayName || profileDisplay.username}}</span>
 					  <el-dropdown-menu slot="dropdown">
 						  <!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
 						  <el-dropdown-item @click.native="profile">我的资料</el-dropdown-item>
@@ -35,8 +35,10 @@ export default {
       isGetMenusLoading: false,
       mainFrameURL: '',
       profileDisplay: {
-        DisplayName: '',
-        HeadURL: null
+        username: '',
+        displayName: '',
+        headURL: null,
+        groups: []
       },
       menus: null,
       menuActiveIndex: '0-0'
@@ -51,20 +53,14 @@ export default {
     }, error => {
       // console.log(error)
       this.isGetMenusLoading = false
-      this.$message({
-        message: error.message,
-        type: 'error'
-      })
+      this.showErrorMessage(error.message)
     })
     api.getProfile().then(response => {
-      // console.log(response.data)
+      console.log(response.data)
       this.profileDisplay = response.data.profile
     }, error => {
       // console.log(error)
-      this.$message({
-        message: error.message,
-        type: 'error'
-      })
+      this.showErrorMessage(error.message)
     })
   },
   methods: {
@@ -98,11 +94,14 @@ export default {
         // httpClient 对 response.data.url 有拦截处理
       }, error => {
         // console.log(error)
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
         this.isLoading = false
+        this.showErrorMessage(error.message)
+      })
+    },
+    showErrorMessage (message) {
+      this.$message({
+        message: message,
+        type: 'error'
       })
     }
   }

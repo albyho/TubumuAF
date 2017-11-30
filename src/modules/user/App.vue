@@ -143,7 +143,7 @@
       @size-change="handlePaginationSizeChange"
       @current-change="handlePaginationCurrentChange"
       :current-page="pagingInfoForm.pageNumber"
-      :page-sizes="[1, 2, 50, 100, 200, 400]"
+      :page-sizes="[20, 50, 100, 200, 400]"
       :page-size="pagingInfoForm.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="page.totalItemCount"
@@ -204,7 +204,7 @@ export default {
       },
       pagingInfoForm: {
         pageNumber: 1,
-        pageSize: 1,
+        pageSize: 20,
         isExcludeMetaData: false,
         sortInfo: {
           sort: 'UserID',
