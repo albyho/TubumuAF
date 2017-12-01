@@ -48,10 +48,7 @@ export default {
         this.list = response.data.list
       }, error => {
         this.isLoading = false
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
+        this.showErrorMessage(error.message)
       })
     },
     handleExtractModulePermissions () {
@@ -66,10 +63,7 @@ export default {
         })
       }, error => {
         this.isLoading = false
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
+        this.showErrorMessage(error.message)
       })
     },
     handleClearModulePermissions () {
@@ -84,10 +78,13 @@ export default {
         })
       }, error => {
         this.isLoading = false
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
+        this.showErrorMessage(error.message)
+      })
+    },
+    showErrorMessage (message) {
+      this.$message({
+        message: message,
+        type: 'error'
       })
     }
   }

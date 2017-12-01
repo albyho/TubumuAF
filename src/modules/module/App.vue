@@ -86,10 +86,13 @@ export default {
         this.item = response.data.item
       }, error => {
         this.isLoading = false
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
+        this.showErrorMessage(error.message)
+      })
+    },
+    showErrorMessage (message) {
+      this.$message({
+        message: message,
+        type: 'error'
       })
     }
   }

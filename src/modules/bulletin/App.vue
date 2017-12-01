@@ -81,13 +81,7 @@ export default {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
-        // 独立的参数目的在于保持干净的提交
-        const params = {
-          title: this.mainForm.title,
-          content: this.mainForm.content,
-          publishDate: this.mainForm.publishDate,
-          isShow: this.mainForm.isShow
-        }
+        const params = this.mainForm
         api.editBulletin(params).then(response => {
           this.isLoading = false
           this.$message({

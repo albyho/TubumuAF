@@ -33,10 +33,13 @@ export default {
         this.content = response.data.html
       }, error => {
         this.isLoading = false
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
+        this.showErrorMessage(error.message)
+      })
+    },
+    showErrorMessage (message) {
+      this.$message({
+        message: message,
+        type: 'error'
       })
     }
   }

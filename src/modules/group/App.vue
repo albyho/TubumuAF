@@ -249,7 +249,7 @@ export default {
       this.mainForm.groupID = null
       this.mainForm.name = null
       this.mainForm.parentIDPath = parentIDPath
-      this.mainForm.parentID = data ? data.id : null
+      this.mainForm.parentID = data ? data.id : null    // parentID 在提交数据前重新计算
       this.mainForm.roleIDs = []            // 不能设置为 null
       this.mainForm.permissionIDs = null
       this.mainForm.limitRoleIDs = []       // 不能设置为 null
@@ -272,7 +272,7 @@ export default {
       this.mainForm.groupID = data.id
       this.mainForm.name = data.name
       this.mainForm.parentIDPath = data.parentIDPath
-      this.mainForm.parentID = data.id
+      this.mainForm.parentID = data.parentID            // parentID 在提交数据前重新计算
       this.mainForm.roleIDs = data.roles.map(m => m.roleID)
       this.mainForm.permissionIDs = data.permissions.map(m => m.permissionID)
       this.mainForm.limitRoleIDs = data.limitRoles.map(m => m.roleID)
@@ -338,18 +338,10 @@ export default {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
-        const params = {
-          groupID: null,                                  // String
-          name: this.mainForm.name,                       // String
-          roleIDs: this.mainForm.roleIDs,                 // Array
-          permissionIDs: this.mainForm.permissionIDs,     // Array
-          limitRoleIDs: this.mainForm.limitRoleIDs,       // Array
-          parentID: this.mainForm.parentIDPath && this.mainForm.parentIDPath.length
+        this.mainForm.parentID = this.mainForm.parentIDPath && this.mainForm.parentIDPath.length
           ? this.mainForm.parentIDPath[this.mainForm.parentIDPath.length - 1]
-          : null,
-          isIncludeUser: this.mainForm.isIncludeUser,
-          isDisabled: this.mainForm.isDisabled
-        }
+          : null
+        const params = this.mainForm
         api.addGroup(params).then(response => {
           this.isLoading = false
           this.mainFormDialogVisible = false
@@ -368,18 +360,10 @@ export default {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
-        const params = {
-          groupID: this.mainForm.groupID,                 // String
-          name: this.mainForm.name,                       // String
-          roleIDs: this.mainForm.roleIDs,                 // Array
-          permissionIDs: this.mainForm.permissionIDs,     // Array
-          limitRoleIDs: this.mainForm.limitRoleIDs,       // Array
-          parentID: this.mainForm.parentIDPath && this.mainForm.parentIDPath.length
+        this.mainForm.parentID = this.mainForm.parentIDPath && this.mainForm.parentIDPath.length
           ? this.mainForm.parentIDPath[this.mainForm.parentIDPath.length - 1]
-          : null,
-          isIncludeUser: this.mainForm.isIncludeUser,
-          isDisabled: this.mainForm.isDisabled
-        }
+          : null
+        const params = this.mainForm
         api.editGroup(params).then(response => {
           this.isLoading = false
           this.editActive = null

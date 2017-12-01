@@ -111,16 +111,7 @@ export default {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
         // 独立的参数目的在于保持干净的提交
-        const params = {
-          name: this.mainForm.name,
-          host: this.mainForm.host,
-          title: this.mainForm.title,
-          keywords: this.mainForm.keywords,
-          description: this.mainForm.description,
-          copyright: this.mainForm.copyright,
-          faviconURL: this.mainForm.faviconURL,
-          pageTitleSeparator: this.mainForm.pageTitleSeparator
-        }
+        const params = this.mainForm
         api.editSiteConfig(params).then(response => {
           this.isLoading = false
           this.$message({

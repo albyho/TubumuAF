@@ -111,21 +111,14 @@ export default {
         this.changeProfileForm.logoURL = profile.logoURL
       }, error => {
         this.isLoading = false
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
+        this.showErrorMessage(error.message)
       })
     },
     handleChangeProfile () {
       this.$refs.changeProfileForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
-        const params = {
-          displayName: this.changeProfileForm.displayName,
-          headURL: this.changeProfileForm.headURL,
-          logoURL: this.changeProfileForm.logoURL
-        }
+        const params = this.changeProfileForm
         api.changeProfile(params).then(response => {
           this.isLoading = false
           this.$message({
@@ -134,10 +127,7 @@ export default {
           })
         }, error => {
           this.isLoading = false
-          this.$message({
-            message: error.message,
-            type: 'error'
-          })
+          this.showErrorMessage(error.message)
         })
       })
     },
@@ -158,10 +148,7 @@ export default {
           })
         }, error => {
           this.isLoading = false
-          this.$message({
-            message: error.message,
-            type: 'error'
-          })
+          this.showErrorMessage(error.message)
         })
       })
     },
@@ -187,6 +174,12 @@ export default {
             _this.changeProfileForm[name] = evt.data.resizedUrl
           })
         }
+      })
+    },
+    showErrorMessage (message) {
+      this.$message({
+        message: message,
+        type: 'error'
       })
     }
   }

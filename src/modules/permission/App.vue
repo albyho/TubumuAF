@@ -61,10 +61,7 @@ export default {
         this.treeData = response.data.tree
       }, error => {
         this.isLoading = false
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
+        this.showErrorMessage(error.message)
       })
     },
     filterNode (value, data) {
@@ -72,6 +69,12 @@ export default {
         return true
       }
       return data.name.indexOf(value) !== -1
+    },
+    showErrorMessage (message) {
+      this.$message({
+        message: message,
+        type: 'error'
+      })
     }
   }
 }
