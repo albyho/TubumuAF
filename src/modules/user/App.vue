@@ -8,7 +8,7 @@
   </el-header>
   <el-main class="main"> 
     <el-row>
-      <el-input placeholder="关键字" size="mini" v-model="searchCriteriaForm.keyword" class="filterText"></el-input>
+      <el-input placeholder="关键字" size="mini" clearable v-model="searchCriteriaForm.keyword" class="filterText"></el-input>
       <el-cascader :options="editGroupTreeData" size="mini" :props="editGroupTreeDefaultProps" clearable change-on-select filterable placeholder="用户组" v-model="searchCriteriaForm.groupIDPath"></el-cascader>
       <el-button size="mini" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
       <el-button size="mini" icon="el-icon-search" @click="handleSearchAll()">全部</el-button>

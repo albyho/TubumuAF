@@ -8,7 +8,7 @@
   </el-header>
   <el-main class="main"> 
     <el-row>
-      <el-input placeholder="输入关键字进行过滤" size="mini" v-model="filterText" class="filterText"></el-input>
+      <el-input placeholder="输入关键字进行过滤" size="mini" clearable v-model="filterText" class="filterText"></el-input>
       <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd()">添加</el-button>  
     </el-row>
     <el-row>
