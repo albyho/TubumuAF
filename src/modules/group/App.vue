@@ -430,19 +430,18 @@ export default {
       // console.log(this.mainForm.permissionIDs)
     },
     generateParentTree (data) {
-      // 在添加或编辑用户组时，需要将系统用户组
+      // 在添加或编辑用户组时，需要将系统用户组排除
       if (!this.treeData) {
         // this.treeData 实际上一定有值的
         this.editParentTreeData = []
         return
       }
       if (!data) {
-        // 添加时，过滤系统用户组
+        // 添加时，过滤系统用户组。系统用户组只在第一级
         this.editParentTreeData = this.treeData.filter((element, index, array) => { return !element.isSystem })
       } else {
-        // 编辑或移动时，过滤系统用户组和自身树(需递归)
         this.editParentTreeData = _.cloneDeep(this.treeData)
-        // 系统用户组只在第一级
+        // 编辑或移动时，过滤系统用户组和自身树(需递归)。系统用户组只在第一级
         this.editParentTreeData = this.editParentTreeData.filter((element, index, array) => { return !element.isSystem })
         this.filterTree(this.editParentTreeData, data)
       }
