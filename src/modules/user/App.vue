@@ -18,7 +18,7 @@
     <el-table :data="page.list" size="small" style="width: 100%" :empty-text="emptyText" @sort-change="sortChange">
       <el-table-column prop="UserID" label="#" width="60" sortable="custom"></el-table-column>
       <el-table-column prop="Username" label="用户名" width="100" sortable="custom"></el-table-column>
-      <el-table-column prop="Group.Name" label="用户组" width="160"></el-table-column>
+      <el-table-column prop="Group.name" label="用户组" width="160"></el-table-column>
       <el-table-column prop="RealName" label="真实名称" width="100"></el-table-column>
       <el-table-column prop="DisplayName" label="昵称" width="100"></el-table-column>
       <el-table-column prop="Mobil" label="手机号码" width="120"></el-table-column>
