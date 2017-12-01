@@ -38,6 +38,9 @@ export default {
   getPermissions () {
     return Vue.httpClient.get('/admin/getPermissions')
   },
+  getModuleConfig () {
+    return Vue.httpClient.get('/admin/getModuleConfig')
+  },
   extractModulePermissions () {
     return Vue.httpClient.get('/admin/extractModulePermissions')
   },

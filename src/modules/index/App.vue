@@ -56,7 +56,7 @@ export default {
       this.showErrorMessage(error.message)
     })
     api.getProfile().then(response => {
-      console.log(response.data)
+      // console.log(response.data)
       this.profileDisplay = response.data.profile
     }, error => {
       // console.log(error)
