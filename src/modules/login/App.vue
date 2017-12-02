@@ -2,13 +2,13 @@
   <el-form :model="mainForm" :rules="mainFormRules" v-loading.fullscreen.lock="isLoading" ref="mainForm" label-position="left" label-width="0px" class="container">
     <h3 class="title">系统登录</h3>
     <el-form-item prop="account">
-      <el-input type="text" v-model.trim="mainForm.account" auto-complete="on" placeholder="账号(用户名、手机号或邮箱)" ref="account" autofocus></el-input>
+      <el-input type="text" v-model.trim="mainForm.account" auto-complete="on" @keyup.enter.native="handleFocus('password')" placeholder="账号(用户名、手机号或邮箱)" ref="account" autofocus></el-input>
     </el-form-item>
     <el-form-item prop="password">
-      <el-input type="password" v-model.trim="mainForm.password" auto-complete="off" placeholder="密码" ref="password"></el-input>
+      <el-input type="password" v-model.trim="mainForm.password" auto-complete="off" @keyup.enter.native="handleFocus('validateCode')" placeholder="密码" ref="password"></el-input>
     </el-form-item>    
     <el-form-item prop="validateCode">
-      <el-input type="text" v-model.trim="mainForm.validateCode" auto-complete="off" placeholder="验证码" ref="validateCode" class="validateCode"></el-input>
+      <el-input type="text" v-model.trim="mainForm.validateCode" auto-complete="off" @keyup.enter.native="handleSubmit" placeholder="验证码" ref="validateCode" class="validateCode"></el-input>
       <img :src="refreshValidateCodeURL" @click="handleRefreshValidateCode" class="validateCodeImage">
     </el-form-item>
     <!-- <el-checkbox v-model="isRemberPassword" class="remember">记住密码</el-checkbox> -->
@@ -83,6 +83,9 @@ export default {
       if (e) {
         this.$refs.validateCode.focus()
       }
+    },
+    handleFocus (el) {
+      this.$refs[el].focus()
     },
     showErrorMessage (message) {
       this.$message({
