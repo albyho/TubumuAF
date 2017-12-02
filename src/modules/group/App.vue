@@ -129,7 +129,8 @@ export default {
       treeData: null,
       treeDefaultProps: {
         children: 'children',
-        label: 'name'
+        label: 'name',
+        value: 'id'
       },
       filterText: null,
 

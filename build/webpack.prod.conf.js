@@ -11,6 +11,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const CleanPlugin = require('clean-webpack-plugin') // webpack插件，用于清除目录文件
 const glob = require('glob');
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 
 const env = process.env.NODE_ENV === 'testing' ?
   require('../config/test.env') :
@@ -37,6 +38,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': env
     }),
+    /*
     // UglifyJs do not support ES6+, you can also use babel-minify for better treeshaking: https://github.com/babel/minify
     new webpack.optimize.UglifyJsPlugin({
       compress: {
@@ -44,6 +46,19 @@ const webpackConfig = merge(baseWebpackConfig, {
       },
       sourceMap: true
     }),
+    */
+    new ParallelUglifyPlugin({
+      cacheDir: '.cache/',
+      sourceMap: true,
+      uglifyJS:{
+        output: {
+          comments: false
+        },
+        compress: {
+          warnings: false
+        }
+      }
+    }),    
     // extract css into its own file
     new ExtractTextPlugin({
       // 修改2: 使用 HtmlWebpackPlugin 的 hash
