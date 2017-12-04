@@ -9,6 +9,7 @@
 					  <el-dropdown-menu slot="dropdown">
 						  <!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
 						  <el-dropdown-item @click.native="profile">我的资料</el-dropdown-item>
+						  <el-dropdown-item @click.native="resources">我的文件</el-dropdown-item>
 						  <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					  </el-dropdown-menu>
 		      </el-dropdown></el-col>
@@ -86,6 +87,9 @@ export default {
     },
     profile () {
       this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=profile&Compents=ckfinder'
+    },
+    resources () {
+      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=resources&Compents=ckfinder'
     },
     logout () {
       this.isLoading = true

@@ -1,5 +1,5 @@
 <template>
- <el-container>
+<el-container v-loading.fullscreen.lock="isLoading">
   <el-header class="header">  
     <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
       <el-breadcrumb-item>系统管理</el-breadcrumb-item>
