@@ -24,11 +24,15 @@ export default {
   },
   methods: {
     showCKFinder () {
-      /* eslint-disable no-undef */
-      CKFinder.widget('main', {
-        width: '100%',
-        height: 700
-      })
+      try {
+        /* eslint-disable no-undef */
+        CKFinder.widget('main', {
+          width: '100%',
+          height: 700
+        })
+      } catch (e) {
+        console.log(e.message)
+      }
     }
   }
 }
