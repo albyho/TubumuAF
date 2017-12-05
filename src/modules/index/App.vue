@@ -112,6 +112,10 @@ export default {
       this.isLoading = true
       api.directlyCall(url).then(response => {
         this.isLoading = false
+        this.$message({
+          message: response.data.message,
+          type: 'success'
+        })
       }, error => {
         this.isLoading = false
         this.showErrorMessage(error.message)
