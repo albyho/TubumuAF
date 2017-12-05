@@ -96,6 +96,9 @@ export default {
   removeUser (params) {
     return Vue.httpClient.post('/admin/removeUser', params)
   },
+  getUserStatus () {
+    return Vue.httpClient.get('/admin/getUserStatus')
+  },
   // 暂未使用
   getGroups () {
     return Vue.httpClient.get('/admin/getGroups')
@@ -106,5 +109,9 @@ export default {
   },
   getPermissionTree () {
     return Vue.httpClient.get('/admin/getPermissionTree')
+  },
+  // 直接调用
+  directlyCall (url) {
+    return Vue.httpClient.get(url)
   }
 }

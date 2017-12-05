@@ -78,7 +78,13 @@ export default {
       for (let i = 0; i < menuIndexes.length; i++) {
         currentMenu = list[menuIndexes[i]]
         if (i === menuIndexes.length - 1) {
-          this.mainFrameURL = currentMenu.link
+          if (currentMenu.directly) {
+            this.directlyCall(currentMenu.link)
+          } else if (currentMenu.linkTarget) {
+            window.open(currentMenu.link, currentMenu.linkTarget)
+          } else {
+            this.mainFrameURL = currentMenu.link
+          }
         } else {
           list = currentMenu.children
         }
@@ -98,6 +104,15 @@ export default {
         // httpClient 对 response.data.url 有拦截处理
       }, error => {
         // console.log(error)
+        this.isLoading = false
+        this.showErrorMessage(error.message)
+      })
+    },
+    directlyCall (url) {
+      this.isLoading = true
+      api.directlyCall(url).then(response => {
+        this.isLoading = false
+      }, error => {
         this.isLoading = false
         this.showErrorMessage(error.message)
       })

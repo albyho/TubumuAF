@@ -8,8 +8,11 @@
   </el-header>
   <el-main class="main"> 
     <el-row>
-      <el-input placeholder="关键字" size="mini" clearable v-model="searchCriteriaForm.keyword" class="filterText"></el-input>
+      <el-input placeholder="关键字(用户名/真实名称/昵称/邮箱/手机号)" size="mini" clearable v-model="searchCriteriaForm.keyword" class="filterText"></el-input>
       <el-cascader :options="editGroupTreeData" size="mini" :props="editGroupTreeDefaultProps" clearable change-on-select filterable placeholder="用户组" v-model="searchCriteriaForm.groupIDPath"></el-cascader>
+      <el-select v-model="searchCriteriaForm.status" size="mini" placeholder="状态">
+        <el-option v-for="item in editUserStatus" :key="item.value" :label="item.label" :value="item.value"></el-option>
+      </el-select>
       <el-button size="mini" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
       <el-button size="mini" icon="el-icon-search" @click="handleSearchAll()">全部</el-button>
       <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd()">添加</el-button>  
@@ -53,10 +56,7 @@
             </el-form-item>
             <el-form-item label="状态" :required="true">
 			        <el-radio-group v-model="mainForm.status">
-				        <el-radio label="NotSet">未设</el-radio>
-				        <el-radio label="Normal">默认</el-radio>
-                <el-radio label="PendingApproval">待审</el-radio>
-				        <el-radio label="Removed">删除</el-radio>
+                <el-radio v-for="item in editUserStatus" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
 			        </el-radio-group>
             </el-form-item>
           <el-form-item label="登录密码" prop="password" :required="!this.editActive">
@@ -200,6 +200,7 @@ export default {
       searchCriteriaForm: {
         keyword: null,
         groupID: null,
+        status: null,
         groupIDPath: []
       },
       pagingInfoForm: {
@@ -277,7 +278,13 @@ export default {
         children: 'children',
         value: 'id',
         label: 'name'
-      }
+      },
+      editUserStatus: [
+        {label: '未设', value: 'NotSet'},
+        {label: '默认', value: 'Normal'},
+        {label: '待审', value: 'PendingApproval'},
+        {label: '删除', value: 'Removed'}
+      ]
     }
   },
   mounted () {
@@ -340,6 +347,7 @@ export default {
       this.pagingInfoForm.pageNumber = 1
       this.searchCriteriaForm.keyword = null
       this.searchCriteriaForm.groupID = null
+      this.searchCriteriaForm.status = null
       this.searchCriteriaForm.groupIDPath = []
       this.getPage()
     },
@@ -574,7 +582,7 @@ export default {
 <style lang="scss" scoped>
 
 .filterText {
-  width: 200px;
+  width: 240px;
   margin-right: 12px;
 }
 .el-row {
@@ -588,10 +596,17 @@ export default {
   display: block;
   margin: 0;
 }
-// 用户组
-.el-cascader {
-  width: 200px;
-  margin-right: 12px;
+.main {
+  // 用户组
+  .el-cascader {
+    width: 200px;
+    margin-right: 12px;
+  }
+  // 用户状态
+  .el-select {
+    width: 120px;
+    margin-right: 12px;
+  }
 }
 
 </style>
