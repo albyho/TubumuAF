@@ -400,8 +400,8 @@ export default {
       this.mainForm.mobile = row.Mobile
       this.mainForm.mobileIsValid = row.MobileIsValid
       // this.mainForm.groupIDPath = []
-      this.getGroupIDPath(this.editGroupTreeData, row.Group.GroupID)
-      this.mainForm.groupID = row.Group.GroupID
+      this.getGroupIDPath(this.editGroupTreeData, row.Group.groupID)
+      this.mainForm.groupID = row.Group.groupID
       this.mainForm.roleIDs = row.Roles.map(m => m.roleID)
       this.mainForm.permissionIDs = row.Permissions.map(m => m.permissionID)
       this.mainForm.password = null
