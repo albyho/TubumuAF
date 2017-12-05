@@ -6,13 +6,17 @@
       <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
   </el-header>
-  <el-main class="main"> 
+  <el-main class="main">
     <el-row>
       <el-input placeholder="关键字(用户名/真实名称/昵称/邮箱/手机号)" size="mini" clearable v-model="searchCriteriaForm.keyword" class="filterText"></el-input>
       <el-cascader :options="editGroupTreeData" size="mini" :props="editGroupTreeDefaultProps" clearable change-on-select filterable placeholder="用户组" v-model="searchCriteriaForm.groupIDPath"></el-cascader>
       <el-select v-model="searchCriteriaForm.status" size="mini" clearable placeholder="状态">
         <el-option v-for="item in editUserStatus" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
+    </el-row>
+    <el-row>
+      <el-date-picker v-model="searchCriteriaForm.creationDate" value-format="yyyy-MM-dd" size="mini" type="daterange" range-separator="至" start-placeholder="创建日期开始" end-placeholder="创建日期结束">
+      </el-date-picker>
       <el-button size="mini" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
       <el-button size="mini" icon="el-icon-search" @click="handleSearchAll()">全部</el-button>
       <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd()">添加</el-button>  
@@ -200,6 +204,9 @@ export default {
       searchCriteriaForm: {
         keyword: null,
         groupID: null,
+        creationDate: null,
+        creationDateBegin: null,
+        creationDateEnd: null,
         status: null,
         groupIDPath: []
       },
@@ -347,12 +354,19 @@ export default {
       this.pagingInfoForm.pageNumber = 1
       this.searchCriteriaForm.keyword = null
       this.searchCriteriaForm.groupID = null
+      this.searchCriteriaForm.creationDate = null
+      this.searchCriteriaForm.creationDateBegin = null
+      this.searchCriteriaForm.creationDateEnd = null
       this.searchCriteriaForm.status = null
       this.searchCriteriaForm.groupIDPath = []
       this.getPage()
     },
     handleSearch () {
       this.pagingInfoForm.pageNumber = 1
+      if (this.searchCriteriaForm.creationDate && this.searchCriteriaForm.creationDate.length === 2) {
+        this.searchCriteriaForm.creationDateBegin = this.searchCriteriaForm.creationDate[0]
+        this.searchCriteriaForm.creationDateEnd = this.searchCriteriaForm.creationDate[1]
+      }
       this.searchCriteriaForm.groupID = this.searchCriteriaForm.groupIDPath && this.searchCriteriaForm.groupIDPath.length
           ? this.searchCriteriaForm.groupIDPath[this.searchCriteriaForm.groupIDPath.length - 1]
           : null
@@ -605,6 +619,9 @@ export default {
   // 用户状态
   .el-select {
     width: 120px;
+    margin-right: 12px;
+  }
+  .el-date-editor--daterange {
     margin-right: 12px;
   }
 }

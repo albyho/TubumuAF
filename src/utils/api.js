@@ -113,5 +113,9 @@ export default {
   // 直接调用
   directlyCall (url) {
     return Vue.httpClient.get(url)
+  },
+  // 下载文件
+  download (url, params) {
+    return Vue.httpClient.post(url, params)
   }
 }
