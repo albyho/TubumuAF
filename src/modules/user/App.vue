@@ -10,7 +10,7 @@
     <el-row>
       <el-input placeholder="关键字(用户名/真实名称/昵称/邮箱/手机号)" size="mini" clearable v-model="searchCriteriaForm.keyword" class="filterText"></el-input>
       <el-cascader :options="editGroupTreeData" size="mini" :props="editGroupTreeDefaultProps" clearable change-on-select filterable placeholder="用户组" v-model="searchCriteriaForm.groupIDPath"></el-cascader>
-      <el-select v-model="searchCriteriaForm.status" size="mini" placeholder="状态">
+      <el-select v-model="searchCriteriaForm.status" size="mini" clearable placeholder="状态">
         <el-option v-for="item in editUserStatus" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
       <el-button size="mini" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
