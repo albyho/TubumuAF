@@ -1,6 +1,5 @@
 import axios from 'axios'
 import qs from 'qs'
-// import { Message } from 'element-ui'
 import { baseURL } from './config.js'
 
 const SuccessCode = 200
@@ -73,8 +72,8 @@ httpClient.interceptors.request.use(
 // 返回状态判断(添加响应拦截器)
 httpClient.interceptors.response.use(
   response => {
-    if (response.data instanceof Blob) return response
     // 对响应数据做些事
+    if (response.data instanceof Blob) return response
     if (response.data && response.data.url) {
       top.location = response.data.url
     } else if (response.data && response.data.code !== SuccessCode) {
