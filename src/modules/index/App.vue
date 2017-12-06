@@ -92,10 +92,10 @@ export default {
       // console.log('handleSelect', index, indexPath, this.mainFrameURL)
     },
     profile () {
-      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=profile&Compents=ckfinder'
+      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=profile&Components=ckfinder'
     },
     resources () {
-      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=resources&Compents=ckfinder'
+      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=resources&Components=ckfinder'
     },
     logout () {
       this.isLoading = true

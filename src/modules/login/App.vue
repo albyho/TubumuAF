@@ -22,6 +22,7 @@
 <script>
 import { baseURL, defaultAccount, defaultPassword } from '@/utils/config'
 import api from '@/utils/api'
+const fileDownload = require('js-file-download')
 
 export default {
   data () {
@@ -91,6 +92,18 @@ export default {
       this.$message({
         message: message,
         type: 'error'
+      })
+    },
+    testDownload () {
+      this.isLoading = true
+      const url = 'http://192.168.0.108:9005/manager/api/Project/Report/ImportAttendance?cityname=35dea0e5-9b9f-4b8b-981e-2e1120b1c317&DeliveryFeeBillCsvPath=Test'
+      const params = null
+      api.download(url, params).then(response => {
+        this.isLoading = false
+        fileDownload(response.data, 'test.xlsx')
+      }, error => {
+        this.isLoading = false
+        this.showErrorMessage(error.message)
       })
     }
   }
