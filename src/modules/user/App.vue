@@ -26,10 +26,25 @@
       <el-table-column prop="UserID" label="#" width="60" sortable="custom"></el-table-column>
       <el-table-column prop="Username" label="用户名" width="100" sortable="custom"></el-table-column>
       <el-table-column prop="Group.name" label="用户组" width="160"></el-table-column>
-      <el-table-column prop="RealName" label="真实名称" width="100"></el-table-column>
       <el-table-column prop="DisplayName" label="昵称" width="100"></el-table-column>
-      <el-table-column prop="Mobil" label="手机号码" width="120"></el-table-column>
-      <el-table-column prop="Email" label="Email"></el-table-column>
+      <el-table-column label="真实名称" width="100">
+        <template slot-scope="scope">
+          <i class="el-icon-question" v-show="scope.row.RealName && !scope.row.RealNameIsValid"></i>
+          <span>{{ scope.row.RealName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="手机号码" width="120">
+        <template slot-scope="scope">
+          <i class="el-icon-question" v-show="scope.row.Mobile && !scope.row.MobileIsValid"></i>
+          <span>{{ scope.row.Mobile }}</span>
+        </template>        
+      </el-table-column>
+      <el-table-column label="Email">
+        <template slot-scope="scope">
+          <i class="el-icon-question" v-show="scope.row.Email && !scope.row.EmailIsValid"></i>
+          <span>{{ scope.row.Email }}</span>
+        </template>      
+      </el-table-column>
       <el-table-column prop="StatusTitle" label="状态" width="60"></el-table-column>
       <el-table-column prop="CreationDate" label="创建日期" width="160"></el-table-column>
       <el-table-column align="center" width="42">
