@@ -26,6 +26,11 @@
       <el-table-column prop="UserID" label="#" width="60" sortable="custom"></el-table-column>
       <el-table-column prop="Username" label="用户名" width="100" sortable="custom"></el-table-column>
       <el-table-column prop="Group.name" label="用户组" width="160"></el-table-column>
+      <el-table-column label="角色" width="100">
+        <template slot-scope="scope">
+          <span>{{ scope.row.Role ? scope.row.Role.name : '' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="DisplayName" label="昵称" width="100"></el-table-column>
       <el-table-column label="真实名称" width="100">
         <template slot-scope="scope">
