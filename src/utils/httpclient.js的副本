@@ -32,7 +32,7 @@ function transformResponse(data, headers) {
 }
 function transformData (data, headers) {
   if (headers['content-type'].indexOf('json') >= 0) {
-    return JSON.parse(data, dateReviver)
+    return JSON.parse(data, dateReviver);
   } else {
     // Do something meaningful here
   }
@@ -41,10 +41,20 @@ function transformData (data, headers) {
 
 const httpClient = axios.create({
   baseURL: baseURL,
-  timeout: 20000,
+  timeout: 10000,
   // 响应的数据格式 json / blob / document / arraybuffer / text / stream
   responseType: 'json',
-  withCredentials: true
+  withCredentials: true,
+  transformResponse: [function transformResponse (data, headers) {
+    console.log('transformResponse', data, headers)
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data)
+      } catch (e) { /* Ignore */ }
+    }
+    console.log('transformResponse', data)
+    return data
+  }]
 })
 
 // POST传参序列化(添加请求拦截器)
@@ -58,8 +68,8 @@ httpClient.interceptors.request.use(
     ) {
       // Content-Type 对于 POST、PUT 和 PATCH 才有意义
       config.headers = {
-        // 'Content-Type': 'application/x-www-form-urlencoded charset=utf-8'
-        'Content-Type': 'application/json charset=utf-8'
+        // 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+        'Content-Type': 'application/json; charset=utf-8'
       }
       // 序列化
       config.data = JSON.stringify(config.data)
@@ -71,16 +81,14 @@ httpClient.interceptors.request.use(
       // QueryString 序列化器
       config.paramsSerializer = function (params) {
         // arrayFormat: indices brackets repeat
-        return qs.stringify(params, {
-          arrayFormat: 'indices'
-        })
+        return qs.stringify(params, { arrayFormat: 'indices' })
       }
     }
 
     // 若是有做鉴权token , 就给头部带上token
     /*
     if (localStorage.token) {
-      config.headers.Authorization = localStorage.token
+      config.headers.Authorization = localStorage.token;
     }
     */
     return config
@@ -93,30 +101,49 @@ httpClient.interceptors.request.use(
 // 返回状态判断(添加响应拦截器)
 httpClient.interceptors.response.use(
   response => {
+    console.log(response)
+    // 对响应数据做些事
     if (response.headers['content-type'].indexOf('json') === -1) {
-      // 返回的数据不是 json (或是 json 但服务器的 content-type 设置不准确)
       return response
     }
-    // 仅处理 json 数据
-    let json
-    if (response.request.responseType === 'arraybuffer' && response.data.toString() === '[object ArrayBuffer]') {
-      // 返回的数据是 arraybuffer，内容是 json
-      // 备注：可能内容不是 json，这里暂未处理
-      const text = Buffer.from(response.data).toString('utf8')
-      console.log(text)
-      json = JSON.parse(text)
+    console.log(response.headers['content-type'].indexOf('json'))
+    if (response.data instanceof Blob) {
+      // return response
+      /*
+      if (response.data.type === 'application/json') {
+        // 如果 Blob 的内容类型为 json, 则使用 FileReader 将 Blob 转换 为 json
+        const fr = new FileReader()
+        fr.onload = function () {
+          const json = JSON.parse(this.result)
+          if (json && json.url) {
+            top.location = json.url
+          } else if (json && json.code !== SuccessCode) {
+            return Promise.reject(new ApiError(json.message))
+          }
+          return response
+        }
+        fr.readAsText(response.data)
+        console.log(fr.result)
+        const json = JSON.parse(fr.result)
+        if (json && json.url) {
+          top.location = json.url
+        } else if (json && json.code !== SuccessCode) {
+          return Promise.reject(new ApiError(json.message))
+        }
+        return response
+      } else {
+        return response
+      }
+      */
     } else {
-      // 备注：不是 arraybuffer 可能会是 blob 等，这里暂未处理
-      json = response.data
+      const json = response.data
+      if (json && json.url) {
+        top.location = json.url
+      } else if (json && json.code !== SuccessCode) {
+        return Promise.reject(new ApiError(json.message))
+      }
+      return response
     }
-
-    if (json && json.url) {
-      top.location = json.url
-    } else if (json && json.code !== SuccessCode) {
-      console.log(json)
-      return Promise.reject(new ApiError(json.message))
-    }
-    return response
   },
   error => {
     // 返回 response 里的错误信息

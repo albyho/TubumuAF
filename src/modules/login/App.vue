@@ -96,8 +96,11 @@ export default {
     },
     testDownload () {
       this.isLoading = true
-      const url = 'http://192.168.0.108:9005/manager/api/Project/Report/ImportAttendance?cityname=35dea0e5-9b9f-4b8b-981e-2e1120b1c317&DeliveryFeeBillCsvPath=Test'
-      const params = null
+      const url = 'http://192.168.0.108:9005/manager/api/Project/Report/ImportAttendance'
+      const params = {
+        Cityname: '35dea0e5-9b9f-4b8b-981e-2e1120b1c317',
+        DeliveryFeeBillCsvPath: '/UserFiles/5/files/2017-11-27-2017-12-04配送费账单(1).csv'
+      }
       api.download(url, params).then(response => {
         this.isLoading = false
         fileDownload(response.data, 'test.xlsx')

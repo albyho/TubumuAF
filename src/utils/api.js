@@ -117,7 +117,7 @@ export default {
   // 下载文件
   download (url, params) {
     return Vue.httpClient.post(url, params, {
-      responseType: 'blob'
+      responseType: 'arraybuffer'
     })
   }
 }
