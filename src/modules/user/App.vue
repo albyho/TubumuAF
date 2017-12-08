@@ -45,7 +45,7 @@
           <span>{{ scope.row.Email }}</span>
         </template>      
       </el-table-column>
-      <el-table-column prop="StatusTitle" label="状态" width="60"></el-table-column>
+      <el-table-column prop="StatusText" label="状态" width="60"></el-table-column>
       <el-table-column prop="CreationDate" label="创建日期" width="160"></el-table-column>
       <el-table-column align="center" width="42">
         <template slot-scope="scope">
@@ -67,8 +67,13 @@
       <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="160px" size="small">
         <el-tabs v-model="activeTabName" type="card">
           <el-tab-pane label="基本信息" name="first">
-            <el-form-item label="所属分组" prop="groupIDPath">
-              <el-cascader :options="editGroupTreeData" :props="editGroupTreeDefaultProps" clearable filterable placeholder="试试搜索" change-on-select v-model="mainForm.groupIDPath"></el-cascader>
+            <el-form-item label="分组" prop="groupIDPath">
+              <el-cascader :options="editGroupTreeData" :props="editGroupTreeDefaultProps" clearable filterable placeholder="试试搜索" change-on-select @change="handleGroupCascaderChange" v-model="mainForm.groupIDPath"></el-cascader>
+            </el-form-item>
+            <el-form-item label="角色" prop="roleID">
+              <el-select v-model="mainForm.roleID" size="mini" clearable placeholder="选择">
+                <el-option v-for="role in editGroupRoleListData" :key="role.roleID" :label="role.name" :value="role.roleID"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="用户名" prop="username">
               <el-input v-model.trim="mainForm.username" auto-complete="off" placeholder="请输入用户名" ref="username"></el-input>
@@ -119,15 +124,15 @@
             </el-input>
           </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="特定角色" name="second">
-            <el-form-item label="特定角色">
+          <el-tab-pane label="附加角色" name="second">
+            <el-form-item label="附加角色">
               <el-checkbox-group v-model="mainForm.roleIDs">
                 <el-checkbox v-for="role in editRoleListData" :label="role.roleID" :key="role.roleID">{{ role.name }}</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="特定权限" name="third">
-            <el-form-item label="特定权限">
+          <el-tab-pane label="附加权限" name="third">
+            <el-form-item label="附加权限">
               <el-tree :data="editPermissionTreeData" :props="editPermissionTreeDefaultProps"
                 node-key="id"
                 ref="editPermissionTree"
@@ -254,6 +259,7 @@ export default {
         mobileIsValid: false,             // bool
         groupIDPath: [],                  // Array 不能设置为 null。给 cascader 组件使用。
         groupID: null,                    // String
+        roleID: null,                     // String
         roleIDs: [],                      // Array 不能设置为 null
         permissionIDs: null,              // Array
         password: null,
@@ -280,7 +286,7 @@ export default {
           { pattern: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/, message: '请输入正确的邮箱', trigger: 'blur' }
         ],
         groupIDPath: [
-          { required: true, type: 'array', message: '请选择所属分组', trigger: 'change' }
+          { required: true, type: 'array', message: '请选择分组', trigger: 'change' }
         ],
         password: [
           { validator: validatePassord, trigger: 'blur' }
@@ -294,6 +300,7 @@ export default {
         children: 'children',
         label: 'name'
       },
+      editGroupRoleListData: null,          // 用于编辑对话框内显示的角色列表
       editRoleListData: null,               // 用于编辑对话框内显示的角色列表
       editGroupTreeData: [],                // 用于搜索 cascader /编辑对话框内显示的用户组树
       editGroupTreeDefaultProps: {
@@ -406,6 +413,8 @@ export default {
       this.mainForm.mobileIsValid = null
       this.mainForm.groupIDPath = []
       this.mainForm.groupID = null
+      this.mainForm.roleID = null
+      this.editGroupRoleListData = []
       this.mainForm.roleIDs = []                // 不能设置为 null
       this.mainForm.permissionIDs = null
       this.mainForm.password = null
@@ -436,9 +445,10 @@ export default {
       this.mainForm.emailIsValid = row.EmailIsValid
       this.mainForm.mobile = row.Mobile
       this.mainForm.mobileIsValid = row.MobileIsValid
-      // this.mainForm.groupIDPath = []
       this.getGroupIDPath(this.editGroupTreeData, row.Group.groupID)
       this.mainForm.groupID = row.Group.groupID
+      this.mainForm.roleID = row.Role ? row.Role.roleID : null
+      this.getGroupLimitRoles(this.editGroupTreeData, row.Group.groupID)
       this.mainForm.roleIDs = row.Roles.map(m => m.roleID)
       this.mainForm.permissionIDs = row.Permissions.map(m => m.permissionID)
       this.mainForm.password = null
@@ -477,6 +487,12 @@ export default {
         this.removeActive = null
       }
     },
+    handleGroupCascaderChange (value) {
+      this.mainForm.roleID = null
+      this.editGroupRoleListData = []
+      if (value.length === 0) return
+      this.getGroupLimitRoles(this.editGroupTreeData, value[value.length - 1])
+    },
     add () {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
@@ -500,7 +516,6 @@ export default {
       }
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
-        this.isLoading = true
         this.isLoading = true
         this.mainForm.groupID = this.mainForm.groupIDPath[this.mainForm.groupIDPath.length - 1]
         const params = this.mainForm
@@ -559,6 +574,18 @@ export default {
           break
         } else {
           this.getGroupIDPath(node.children, id)
+        }
+      }
+    },
+    getGroupLimitRoles (tree, id) {
+      this.editGroupRoleListData = []
+      if (!tree) return
+      for (let node of tree) {
+        if (node.id === id) {
+          this.editGroupRoleListData = node.limitRoles
+          break
+        } else {
+          this.getGroupLimitRoles(node.children, id)
         }
       }
     },
