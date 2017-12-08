@@ -7,7 +7,7 @@
     </el-breadcrumb>
   </el-header>
   <el-main class="main">
-    <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="120px" size="small">
+    <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="120px" size="mini">
       <el-form-item label="公告标题" prop="title">
         <el-input v-model.trim="mainForm.title" auto-complete="off" placeholder="请输入公告标题" ref="title"></el-input>
       </el-form-item>

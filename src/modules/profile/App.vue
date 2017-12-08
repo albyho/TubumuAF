@@ -8,7 +8,7 @@
   <el-main class="main"> 
   <el-tabs v-model="activeTabName" type="card">
     <el-tab-pane label="修改资料" name="first">
-    <el-form ref="changeProfileForm" :model="changeProfileForm" :rules="changeProfileFormRules" label-position="right" label-width="120px" size="small">
+    <el-form ref="changeProfileForm" :model="changeProfileForm" :rules="changeProfileFormRules" label-position="right" label-width="120px" size="mini">
       <el-form-item label="昵称" prop="displayName">
         <el-input v-model.trim="changeProfileForm.displayName" auto-complete="off" placeholder="请输入昵称" ref="displayName"></el-input>
       </el-form-item>
@@ -28,7 +28,7 @@
     </el-form>
     </el-tab-pane>
     <el-tab-pane label="修改密码" name="second">
-    <el-form ref="changePasswordForm" :model="changePasswordForm" :rules="changePasswordFormRules" label-position="right" label-width="120px" size="small">
+    <el-form ref="changePasswordForm" :model="changePasswordForm" :rules="changePasswordFormRules" label-position="right" label-width="120px" size="mini">
       <el-form-item label="当前密码" prop="currentPassword">
         <el-input type="password" v-model.trim="changePasswordForm.currentPassword" auto-complete="off" placeholder="请输入当前密码" ref="currentPassword"></el-input>
       </el-form-item>

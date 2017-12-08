@@ -28,7 +28,7 @@
       <span slot="title">
         {{ editActive ? '编辑' : '添加'}}
       </span>
-      <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="100px" size="small">
+      <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="100px" size="mini">
         <el-tabs v-model="activeTabName" type="card">
           <el-tab-pane label="基本信息" name="first">
             <el-form-item label="所属分组">
@@ -92,7 +92,7 @@
       <span slot="title">
         移动节点: {{ moveActive ? moveActive.name : null }}
       </span>
-      <el-form ref="moveForm" :model="moveForm" :rules="moveFormRules" label-position="right" label-width="100px" size="small">
+      <el-form ref="moveForm" :model="moveForm" :rules="moveFormRules" label-position="right" label-width="100px" size="mini">
         <el-form-item label="目标节点" prop="targetIDPath">
           <el-cascader :options="editParentTreeData" :props="editParentTreeDefaultProps" clearable change-on-select v-model="moveForm.targetIDPath"></el-cascader>
         </el-form-item>

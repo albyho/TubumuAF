@@ -37,7 +37,7 @@
         {{ editActive ? '编辑' : '添加'}}
       </span>
 
-      <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="80px" size="small">
+      <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="80px" size="mini">
         <el-form-item label="角色名称" prop="name">
           <el-input v-model.trim="mainForm.name" auto-complete="off" placeholder="请输入角色名称" ref="name"></el-input>
         </el-form-item>

@@ -7,7 +7,7 @@
     </el-breadcrumb>
   </el-header>
   <el-main class="main">
-    <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="120px" size="small">
+    <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="120px" size="mini">
       <el-form-item label="系统名称" prop="name">
         <el-input v-model.trim="mainForm.name" auto-complete="off" placeholder="请输入系统名称" ref="name"></el-input>
       </el-form-item>

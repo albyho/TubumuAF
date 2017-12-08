@@ -51,7 +51,7 @@
         </template>      
       </el-table-column>
       <el-table-column prop="StatusText" label="状态" width="60"></el-table-column>
-      <el-table-column prop="CreationDate" label="创建日期" width="160"></el-table-column>
+      <el-table-column prop="CreationDate" label="创建时间" width="160"></el-table-column>
       <el-table-column align="center" width="42">
         <template slot-scope="scope">
           <el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)"></el-button>
@@ -69,14 +69,14 @@
       <span slot="title">
         {{ editActive ? '编辑' : '添加'}}
       </span>
-      <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="160px" size="small">
+      <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="160px" size="mini">
         <el-tabs v-model="activeTabName" type="card">
           <el-tab-pane label="基本信息" name="first">
             <el-form-item label="分组" prop="groupIDPath">
               <el-cascader :options="editGroupTreeData" :props="editGroupTreeDefaultProps" clearable filterable placeholder="试试搜索" change-on-select @change="handleGroupCascaderChange" v-model="mainForm.groupIDPath"></el-cascader>
             </el-form-item>
             <el-form-item label="角色" prop="roleID">
-              <el-select v-model="mainForm.roleID" size="mini" clearable placeholder="选择">
+              <el-select v-model="mainForm.roleID" clearable placeholder="选择">
                 <el-option v-for="role in editGroupRoleListData" :key="role.roleID" :label="role.name" :value="role.roleID"></el-option>
               </el-select>
             </el-form-item>
