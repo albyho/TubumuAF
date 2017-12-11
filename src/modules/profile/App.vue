@@ -192,10 +192,8 @@ export default {
 
 <style lang="scss">
 
-.main {
-  .el-tab-pane {
-    width: 600px;
- }
+.el-tab-pane {
+  width: 600px;
 }
 
 </style>

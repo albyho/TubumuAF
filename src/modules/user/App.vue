@@ -640,7 +640,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 .filterText {
   width: 240px;
@@ -657,20 +657,24 @@ export default {
   display: block;
   margin: 0;
 }
-.main {
-  // 用户组
-  .el-cascader {
-    width: 200px;
-    margin-right: 12px;
-  }
-  // 用户状态
-  .el-select {
-    width: 120px;
-    margin-right: 12px;
-  }
-  .el-date-editor--daterange {
-    margin-right: 12px;
-  }
+// 用户组
+.el-cascader {
+  width: 200px;
+  margin-right: 12px;
+}
+// 用户状态
+.el-select {
+  width: 120px;
+  margin-right: 12px;
+}
+.el-date-editor--daterange {
+  margin-right: 12px;
+}
+.el-table td {
+  padding: 0;
+}
+.el-table .cell{
+  line-height: normal;
 }
 
 </style>
