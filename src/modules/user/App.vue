@@ -17,8 +17,10 @@
     <el-row>
       <el-date-picker v-model="searchCriteriaForm.creationDate" value-format="yyyy-MM-dd" size="mini" type="daterange" range-separator="至" start-placeholder="创建日期开始" end-placeholder="创建日期结束">
       </el-date-picker>
-      <el-button size="mini" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
-      <el-button size="mini" icon="el-icon-search" @click="handleSearchAll()">全部</el-button>
+      <el-button-group>
+        <el-button size="mini" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
+        <el-button size="mini" icon="el-icon-search" @click="handleSearchAll()">全部</el-button>
+      </el-button-group>
       <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd()">添加</el-button>  
     </el-row>
     <el-row>
@@ -647,7 +649,7 @@ export default {
   margin-right: 12px;
 }
 .el-row {
-  margin-bottom: 20px;
+  margin-bottom: 8px;
   &:last-child {
     margin-bottom: 0;
   }

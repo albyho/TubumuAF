@@ -12,7 +12,7 @@
         <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd">添加</el-button>  
       </el-col>
     </el-row>
-    <el-table :data="list" size="medium" style="width: 100%" :empty-text="emptyText">
+    <el-table :data="list" size="mini" style="width: 100%" :empty-text="emptyText">
       <el-table-column prop="name" label="名称"></el-table-column>
       <el-table-column align="center" width="42">
         <template slot-scope="scope">
@@ -312,6 +312,13 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+
+.el-table td {
+  padding: 4px 0;
+}
+.el-table .cell{
+  line-height: normal;
+}
 
 </style>

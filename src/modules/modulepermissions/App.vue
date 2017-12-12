@@ -8,11 +8,13 @@
   </el-header>
   <el-main class="main"> 
     <el-row>
-      <el-button type="primary" size="mini" icon="el-icon-refresh" @click="handleExtractModulePermissions">提取模块权限</el-button>  
-      <el-button type="primary" size="mini" icon="el-icon-time" @click="handleClearModulePermissions">清理模块权限</el-button>  
+      <el-button-group>
+        <el-button type="primary" size="mini" icon="el-icon-refresh" @click="handleExtractModulePermissions">提取模块权限</el-button>  
+        <el-button type="primary" size="mini" icon="el-icon-time" @click="handleClearModulePermissions">清理模块权限</el-button>  
+      </el-button-group>
     </el-row>
     <el-row>
-    <el-table :data="list" size="small" style="width: 100%" :empty-text="emptyText">
+    <el-table :data="list" size="mini" style="width: 100%" :empty-text="emptyText">
       <el-table-column prop="displayOrder" label="#" width="40"></el-table-column>
       <el-table-column prop="moduleName" label="模块" width="180"></el-table-column>    
       <el-table-column prop="name" label="名称"></el-table-column>
@@ -91,13 +93,19 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 .el-row {
-  margin-bottom: 20px;
+  margin-bottom: 8px;
   &:last-child {
     margin-bottom: 0;
   }
+}
+.el-table td {
+  padding: 8px 0;
+}
+.el-table .cell{
+  line-height: normal;
 }
 
 </style>
