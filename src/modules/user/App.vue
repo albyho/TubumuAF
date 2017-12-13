@@ -7,22 +7,37 @@
     </el-breadcrumb>
   </el-header>
   <el-main class="main">
-    <el-row>
-      <el-input placeholder="关键字(用户名/真实名称/昵称/邮箱/手机号)" size="mini" clearable v-model="searchCriteriaForm.keyword" class="filterText"></el-input>
-      <el-cascader :options="editGroupTreeData" size="mini" :props="editGroupTreeDefaultProps" clearable change-on-select filterable placeholder="用户组" v-model="searchCriteriaForm.groupIDPath"></el-cascader>
-      <el-select v-model="searchCriteriaForm.status" size="mini" clearable placeholder="状态">
-        <el-option v-for="item in editUserStatus" :key="item.value" :label="item.label" :value="item.value"></el-option>
-      </el-select>
-    </el-row>
-    <el-row>
-      <el-date-picker v-model="searchCriteriaForm.creationDate" value-format="yyyy-MM-dd" size="mini" type="daterange" range-separator="至" start-placeholder="创建日期开始" end-placeholder="创建日期结束">
-      </el-date-picker>
-      <el-button-group>
-        <el-button size="mini" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
-        <el-button size="mini" icon="el-icon-search" @click="handleSearchAll()">全部</el-button>
-      </el-button-group>
-      <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd()">添加</el-button>  
-    </el-row>
+    <el-form ref="searchCriteriaForm" class="searchCriteriaForm" :model="searchCriteriaForm" inline size="mini">
+      <el-row>
+        <el-form-item>
+          <el-input placeholder="关键字(用户名/真实名称/昵称/邮箱/手机号)" clearable v-model="searchCriteriaForm.keyword" class="filterText"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-cascader :options="editGroupTreeData" :props="editGroupTreeDefaultProps" clearable change-on-select filterable placeholder="用户组" v-model="searchCriteriaForm.groupIDPath"></el-cascader>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="searchCriteriaForm.status" clearable placeholder="状态">
+            <el-option v-for="item in editUserStatus" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button plain @click="isSearchCriteriaFormExpand =! isSearchCriteriaFormExpand" :icon="isSearchCriteriaFormExpand ? 'el-icon-caret-top' : 'el-icon-caret-bottom'"></el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button-group>
+            <el-button type="primary" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="handleSearchAll()">全部</el-button>
+          </el-button-group>
+          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAdd()">添加</el-button>  
+        </el-form-item>
+      </el-row>
+      <el-row v-show="isSearchCriteriaFormExpand">
+        <el-form-item>
+          <el-date-picker v-model="searchCriteriaForm.creationDate" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="创建日期开始" end-placeholder="创建日期结束">
+          </el-date-picker>
+        </el-form-item>
+      </el-row>
+    </el-form>
     <el-row>
     <el-table :data="page.list" size="small" style="width: 100%" :empty-text="emptyText" @sort-change="sortChange">
       <el-table-column prop="UserID" label="#" width="60" sortable="custom"></el-table-column>
@@ -228,6 +243,7 @@ export default {
         totalItemCount: null,
         totalPageCount: null
       },
+      isSearchCriteriaFormExpand: false,
       searchCriteriaForm: {
         keyword: null,
         groupID: null,
@@ -644,34 +660,39 @@ export default {
 
 <style lang="scss">
 
-.filterText {
-  width: 240px;
-  margin-right: 12px;
-}
-.el-row {
-  margin-bottom: 8px;
-  &:last-child {
-    margin-bottom: 0;
+.searchCriteriaForm {
+  .el-row {
+    margin-bottom: 8px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .el-form-item {
+    margin-bottom: 4px;
+    margin-right: 4px;
+  }
+  .filterText {
+    width: 240px;
+    margin-right: 12px;
+  }
+  // 用户组
+  .el-cascader {
+    width: 200px;
+    margin-right: 12px;
+  }
+  // 用户状态
+  .el-select {
+    width: 120px;
+    margin-right: 12px;
   }
 }
-// 角色
+
+// 编辑对话框：附加角色
 .el-checkbox {
   display: block;
   margin: 0;
 }
-// 用户组
-.el-cascader {
-  width: 200px;
-  margin-right: 12px;
-}
-// 用户状态
-.el-select {
-  width: 120px;
-  margin-right: 12px;
-}
-.el-date-editor--daterange {
-  margin-right: 12px;
-}
+
 .el-table td {
   padding: 0;
 }
