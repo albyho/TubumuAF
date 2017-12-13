@@ -4,6 +4,9 @@
       <el-row>
         <el-col :span="16">系统管理</el-col>
         <el-col :span="8" class="userinfo">
+          <el-badge value="new" :hidden="!hasNewMessage">
+            <i class="el-icon-message newMessage" @click="handleNewMessage"></i>
+          </el-badge>
           <el-dropdown trigger="hover" :show-timeout="150">
 					  <span class="el-dropdown-link userinfo-inner"><img :src="profileDisplay.headURL" v-show="profileDisplay.headURL" /> [ {{ profileDisplay.groups.map(m => m.name).join(' - ') }} ] {{ profileDisplay.displayName || profileDisplay.username}}</span>
 					  <el-dropdown-menu slot="dropdown">
@@ -34,6 +37,8 @@ export default {
     return {
       isLoading: false,
       isGetMenusLoading: false,
+      hasNewMessage: false,
+      newMessageURL: null,
       mainFrameURL: '',
       profileDisplay: {
         username: '',
@@ -59,6 +64,7 @@ export default {
     api.getProfile().then(response => {
       // console.log(response.data)
       this.profileDisplay = response.data.profile
+      this.connectNotifictionServer()
     }, error => {
       // console.log(error)
       this.showErrorMessage(error.message)
@@ -121,6 +127,42 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
+    connectNotifictionServer () {
+      try {
+        /* eslint-disable no-undef */
+        const hub = $.connection.notificationHub
+        hub.client.receviedMessage = function (data) {
+          console.log(data)
+          // 错误码：
+          // 200 连接通知成功
+          // 201 新消息(可带url参数)
+          // 202 清除新消息标记
+          // 400 连接通知失败等错误
+          if (data.code === 201) {
+            this.newMessageURL = data.url
+            this.hasNewMessage = true
+            this.$notify.info({
+              title: '新的消息',
+              message: data.message
+            })
+          } else if (data.code === 202) {
+            this.hasNewMessage = false
+          } else if (data.code === 400) {
+            this.showErrorMessage(data.message)
+          }
+        }
+        $.connection.hub.start().done(function () {
+          hub.server.join('@Token')
+        })
+      } catch (e) {
+        console.log(e.message)
+      }
+    },
+    handleNewMessage () {
+      if (this.newMessageURL) {
+        this.mainFrameURL = this.newMessageURL
+      }
+    },
     showErrorMessage (message) {
       this.$message({
         message: message,
@@ -131,7 +173,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '../../styles/vars.scss';
 
 body {
@@ -150,6 +192,23 @@ body {
 		  background: $color-primary;
       color: #fff;
       font-size: 16px;
+      .el-badge {
+        margin-top: 2px;
+        margin-right: 40px;
+        height: 32px;
+        line-height: 32px;
+        font-size: 24px;
+        .el-badge__content {
+          font-size: 8px;
+          padding: 0 4px;
+          height: 12px;
+          line-height: 12px;
+          border-radius: 8px;
+        }
+        .newMessage {
+          cursor: pointer;
+        }
+      }
       .userinfo {
 			  text-align: right;
 			  padding-right: 20px;
