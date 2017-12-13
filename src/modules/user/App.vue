@@ -638,21 +638,25 @@ export default {
     },
     popupCKFinder (name) {
       const _this = this
-      /* eslint-disable no-undef */
-      CKFinder.popup({
-        chooseFiles: true,
-        width: 800,
-        height: 600,
-        onInit: function (finder) {
-          finder.on('files:choose', function (evt) {
-            const file = evt.data.files.first()
-            _this.changeProfileForm[name] = file.getUrl()
-          })
-          finder.on('file:choose:resizedImage', function (evt) {
-            _this.changeProfileForm[name] = evt.data.resizedUrl
-          })
-        }
-      })
+      try {
+        /* eslint-disable no-undef */
+        CKFinder.popup({
+          chooseFiles: true,
+          width: 800,
+          height: 600,
+          onInit: function (finder) {
+            finder.on('files:choose', function (evt) {
+              const file = evt.data.files.first()
+              _this.changeProfileForm[name] = file.getUrl()
+            })
+            finder.on('file:choose:resizedImage', function (evt) {
+              _this.changeProfileForm[name] = evt.data.resizedUrl
+            })
+          }
+        })
+      } catch (e) {
+        console.log(e.message)
+      }
     }
   }
 }
