@@ -132,7 +132,7 @@ export default {
         /* eslint-disable no-undef */
         const hub = $.connection.notificationHub
         hub.client.receviedMessage = function (data) {
-          console.log(data)
+          // console.log(data)
           // 错误码：
           // 200 连接通知成功
           // 201 新消息(可带url参数)
@@ -194,7 +194,7 @@ body {
       font-size: 16px;
       .el-badge {
         margin-top: 2px;
-        margin-right: 40px;
+        margin-right: 20px;
         height: 32px;
         line-height: 32px;
         font-size: 24px;
