@@ -246,7 +246,7 @@ export default {
       isSearchCriteriaFormExpand: false,
       searchCriteriaForm: {
         keyword: null,
-        groupID: null,
+        groupIDs: null,         // 服务器期待一个数组
         creationDate: null,
         creationDateBegin: null,
         creationDateEnd: null,
@@ -285,11 +285,11 @@ export default {
         roleID: null,                     // String
         roleIDs: [],                      // Array 不能设置为 null
         permissionIDs: null,              // Array
-        password: null,
-        passwordConfirm: null,
-        description: null,
-        headURL: null,
-        logoURL: null
+        password: null,                   // String
+        passwordConfirm: null,            // String
+        description: null,                // String
+        headURL: null,                    // String
+        logoURL: null                     // String
       },
       mainFormRules: {
         username: [
@@ -398,7 +398,7 @@ export default {
     handleSearchAll () {
       this.pagingInfoForm.pageNumber = 1
       this.searchCriteriaForm.keyword = null
-      this.searchCriteriaForm.groupID = null
+      this.searchCriteriaForm.groupIDs = null
       this.searchCriteriaForm.creationDate = null
       this.searchCriteriaForm.creationDateBegin = null
       this.searchCriteriaForm.creationDateEnd = null
@@ -412,8 +412,8 @@ export default {
         this.searchCriteriaForm.creationDateBegin = this.searchCriteriaForm.creationDate[0]
         this.searchCriteriaForm.creationDateEnd = this.searchCriteriaForm.creationDate[1]
       }
-      this.searchCriteriaForm.groupID = this.searchCriteriaForm.groupIDPath && this.searchCriteriaForm.groupIDPath.length
-          ? this.searchCriteriaForm.groupIDPath[this.searchCriteriaForm.groupIDPath.length - 1]
+      this.searchCriteriaForm.groupIDs = this.searchCriteriaForm.groupIDPath && this.searchCriteriaForm.groupIDPath.length
+          ? [this.searchCriteriaForm.groupIDPath[this.searchCriteriaForm.groupIDPath.length - 1]]
           : null
       this.getPage()
     },
