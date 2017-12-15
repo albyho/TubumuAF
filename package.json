@@ -22,6 +22,7 @@
     "lodash": "^4.17.4",
     "sortablejs": "^1.6.1",
     "vue": "^2.5.10",
+    "vue-awesome": "^2.3.4",
     "vue-quill-editor": "^2.3.3",
     "vue-router": "^3.0.1"
   },

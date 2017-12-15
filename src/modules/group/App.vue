@@ -6,7 +6,7 @@
       <el-breadcrumb-item>用户组列表</el-breadcrumb-item>
     </el-breadcrumb>
   </el-header>
-  <el-main class="main"> 
+  <el-main class="main">
     <el-row>
       <el-input placeholder="输入关键字进行过滤" size="mini" clearable v-model="filterText" class="filterText"></el-input>
       <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd()">添加</el-button>  
@@ -476,14 +476,13 @@ export default {
       return (
         <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 10px;">
           <span>
-            <span>{ node.label }</span>
+            <span>{ node.label } <icon name="user-times" v-show={ !data.isIncludeUser }></icon></span>
           </span>
           <span>
             <span style="font-size: 12px;"> { data.limitRoles ? data.limitRoles.map(m => m.name).join(' ') : '' } </span>
           </span>
           <span v-show={ !data.isSystem }>
             <span style="font-size: 12px;" v-show={ data.isDisabled }>[停用] </span>
-            <span style="font-size: 12px;" v-show={ data.isIncludeUser }>[用户] </span>
             <el-button style="font-size: 12px;" type="text" icon="el-icon-edit-outline" onClick={ (e) => {
               e.stopPropagation()
               e.preventDefault()

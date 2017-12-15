@@ -3,8 +3,11 @@ import ElementUI from 'element-ui'
 // import { Form, FormItem, Button } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '../../styles/inner.scss'
-// import 'font-awesome/css/font-awesome.css'
 import App from './App.vue'
+import 'vue-awesome/icons/users'
+import 'vue-awesome/icons/user-times'
+// import 'vue-awesome/icons'
+import Icon from 'vue-awesome/components/Icon'
 import HttpClient from '@/utils/httpclient.js'
 
 Vue.config.productionTip = false
@@ -17,6 +20,8 @@ Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Button)
 */
+
+Vue.component('icon', Icon)
 
 Vue.use(HttpClient)
 
