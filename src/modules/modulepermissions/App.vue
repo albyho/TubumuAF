@@ -1,27 +1,49 @@
 <template>
-<el-container v-loading.fullscreen.lock="isLoading">
-  <el-header class="header">  
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-      <el-breadcrumb-item>模块管理</el-breadcrumb-item>
-      <el-breadcrumb-item>权限列表</el-breadcrumb-item>
-    </el-breadcrumb>
-  </el-header>
-  <el-main class="main"> 
-    <el-row>
-      <el-button-group>
-        <el-button type="primary" size="mini" icon="el-icon-refresh" @click="handleExtractModulePermissions">提取模块权限</el-button>  
-        <el-button type="primary" size="mini" icon="el-icon-time" @click="handleClearModulePermissions">清理模块权限</el-button>  
-      </el-button-group>
-    </el-row>
-    <el-row>
-    <el-table :data="list" size="mini" style="width: 100%" :empty-text="emptyText">
-      <el-table-column prop="displayOrder" label="#" width="40"></el-table-column>
-      <el-table-column prop="moduleName" label="模块" width="180"></el-table-column>    
-      <el-table-column prop="name" label="名称"></el-table-column>
-    </el-table>
-    </el-row>
-  </el-main>
-</el-container>
+  <el-container v-loading.fullscreen.lock="isLoading">
+    <el-header class="header">  
+      <el-breadcrumb 
+        separator-class="el-icon-arrow-right"
+        class="breadcrumb">
+        <el-breadcrumb-item>模块管理</el-breadcrumb-item>
+        <el-breadcrumb-item>权限列表</el-breadcrumb-item>
+      </el-breadcrumb>
+    </el-header>
+    <el-main class="main"> 
+      <el-row>
+        <el-button-group>
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-refresh"
+            @click="handleExtractModulePermissions">提取模块权限</el-button>  
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-time"
+            @click="handleClearModulePermissions">清理模块权限</el-button>  
+        </el-button-group>
+      </el-row>
+      <el-row>
+        <el-table
+          :data="list"
+          size="mini"
+          style="width: 100%"
+          :empty-text="emptyText">
+          <el-table-column
+            prop="displayOrder"
+            label="#"
+            width="40" />
+          <el-table-column
+            prop="moduleName"
+            label="模块"
+            width="180" />    
+          <el-table-column
+            prop="name"
+            label="名称" />
+        </el-table>
+      </el-row>
+    </el-main>
+  </el-container>
 </template>
 
 <script>

@@ -1,76 +1,137 @@
 <template>
-<el-container v-loading.fullscreen.lock="isLoading">
-  <el-header class="header">  
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>角色列表</el-breadcrumb-item>
-    </el-breadcrumb>
-  </el-header>
-  <el-main class="main">
-    <el-row>
-      <el-col>
-        <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" @click="handleAdd">添加</el-button>  
-      </el-col>
-    </el-row>
-    <el-table :data="list" size="mini" style="width: 100%" :empty-text="emptyText">
-      <el-table-column prop="name" label="名称"></el-table-column>
-      <el-table-column align="center" width="42">
-        <template slot-scope="scope">
-          <!-- 禁止拖动：不使用 v-show 和 :class，而是直接使用 v-if 也可行 -->
-          <el-button type="text" size="small" icon="el-icon-rank" :class="{ 'ignore-elements': scope.row.isSystem }" v-show="!scope.row.isSystem"></el-button>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" width="42">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)" v-if="!scope.row.isSystem"></el-button>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" width="42">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" icon="el-icon-delete" @click="handleRemove(scope.row)" v-if="!scope.row.isSystem"></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+  <el-container v-loading.fullscreen.lock="isLoading">
+    <el-header class="header">  
+      <el-breadcrumb
+        separator-class="el-icon-arrow-right"
+        class="breadcrumb">
+        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+        <el-breadcrumb-item>角色列表</el-breadcrumb-item>
+      </el-breadcrumb>
+    </el-header>
+    <el-main class="main">
+      <el-row>
+        <el-col>
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-circle-plus-outline"
+            @click="handleAdd">添加</el-button>  
+        </el-col>
+      </el-row>
+      <el-table
+        :data="list"
+        size="mini"
+        style="width: 100%"
+        :empty-text="emptyText">
+        <el-table-column
+          prop="name"
+          label="名称" />
+        <el-table-column
+          align="center" 
+          width="42">
+          <template slot-scope="scope">
+            <!-- 禁止拖动：不使用 v-show 和 :class，而是直接使用 v-if 也可行 -->
+            <el-button
+              type="text"
+              size="small"
+              icon="el-icon-rank"
+              :class="{ 'ignore-elements': scope.row.isSystem }"
+              v-show="!scope.row.isSystem" />
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          width="42">
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              size="small"
+              icon="el-icon-edit"
+              @click="handleEdit(scope.row)"
+              v-if="!scope.row.isSystem" />
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          width="42">
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              size="small"
+              icon="el-icon-delete"
+              @click="handleRemove(scope.row)"
+              v-if="!scope.row.isSystem" />
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <el-dialog :visible.sync="mainFormDialogVisible" @submit.native.prevent :close-on-click-modal="false" width="400px">
-      <span slot="title">
-        {{ editActive ? '编辑' : '添加'}}
-      </span>
+      <!-- 添加/编辑对话框 -->
+      <el-dialog
+        :visible.sync="mainFormDialogVisible"
+        @submit.native.prevent
+        :close-on-click-modal="false"
+        width="400px">
+        <span slot="title">
+          {{ editActive ? '编辑' : '添加' }}
+        </span>
+        <el-form
+          ref="mainForm"
+          :model="mainForm"
+          :rules="mainFormRules"
+          label-position="right"
+          label-width="80px"
+          size="mini">
+          <el-form-item
+            label="角色名称"
+            prop="name">
+            <el-input
+              ref="name"
+              v-model.trim="mainForm.name"
+              auto-complete="off"
+              placeholder="请输入角色名称" />
+          </el-form-item>
+          <el-form-item label="包含权限">
+            <el-tree
+              :data="editPermissionTreeData"
+              :props="editPermissionTreeDefaultProps"
+              node-key="id"
+              ref="editPermissionTree"
+              empty-text=""
+              show-checkbox
+              default-expand-all
+              check-strictly
+              @check-change="handlePermissionTreeCheckChange" />
+          </el-form-item>
+        </el-form>
+        <div
+          slot="footer"
+          class="dialog-footer">
+          <el-button @click="handleMainFormSure(false)">取 消</el-button>
+          <el-button
+            type="primary"
+            @click="handleMainFormSure(true)">确 定</el-button>
+        </div>
+      </el-dialog>
 
-      <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="80px" size="mini">
-        <el-form-item label="角色名称" prop="name">
-          <el-input v-model.trim="mainForm.name" auto-complete="off" placeholder="请输入角色名称" ref="name"></el-input>
-        </el-form-item>
+      <!-- 删除对话框 -->
+      <el-dialog
+        title="提示"
+        :visible.sync="removeConfirmDialogVisible"
+        width="320px"
+        center>
+        <span>删除该角色后，相关的数据也将被删除。<br>确定要删除吗？</span>
+        <div
+          slot="footer"
+          class="dialog-footer">
+          <el-button @click="handleRemoveSure(false)">取 消</el-button>
+          <el-button
+            type="primary"
+            @click="handleRemoveSure(true)">确 定</el-button>
+        </div>
+      </el-dialog>
 
-        <el-form-item label="包含权限">
-          <el-tree :data="editPermissionTreeData" :props="editPermissionTreeDefaultProps"
-            node-key="id"
-            ref="editPermissionTree"
-            empty-text=""
-            show-checkbox
-            default-expand-all
-            check-strictly
-            @check-change="handlePermissionTreeCheckChange"
-            >
-          </el-tree>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="handleMainFormSure(false)">取 消</el-button>
-        <el-button type="primary" @click="handleMainFormSure(true)">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog title="提示" :visible.sync="removeConfirmDialogVisible"  width="320px" center>
-      <span>删除该角色后，相关的数据也将被删除。<br/>确定要删除吗？</span>
-      <div slot="footer" class="dialog-footer">
-       <el-button @click="handleRemoveSure(false)">取 消</el-button>
-       <el-button type="primary" @click="handleRemoveSure(true)">确 定</el-button>
-      </div>
-    </el-dialog>
-
-  </el-main>
-</el-container>
+    </el-main>
+  </el-container>
 </template>
 
 <script>

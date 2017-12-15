@@ -1,51 +1,120 @@
 <template>
-<el-container v-loading.fullscreen.lock="isLoading">
-  <el-header class="header">  
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-      <el-breadcrumb-item>我的资料</el-breadcrumb-item>
-    </el-breadcrumb>
-  </el-header>
-  <el-main class="main"> 
-  <el-tabs v-model="activeTabName" type="card">
-    <el-tab-pane label="修改资料" name="first">
-    <el-form ref="changeProfileForm" :model="changeProfileForm" :rules="changeProfileFormRules" label-position="right" label-width="120px" size="mini">
-      <el-form-item label="昵称" prop="displayName">
-        <el-input v-model.trim="changeProfileForm.displayName" auto-complete="off" placeholder="请输入昵称" ref="displayName"></el-input>
-      </el-form-item>
-      <el-form-item label="头像" prop="headURL">
-        <el-input v-model.trim="changeProfileForm.headURL" auto-complete="off" placeholder="请输入头像 URL" ref="headURL">
-          <el-button slot="append" icon="el-icon-search" @click="handleChangeHeadURLBrowser"></el-button>
-        </el-input>
-      </el-form-item>
-      <el-form-item label="Logo" prop="logoURL">
-        <el-input v-model.trim="changeProfileForm.logoURL" auto-complete="off" placeholder="请输入Logo URL" ref="logoURL">
-          <el-button slot="append" icon="el-icon-search" @click="handleChangeLogoURLBrowser"></el-button>
-        </el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="handleChangeProfile">修改资料</el-button>
-      </el-form-item> 
-    </el-form>
-    </el-tab-pane>
-    <el-tab-pane label="修改密码" name="second">
-    <el-form ref="changePasswordForm" :model="changePasswordForm" :rules="changePasswordFormRules" label-position="right" label-width="120px" size="mini">
-      <el-form-item label="当前密码" prop="currentPassword">
-        <el-input type="password" v-model.trim="changePasswordForm.currentPassword" auto-complete="off" placeholder="请输入当前密码" ref="currentPassword"></el-input>
-      </el-form-item>
-      <el-form-item label="新密码" prop="newPassword">
-        <el-input type="password" v-model.trim="changePasswordForm.newPassword" auto-complete="off" placeholder="请输入新密码" ref="newPassword"></el-input>
-      </el-form-item>
-      <el-form-item label="确认新密码" prop="newPasswordConfirm">
-        <el-input type="password" v-model.trim="changePasswordForm.newPasswordConfirm" auto-complete="off" placeholder="请确认新密码" ref="newPasswordConfirm"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="handleChangePassword">修改密码</el-button>
-      </el-form-item> 
-    </el-form>
-    </el-tab-pane>
-  </el-tabs>
-  </el-main>
-</el-container>
+  <el-container v-loading.fullscreen.lock="isLoading">
+    <el-header class="header">  
+      <el-breadcrumb
+        separator-class="el-icon-arrow-right"
+        class="breadcrumb">
+        <el-breadcrumb-item>我的资料</el-breadcrumb-item>
+      </el-breadcrumb>
+    </el-header>
+    <el-main class="main"> 
+      <el-tabs
+        v-model="activeTabName"
+        type="card">
+        <el-tab-pane
+          label="修改资料"
+          name="first">
+          <el-form
+            ref="changeProfileForm"
+            :model="changeProfileForm"
+            :rules="changeProfileFormRules"
+            label-position="right"
+            label-width="120px"
+            size="mini">
+            <el-form-item
+              label="昵称"
+              prop="displayName">
+              <el-input
+                ref="displayName"
+                v-model.trim="changeProfileForm.displayName"
+                auto-complete="off"
+                placeholder="请输入昵称" />
+            </el-form-item>
+            <el-form-item
+              label="头像"
+              prop="headURL">
+              <el-input
+                ref="headURL"
+                v-model.trim="changeProfileForm.headURL"
+                auto-complete="off"
+                placeholder="请输入头像 URL">
+                <el-button
+                  slot="append"
+                  icon="el-icon-search"
+                  @click="handleChangeHeadURLBrowser" />
+              </el-input>
+            </el-form-item>
+            <el-form-item
+              label="Logo"
+              prop="logoURL">
+              <el-input
+                v-model.trim="changeProfileForm.logoURL"
+                auto-complete="off"
+                placeholder="请输入Logo URL"
+                ref="logoURL">
+                <el-button
+                  slot="append"
+                  icon="el-icon-search"
+                  @click="handleChangeLogoURLBrowser" />
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                type="primary"
+                @click="handleChangeProfile">修改资料</el-button>
+            </el-form-item> 
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane
+          label="修改密码"
+          name="second">
+          <el-form
+            ref="changePasswordForm"
+            :model="changePasswordForm"
+            :rules="changePasswordFormRules"
+            label-position="right"
+            label-width="120px"
+            size="mini">
+            <el-form-item
+              label="当前密码"
+              prop="currentPassword">
+              <el-input
+                ref="currentPassword"
+                type="password"
+                v-model.trim="changePasswordForm.currentPassword"
+                auto-complete="off"
+                placeholder="请输入当前密码" />
+            </el-form-item>
+            <el-form-item
+              label="新密码"
+              prop="newPassword">
+              <el-input
+                ref="newPassword"
+                type="password"
+                v-model.trim="changePasswordForm.newPassword"
+                auto-complete="off"
+                placeholder="请输入新密码" />
+            </el-form-item>
+            <el-form-item
+              label="确认新密码"
+              prop="newPasswordConfirm">
+              <el-input
+                ref="newPasswordConfirm"
+                type="password"
+                v-model.trim="changePasswordForm.newPasswordConfirm"
+                auto-complete="off"
+                placeholder="请确认新密码" />
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                type="primary"
+                @click="handleChangePassword">修改密码</el-button>
+            </el-form-item> 
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
+    </el-main>
+  </el-container>
 </template>
 
 <script>

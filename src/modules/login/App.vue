@@ -1,20 +1,53 @@
 <template>
-  <el-form :model="mainForm" :rules="mainFormRules" v-loading.fullscreen.lock="isLoading" ref="mainForm" label-position="left" label-width="0px" class="container">
+  <el-form 
+    ref="mainForm"
+    :model="mainForm" 
+    :rules="mainFormRules"
+    v-loading.fullscreen.lock="isLoading"
+    label-position="left"
+    label-width="0px"
+    class="container">
     <h3 class="title">系统登录</h3>
     <el-form-item prop="account">
-      <el-input type="text" v-model.trim="mainForm.account" auto-complete="on" @keyup.enter.native="handleFocus('password')" placeholder="账号(用户名、手机号或邮箱)" ref="account" autofocus></el-input>
+      <el-input
+        ref="account"
+        type="text"
+        v-model.trim="mainForm.account"
+        auto-complete="on"
+        @keyup.enter.native="handleFocus('password')"
+        placeholder="账号(用户名、手机号或邮箱)"
+        autofocus />
     </el-form-item>
     <el-form-item prop="password">
-      <el-input type="password" v-model.trim="mainForm.password" auto-complete="off" @keyup.enter.native="handleFocus('validateCode')" placeholder="密码" ref="password"></el-input>
+      <el-input
+        ref="password"
+        type="password"
+        v-model.trim="mainForm.password"
+        auto-complete="off"
+        @keyup.enter.native="handleFocus('validateCode')"
+        placeholder="密码" />
     </el-form-item>    
     <el-form-item prop="validateCode">
-      <el-input type="text" v-model.trim="mainForm.validateCode" auto-complete="off" @keyup.enter.native="handleSubmit" placeholder="验证码" ref="validateCode" class="validateCode"></el-input>
-      <img :src="refreshValidateCodeURL" @click="handleRefreshValidateCode" class="validateCodeImage">
+      <el-input
+        ref="validateCode"
+        type="text"
+        v-model.trim="mainForm.validateCode"
+        auto-complete="off"
+        @keyup.enter.native="handleSubmit"
+        placeholder="验证码"
+        class="validateCode" />
+      <img
+        :src="refreshValidateCodeURL"
+        @click="handleRefreshValidateCode"
+        class="validateCodeImage">
     </el-form-item>
     <!-- <el-checkbox v-model="isRemberPassword" class="remember">记住密码</el-checkbox> -->
     <el-form-item style="width:100%;">
-      <el-button type="primary" class="login" @click="handleSubmit">登录</el-button>
-      <!-- <el-button @click.native.prevent="handleReset">重置</el-button> -->
+      <el-button
+        type="primary"
+        class="login"
+        @click="handleSubmit">登录</el-button>
+    <!-- <el-button @click.native.prevent="handleReset">重置</el-button> -->
     </el-form-item>
   </el-form>
 </template>

@@ -1,203 +1,400 @@
 <template>
-<el-container v-loading.fullscreen.lock="isLoading">
-  <el-header class="header">  
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
-  </el-header>
-  <el-main class="main">
-    <el-form ref="searchCriteriaForm" class="searchCriteriaForm" :model="searchCriteriaForm" inline size="mini">
-      <el-row>
-        <el-form-item>
-          <el-input placeholder="关键字(用户名/真实名称/昵称/邮箱/手机号)" clearable v-model="searchCriteriaForm.keyword" class="filterText"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-cascader :options="editGroupTreeData" :props="editGroupTreeDefaultProps" clearable change-on-select filterable placeholder="用户组" v-model="searchCriteriaForm.groupIDPath"></el-cascader>
-        </el-form-item>
-        <el-form-item>
-          <el-select v-model="searchCriteriaForm.status" clearable placeholder="状态">
-            <el-option v-for="item in editUserStatus" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button plain @click="isSearchCriteriaFormExpand =! isSearchCriteriaFormExpand" :icon="isSearchCriteriaFormExpand ? 'el-icon-caret-top' : 'el-icon-caret-bottom'"></el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button-group>
-            <el-button type="primary" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
-            <el-button type="primary" icon="el-icon-search" @click="handleSearchAll()">全部</el-button>
-          </el-button-group>
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAdd()">添加</el-button>  
-        </el-form-item>
-      </el-row>
-      <el-row v-show="isSearchCriteriaFormExpand">
-        <el-form-item>
-          <el-date-picker v-model="searchCriteriaForm.creationDate" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="创建日期开始" end-placeholder="创建日期结束">
-          </el-date-picker>
-        </el-form-item>
-      </el-row>
-    </el-form>
-    <el-row>
-    <el-table :data="page.list" size="small" style="width: 100%" :empty-text="emptyText" @sort-change="sortChange">
-      <el-table-column prop="UserID" label="#" width="60" sortable="custom"></el-table-column>
-      <el-table-column prop="Username" label="用户名" width="100" sortable="custom"></el-table-column>
-      <el-table-column prop="Group.name" label="用户组" width="160"></el-table-column>
-      <el-table-column label="角色" width="100">
-        <template slot-scope="scope">
-          <span>{{ scope.row.Role ? scope.row.Role.name : '' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="DisplayName" label="昵称" width="100"></el-table-column>
-      <el-table-column label="真实名称" width="100">
-        <template slot-scope="scope">
-          <i class="el-icon-question" v-show="scope.row.RealName && !scope.row.RealNameIsValid"></i>
-          <span>{{ scope.row.RealName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="手机号码" width="120">
-        <template slot-scope="scope">
-          <i class="el-icon-question" v-show="scope.row.Mobile && !scope.row.MobileIsValid"></i>
-          <span>{{ scope.row.Mobile }}</span>
-        </template>        
-      </el-table-column>
-      <el-table-column label="Email">
-        <template slot-scope="scope">
-          <i class="el-icon-question" v-show="scope.row.Email && !scope.row.EmailIsValid"></i>
-          <span>{{ scope.row.Email }}</span>
-        </template>      
-      </el-table-column>
-      <el-table-column prop="StatusText" label="状态" width="60"></el-table-column>
-      <el-table-column prop="CreationDate" label="创建时间" width="160"></el-table-column>
-      <el-table-column align="center" width="42">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)"></el-button>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" width="42">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" icon="el-icon-delete" @click="handleRemove(scope.row)"></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    </el-row>
-
-    <el-dialog :visible.sync="mainFormDialogVisible" @submit.native.prevent :close-on-click-modal="false" width="600px">
-      <span slot="title">
-        {{ editActive ? '编辑' : '添加'}}
-      </span>
-      <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="160px" size="mini">
-        <el-tabs v-model="activeTabName" type="card">
-          <el-tab-pane label="基本信息" name="first">
-            <el-form-item label="分组" prop="groupIDPath">
-              <el-cascader :options="editGroupTreeData" :props="editGroupTreeDefaultProps" clearable filterable placeholder="试试搜索" change-on-select @change="handleGroupCascaderChange" v-model="mainForm.groupIDPath"></el-cascader>
-            </el-form-item>
-            <el-form-item label="角色" prop="roleID">
-              <el-select v-model="mainForm.roleID" clearable placeholder="选择">
-                <el-option v-for="role in editGroupRoleListData" :key="role.roleID" :label="role.name" :value="role.roleID"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="用户名" prop="username">
-              <el-input v-model.trim="mainForm.username" auto-complete="off" placeholder="请输入用户名" ref="username"></el-input>
-            </el-form-item>
-            <el-form-item label="状态" :required="true">
-			        <el-radio-group v-model="mainForm.status">
-                <el-radio v-for="item in editUserStatus" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
-			        </el-radio-group>
-            </el-form-item>
-          <el-form-item label="登录密码" prop="password" :required="!this.editActive">
-            <el-input v-model="mainForm.password" type='password' :placeholder="this.editActive ? '如果不修改密码，请保持为空' : '请输入登录密码'"></el-input>
+  <el-container v-loading.fullscreen.lock="isLoading">
+    <el-header class="header">  
+      <el-breadcrumb
+        separator-class="el-icon-arrow-right"
+        class="breadcrumb">
+        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+        <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+      </el-breadcrumb>
+    </el-header>
+    <el-main class="main">
+      <el-form
+        ref="searchCriteriaForm"
+        class="searchCriteriaForm"
+        :model="searchCriteriaForm"
+        inline
+        size="mini">
+        <el-row>
+          <el-form-item>
+            <el-input
+              placeholder="关键字(用户名/真实名称/昵称/邮箱/手机号)"
+              clearable
+              v-model="searchCriteriaForm.keyword"
+              class="filterText" />
           </el-form-item>
-          <el-form-item label="确认密码" prop="passwordConfirm" :required="!this.editActive">
-            <el-input v-model="mainForm.passwordConfirm" type='password' :placeholder="this.editActive ? '如果不修改密码，请保持为空' : '请输入确认密码'"></el-input>
+          <el-form-item>
+            <el-cascader
+              :options="editGroupTreeData"
+              :props="editGroupTreeDefaultProps"
+              clearable
+              change-on-select
+              filterable
+              placeholder="用户组"
+              v-model="searchCriteriaForm.groupIDPath" />
           </el-form-item>
-          <el-form-item label="昵称">
-            <el-input v-model="mainForm.displayName" type='text'></el-input>
+          <el-form-item>
+            <el-select
+              v-model="searchCriteriaForm.status"
+              clearable
+              placeholder="状态">
+              <el-option
+                v-for="item in editUserStatus"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value" />
+            </el-select>
           </el-form-item>
-          <el-form-item label="真实名称">
-            <el-input v-model="mainForm.realName" type='text'></el-input>
+          <el-form-item>
+            <el-button
+              plain
+              @click="isSearchCriteriaFormExpand =! isSearchCriteriaFormExpand"
+              :icon="isSearchCriteriaFormExpand ? 'el-icon-caret-top' : 'el-icon-caret-bottom'" />
           </el-form-item>
-          <el-form-item label="真实名称是否验证">
-            <el-switch v-model="mainForm.realNameIsValid"></el-switch>
+          <el-form-item>
+            <el-button-group>
+              <el-button
+                type="primary"
+                icon="el-icon-search"
+                @click="handleSearch()">搜索</el-button>
+              <el-button
+                type="primary"
+                icon="el-icon-search"
+                @click="handleSearchAll()">全部</el-button>
+            </el-button-group>
+            <el-button
+              type="primary"
+              icon="el-icon-circle-plus-outline"
+              @click="handleAdd()">添加</el-button>  
           </el-form-item>
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="mainForm.email" type='text'></el-input>
+        </el-row>
+        <el-row v-show="isSearchCriteriaFormExpand">
+          <el-form-item>
+            <el-date-picker
+              v-model="searchCriteriaForm.creationDate"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="创建日期开始"
+              end-placeholder="创建日期结束" />
           </el-form-item>
-          <el-form-item label="邮箱是否验证">
-            <el-switch v-model="mainForm.emailIsValid"></el-switch>
-          </el-form-item>
-          <el-form-item label="手机号码" prop="mobile">
-            <el-input v-model="mainForm.mobile" type='text'></el-input>
-          </el-form-item>
-          <el-form-item label="手机号码是否验证">
-            <el-switch v-model="mainForm.mobileIsValid"></el-switch>
-          </el-form-item>
-          <el-form-item label="描述">
-            <el-input type="textarea" :rows="2" v-model.trim="mainForm.description"></el-input>
-          </el-form-item>
-          <el-form-item label="头像" prop="headURL">
-            <el-input v-model.trim="mainForm.headURL" auto-complete="off" placeholder="请输入头像 URL" ref="headURL">
-              <el-button slot="append" icon="el-icon-search" @click="handleChangeHeadURLBrowser"></el-button>
-            </el-input>
-          </el-form-item>
-          <el-form-item label="Logo" prop="logoURL">
-            <el-input v-model.trim="mainForm.logoURL" auto-complete="off" placeholder="请输入Logo URL" ref="logoURL">
-              <el-button slot="append" icon="el-icon-search" @click="handleChangeLogoURLBrowser"></el-button>
-            </el-input>
-          </el-form-item>
-          </el-tab-pane>
-          <el-tab-pane label="附加角色" name="second">
-            <el-form-item label="附加角色">
-              <el-checkbox-group v-model="mainForm.roleIDs">
-                <el-checkbox v-for="role in editRoleListData" :label="role.roleID" :key="role.roleID">{{ role.name }}</el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
-          </el-tab-pane>
-          <el-tab-pane label="附加权限" name="third">
-            <el-form-item label="附加权限">
-              <el-tree :data="editPermissionTreeData" :props="editPermissionTreeDefaultProps"
-                node-key="id"
-                ref="editPermissionTree"
-                empty-text=""
-                show-checkbox
-                default-expand-all
-                check-strictly
-                @check-change="handlePermissionTreeCheckChange"
-                >
-              </el-tree>
-            </el-form-item>
-          </el-tab-pane>
-        </el-tabs>
+        </el-row>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="handleMainFormSure(false)">取 消</el-button>
-        <el-button type="primary" @click="handleMainFormSure(true)">确 定</el-button>
-      </div>
-    </el-dialog>
+      <el-row>
+        <el-table
+          :data="page.list"
+          size="small"
+          style="width: 100%"
+          :empty-text="emptyText"
+          @sort-change="sortChange">
+          <el-table-column
+            prop="UserID"
+            label="#"
+            width="60"
+            sortable="custom" />
+          <el-table-column
+            prop="Username"
+            label="用户名"
+            width="100"
+            sortable="custom" />
+          <el-table-column
+            prop="Group.name"
+            label="用户组"
+            width="160" />
+          <el-table-column
+            label="角色"
+            width="100">
+            <template slot-scope="scope">
+              <span>{{ scope.row.Role ? scope.row.Role.name : '' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="DisplayName"
+            label="昵称"
+            width="100" />
+          <el-table-column
+            label="真实名称"
+            width="100">
+            <template slot-scope="scope">
+              <i
+                class="el-icon-question"
+                v-show="scope.row.RealName && !scope.row.RealNameIsValid" />
+              <span>{{ scope.row.RealName }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="手机号码"
+            width="120">
+            <template slot-scope="scope">
+              <i
+                class="el-icon-question"
+                v-show="scope.row.Mobile && !scope.row.MobileIsValid" />
+              <span>{{ scope.row.Mobile }}</span>
+            </template>        
+          </el-table-column>
+          <el-table-column label="Email">
+            <template slot-scope="scope">
+              <i
+                class="el-icon-question"
+                v-show="scope.row.Email && !scope.row.EmailIsValid" />
+              <span>{{ scope.row.Email }}</span>
+            </template>      
+          </el-table-column>
+          <el-table-column
+            prop="StatusText"
+            label="状态"
+            width="60" />
+          <el-table-column
+            prop="CreationDate"
+            label="创建时间"
+            width="160" />
+          <el-table-column
+            align="center"
+            width="42">
+            <template slot-scope="scope">
+              <el-button
+                type="text"
+                size="small"
+                icon="el-icon-edit"
+                @click="handleEdit(scope.row)" />
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            width="42">
+            <template slot-scope="scope">
+              <el-button
+                type="text"
+                size="small"
+                icon="el-icon-delete"
+                @click="handleRemove(scope.row)" />
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-row>
 
-    <el-dialog title="提示" :visible.sync="removeConfirmDialogVisible"  width="320px" center>
-      <span>删除该用户后，相关的数据也将被删除。<br/>确定要删除吗？</span>
-      <div slot="footer" class="dialog-footer">
-       <el-button @click="handleRemoveSure(false)">取 消</el-button>
-       <el-button type="primary" @click="handleRemoveSure(true)">确 定</el-button>
-      </div>
-    </el-dialog>
+      <el-dialog
+        :visible.sync="mainFormDialogVisible"
+        @submit.native.prevent
+        :close-on-click-modal="false"
+        width="600px">
+        <span slot="title">
+          {{ editActive ? '编辑' : '添加' }}
+        </span>
+        <el-form
+          ref="mainForm"
+          :model="mainForm"
+          :rules="mainFormRules"
+          label-position="right"
+          label-width="160px"
+          size="mini">
+          <el-tabs
+            v-model="activeTabName"
+            type="card">
+            <el-tab-pane
+              label="基本信息"
+              name="first">
+              <el-form-item
+                label="分组"
+                prop="groupIDPath">
+                <el-cascader
+                  :options="editGroupTreeData"
+                  :props="editGroupTreeDefaultProps"
+                  clearable
+                  filterable
+                  placeholder="试试搜索"
+                  change-on-select
+                  @change="handleGroupCascaderChange"
+                  v-model="mainForm.groupIDPath" />
+              </el-form-item>
+              <el-form-item
+                label="角色"
+                prop="roleID">
+                <el-select
+                  v-model="mainForm.roleID"
+                  clearable
+                  placeholder="选择">
+                  <el-option
+                    v-for="role in editGroupRoleListData"
+                    :key="role.roleID"
+                    :label="role.name"
+                    :value="role.roleID" />
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                label="用户名"
+                prop="username">
+                <el-input
+                  ref="username"
+                  v-model.trim="mainForm.username"
+                  auto-complete="off"
+                  placeholder="请输入用户名" />
+              </el-form-item>
+              <el-form-item
+                label="状态"
+                :required="true">
+                <el-radio-group v-model="mainForm.status">
+                  <el-radio
+                    v-for="item in editUserStatus"
+                    :key="item.value"
+                    :label="item.value">{{ item.label }}</el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item
+                label="登录密码"
+                prop="password"
+                :required="!editActive">
+                <el-input
+                  v-model="mainForm.password"
+                  type="password"
+                  :placeholder="editActive ? '如果不修改密码，请保持为空' : '请输入登录密码'" />
+              </el-form-item>
+              <el-form-item
+                label="确认密码"
+                prop="passwordConfirm"
+                :required="!editActive">
+                <el-input
+                  v-model="mainForm.passwordConfirm"
+                  type="password"
+                  :placeholder="editActive ? '如果不修改密码，请保持为空' : '请输入确认密码'" />
+              </el-form-item>
+              <el-form-item label="昵称">
+                <el-input
+                  v-model="mainForm.displayName"
+                  type="text" />
+              </el-form-item>
+              <el-form-item label="真实名称">
+                <el-input
+                  v-model="mainForm.realName"
+                  type="text" />
+              </el-form-item>
+              <el-form-item label="真实名称是否验证">
+                <el-switch v-model="mainForm.realNameIsValid" />
+              </el-form-item>
+              <el-form-item
+                label="邮箱"
+                prop="email">
+                <el-input
+                  v-model="mainForm.email"
+                  type="text" />
+              </el-form-item>
+              <el-form-item label="邮箱是否验证">
+                <el-switch v-model="mainForm.emailIsValid" />
+              </el-form-item>
+              <el-form-item
+                label="手机号码"
+                prop="mobile">
+                <el-input
+                  v-model="mainForm.mobile"
+                  type="text" />
+              </el-form-item>
+              <el-form-item label="手机号码是否验证">
+                <el-switch v-model="mainForm.mobileIsValid" />
+              </el-form-item>
+              <el-form-item label="描述">
+                <el-input
+                  type="textarea"
+                  :rows="2"
+                  v-model.trim="mainForm.description" />
+              </el-form-item>
+              <el-form-item
+                label="头像"
+                prop="headURL">
+                <el-input
+                  ref="headURL"
+                  v-model.trim="mainForm.headURL"
+                  auto-complete="off"
+                  placeholder="请输入头像 URL">
+                  <el-button
+                    slot="append"
+                    icon="el-icon-search"
+                    @click="handleChangeHeadURLBrowser" />
+                </el-input>
+              </el-form-item>
+              <el-form-item
+                label="Logo"
+                prop="logoURL">
+                <el-input
+                  ref="logoURL"
+                  v-model.trim="mainForm.logoURL"
+                  auto-complete="off"
+                  placeholder="请输入Logo URL">
+                  <el-button
+                    slot="append"
+                    icon="el-icon-search"
+                    @click="handleChangeLogoURLBrowser" />
+                </el-input>
+              </el-form-item>
+            </el-tab-pane>
+            <el-tab-pane
+              label="附加角色"
+              name="second">
+              <el-form-item label="附加角色">
+                <el-checkbox-group v-model="mainForm.roleIDs">
+                  <el-checkbox
+                    v-for="role in editRoleListData"
+                    :label="role.roleID"
+                    :key="role.roleID">{{ role.name }}</el-checkbox>
+                </el-checkbox-group>
+              </el-form-item>
+            </el-tab-pane>
+            <el-tab-pane
+              label="附加权限"
+              name="third">
+              <el-form-item label="附加权限">
+                <el-tree
+                  :data="editPermissionTreeData"
+                  :props="editPermissionTreeDefaultProps"
+                  node-key="id"
+                  ref="editPermissionTree"
+                  empty-text=""
+                  show-checkbox
+                  default-expand-all
+                  check-strictly
+                  @check-change="handlePermissionTreeCheckChange" />
+              </el-form-item>
+            </el-tab-pane>
+          </el-tabs>
+        </el-form>
+        <div
+          slot="footer"
+          class="dialog-footer">
+          <el-button @click="handleMainFormSure(false)">取 消</el-button>
+          <el-button
+            type="primary"
+            @click="handleMainFormSure(true)">确 定</el-button>
+        </div>
+      </el-dialog>
 
-  </el-main>
-  <el-footer class="footer">    
-    <el-pagination
-      @size-change="handlePaginationSizeChange"
-      @current-change="handlePaginationCurrentChange"
-      :current-page="pagingInfoForm.pageNumber"
-      :page-sizes="[20, 50, 100, 200, 400]"
-      :page-size="pagingInfoForm.pageSize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="page.totalItemCount"
-      v-if="page.totalItemCount"
-      >
-    </el-pagination>
-  </el-footer>
-</el-container>
+      <el-dialog
+        title="提示"
+        :visible.sync="removeConfirmDialogVisible"
+        width="320px"
+        center>
+        <span>删除该用户后，相关的数据也将被删除。<br>确定要删除吗？</span>
+        <div
+          slot="footer"
+          class="dialog-footer">
+          <el-button @click="handleRemoveSure(false)">取 消</el-button>
+          <el-button
+            type="primary"
+            @click="handleRemoveSure(true)">确 定</el-button>
+        </div>
+      </el-dialog>
+
+    </el-main>
+    <el-footer class="footer">    
+      <el-pagination
+        @size-change="handlePaginationSizeChange"
+        @current-change="handlePaginationCurrentChange"
+        :current-page="pagingInfoForm.pageNumber"
+        :page-sizes="[20, 50, 100, 200, 400]"
+        :page-size="pagingInfoForm.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.totalItemCount"
+        v-if="page.totalItemCount" />
+    </el-footer>
+  </el-container>
 </template>
 
 <script>

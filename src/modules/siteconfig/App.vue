@@ -1,43 +1,105 @@
 <template>
-<el-container v-loading.fullscreen.lock="isLoading">
-  <el-header class="header">  
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-      <el-breadcrumb-item>系统管理</el-breadcrumb-item>
-      <el-breadcrumb-item>系统配置</el-breadcrumb-item>
-    </el-breadcrumb>
-  </el-header>
-  <el-main class="main">
-    <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="120px" size="mini">
-      <el-form-item label="系统名称" prop="name">
-        <el-input v-model.trim="mainForm.name" auto-complete="off" placeholder="请输入系统名称" ref="name"></el-input>
-      </el-form-item>
-      <el-form-item label="系统地址" prop="host">
-        <el-input v-model.trim="mainForm.host" auto-complete="off" placeholder="请输入系统地址" ref="host"></el-input>
-      </el-form-item>
-      <el-form-item label="系统主标题" prop="title">
-        <el-input v-model.trim="mainForm.title" auto-complete="off" placeholder="请输入系统主标题" ref="title"></el-input>
-      </el-form-item>
-      <el-form-item label="系统关键字" prop="keywords">
-        <el-input v-model.trim="mainForm.keywords" auto-complete="off" placeholder="请输入系统关键字" ref="keywords"></el-input>
-      </el-form-item>
-      <el-form-item label="系统描述" prop="description">
-        <el-input type="textarea" :rows="4" v-model.trim="mainForm.description" auto-complete="off" placeholder="请输入系统描述" ref="description"></el-input>
-      </el-form-item>
-      <el-form-item label="版权信息" prop="copyright">
-        <el-input type="textarea" :rows="4" v-model.trim="mainForm.copyright" auto-complete="off" placeholder="请输入系统描述" ref="copyright"></el-input>
-      </el-form-item>     
-      <el-form-item label="系统小图标" prop="faviconURL">
-        <el-input v-model.trim="mainForm.faviconURL" auto-complete="off" placeholder="请输入系统小图标地址" ref="faviconURL"></el-input>
-      </el-form-item>      
-      <el-form-item label="标题分隔符" prop="pageTitleSeparator">
-        <el-input v-model="mainForm.pageTitleSeparator" auto-complete="off" placeholder="请输入标题分隔符" ref="pageTitleSeparator"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="handleEditSiteConfig">确 认</el-button>
-      </el-form-item> 
-    </el-form>
-  </el-main>
-</el-container>
+  <el-container v-loading.fullscreen.lock="isLoading">
+    <el-header class="header">  
+      <el-breadcrumb
+        separator-class="el-icon-arrow-right"
+        class="breadcrumb">
+        <el-breadcrumb-item>系统管理</el-breadcrumb-item>
+        <el-breadcrumb-item>系统配置</el-breadcrumb-item>
+      </el-breadcrumb>
+    </el-header>
+    <el-main class="main">
+      <el-form
+        ref="mainForm"
+        :model="mainForm"
+        :rules="mainFormRules"
+        label-position="right"
+        label-width="120px"
+        size="mini">
+        <el-form-item
+          label="系统名称"
+          prop="name">
+          <el-input
+            ref="name"
+            v-model.trim="mainForm.name"
+            auto-complete="off"
+            placeholder="请输入系统名称" />
+        </el-form-item>
+        <el-form-item
+          label="系统地址"
+          prop="host">
+          <el-input
+            ref="host"
+            v-model.trim="mainForm.host"
+            auto-complete="off"
+            placeholder="请输入系统地址" />
+        </el-form-item>
+        <el-form-item
+          label="系统主标题"
+          prop="title">
+          <el-input
+            ref="title"
+            v-model.trim="mainForm.title"
+            auto-complete="off"
+            placeholder="请输入系统主标题" />
+        </el-form-item>
+        <el-form-item
+          label="系统关键字"
+          prop="keywords">
+          <el-input
+            ref="keywords"
+            v-model.trim="mainForm.keywords"
+            auto-complete="off"
+            placeholder="请输入系统关键字" />
+        </el-form-item>
+        <el-form-item
+          label="系统描述"
+          prop="description">
+          <el-input
+            ref="description"
+            type="textarea"
+            :rows="4"
+            v-model.trim="mainForm.description"
+            auto-complete="off"
+            placeholder="请输入系统描述" />
+        </el-form-item>
+        <el-form-item
+          label="版权信息"
+          prop="copyright">
+          <el-input
+            ref="copyright"
+            type="textarea"
+            :rows="4"
+            v-model.trim="mainForm.copyright"
+            auto-complete="off"
+            placeholder="请输入系统描述" />
+        </el-form-item>     
+        <el-form-item
+          label="系统小图标"
+          prop="faviconURL">
+          <el-input
+            ref="faviconURL"
+            v-model.trim="mainForm.faviconURL"
+            auto-complete="off"
+            placeholder="请输入系统小图标地址" />
+        </el-form-item>      
+        <el-form-item
+          label="标题分隔符"
+          prop="pageTitleSeparator">
+          <el-input
+            ref="pageTitleSeparator"
+            v-model="mainForm.pageTitleSeparator"
+            auto-complete="off"
+            placeholder="请输入标题分隔符" />
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="primary" 
+            @click="handleEditSiteConfig">确 认</el-button>
+        </el-form-item> 
+      </el-form>
+    </el-main>
+  </el-container>
 </template>
 
 <script>

@@ -1,28 +1,34 @@
 <template>
-<el-container v-loading.fullscreen.lock="isLoading">
-  <el-header class="header">  
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>权限列表</el-breadcrumb-item>
-    </el-breadcrumb>
-  </el-header>
-  <el-main class="main"> 
-    <el-row>
-      <el-input placeholder="输入关键字进行过滤" size="mini" clearable v-model="filterText" class="filterText"></el-input>
-    </el-row>
-    <el-row>
-      <el-tree
-        :data="treeData" 
-        :props="treeDefaultProps" 
-        :empty-text="emptyText"
-        node-key="id" 
-        ref="tree"
-        :filter-node-method="filterNode"
-        default-expand-all>
-      </el-tree>
-    </el-row>
-  </el-main>
-</el-container>
+  <el-container v-loading.fullscreen.lock="isLoading">
+    <el-header class="header">  
+      <el-breadcrumb
+        separator-class="el-icon-arrow-right"
+        class="breadcrumb">
+        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+        <el-breadcrumb-item>权限列表</el-breadcrumb-item>
+      </el-breadcrumb>
+    </el-header>
+    <el-main class="main"> 
+      <el-row>
+        <el-input
+          placeholder="输入关键字进行过滤"
+          size="mini"
+          clearable
+          v-model="filterText"
+          class="filterText" />
+      </el-row>
+      <el-row>
+        <el-tree
+          :data="treeData" 
+          :props="treeDefaultProps" 
+          :empty-text="emptyText"
+          node-key="id" 
+          ref="tree"
+          :filter-node-method="filterNode"
+          default-expand-all />
+      </el-row>
+    </el-main>
+  </el-container>
 </template>
 
 <script>

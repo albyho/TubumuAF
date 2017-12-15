@@ -1,14 +1,17 @@
 <template>
-<el-container v-loading.fullscreen.lock="isLoading">
-  <el-header class="header">  
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-      <el-breadcrumb-item>系统管理</el-breadcrumb-item>
-      <el-breadcrumb-item>服务器信息</el-breadcrumb-item>
-    </el-breadcrumb>
-  </el-header>
-  <el-main class="main" v-html="content">
-  </el-main>
-</el-container>
+  <el-container v-loading.fullscreen.lock="isLoading">
+    <el-header class="header">  
+      <el-breadcrumb
+        separator-class="el-icon-arrow-right"
+        class="breadcrumb">
+        <el-breadcrumb-item>系统管理</el-breadcrumb-item>
+        <el-breadcrumb-item>服务器信息</el-breadcrumb-item>
+      </el-breadcrumb>
+    </el-header>
+    <el-main
+      class="main"
+      v-html="content" />
+  </el-container>
 </template>
 
 <script>
