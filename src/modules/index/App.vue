@@ -9,7 +9,7 @@
           <el-badge
             value="new"
             :hidden="!hasNewMessage">
-            <i 
+            <i
               class="el-icon-message newMessage" 
               @click="handleNewMessage" />
           </el-badge>
@@ -156,6 +156,7 @@ export default {
       })
     },
     connectNotifictionServer () {
+      const _this = this
       try {
         /* eslint-disable no-undef */
         const hub = $.connection.notificationHub
@@ -167,16 +168,16 @@ export default {
           // 202 清除新消息标记
           // 400 连接通知失败等错误
           if (data.code === 201) {
-            this.newMessageURL = data.url
-            this.hasNewMessage = true
-            this.$notify.info({
-              title: '新的消息',
+            _this.newMessageURL = data.url
+            _this.hasNewMessage = true
+            _this.$notify.info({
+              title: data.title || '新的消息',
               message: data.message
             })
           } else if (data.code === 202) {
-            this.hasNewMessage = false
+            _this.hasNewMessage = false
           } else if (data.code === 400) {
-            this.showErrorMessage(data.message)
+            _this.showErrorMessage(data.message)
           }
         }
         $.connection.hub.start().done(function () {
