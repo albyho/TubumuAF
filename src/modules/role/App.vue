@@ -47,8 +47,7 @@
               type="text"
               size="small"
               icon="el-icon-edit"
-              @click="handleEdit(scope.row)"
-              v-if="!scope.row.isSystem" />
+              @click="handleEdit(scope.row)" />
           </template>
         </el-table-column>
         <el-table-column

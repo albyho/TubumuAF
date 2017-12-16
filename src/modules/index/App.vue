@@ -66,7 +66,6 @@ export default {
       isLoading: false,
       isGetMenusLoading: false,
       hasNewMessage: false,
-      newMessageURL: null,
       mainFrameURL: '',
       profileDisplay: {
         username: '',
@@ -168,7 +167,6 @@ export default {
           // 202 清除新消息标记
           // 400 连接通知失败等错误
           if (data.code === 201) {
-            _this.newMessageURL = data.url
             _this.hasNewMessage = true
             _this.$notify.info({
               title: data.title || '新的消息',
@@ -188,9 +186,7 @@ export default {
       }
     },
     handleNewMessage () {
-      if (this.newMessageURL) {
-        this.mainFrameURL = this.newMessageURL
-      }
+      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=notification'
     },
     showErrorMessage (message) {
       this.$message({

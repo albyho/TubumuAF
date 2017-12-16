@@ -99,6 +99,28 @@ export default {
   getUserStatus () {
     return Vue.httpClient.get('/admin/getUserStatus')
   },
+  // 通知
+  getNotificationsForManager (params) {
+    return Vue.httpClient.post('/admin/getNotificationsForManager', params)
+  },
+  addNotification (params) {
+    return Vue.httpClient.post('/admin/addNotification', params)
+  },
+  editNotification (params) {
+    return Vue.httpClient.post('/admin/editNotification', params)
+  },
+  removeNotification (params) {
+    return Vue.httpClient.post('/admin/removeNotification', params)
+  },
+  getNotifications (params) {
+    return Vue.httpClient.post('/admin/getNotifications', params)
+  },
+  readNotification (params) {
+    return Vue.httpClient.post('/admin/readNotification', params)
+  },
+  deleteNotification (params) {
+    return Vue.httpClient.post('/admin/deleteNotification', params)
+  },
   // 暂未使用
   getGroups () {
     return Vue.httpClient.get('/admin/getGroups')

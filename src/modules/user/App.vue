@@ -50,8 +50,6 @@
               plain
               @click="isSearchCriteriaFormExpand =! isSearchCriteriaFormExpand"
               :icon="isSearchCriteriaFormExpand ? 'el-icon-caret-top' : 'el-icon-caret-bottom'" />
-          </el-form-item>
-          <el-form-item>
             <el-button-group>
               <el-button
                 type="primary"
