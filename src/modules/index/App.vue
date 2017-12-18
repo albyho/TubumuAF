@@ -170,6 +170,8 @@ export default {
             _this.hasNewMessage = true
             _this.$notify.info({
               dangerouslyUseHTMLString: true,
+              offset: 64,
+              duration: 5000,
               title: data.title || '新的消息',
               message: data.message
             })
