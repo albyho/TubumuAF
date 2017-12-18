@@ -1,6 +1,6 @@
 <template>
   <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">  
+    <el-header class="header">
       <el-breadcrumb
         separator-class="el-icon-arrow-right"
         class="breadcrumb">
@@ -8,7 +8,7 @@
         <el-breadcrumb-item>权限列表</el-breadcrumb-item>
       </el-breadcrumb>
     </el-header>
-    <el-main class="main"> 
+    <el-main class="main">
       <el-row>
         <el-input
           placeholder="输入关键字进行过滤"
@@ -19,10 +19,10 @@
       </el-row>
       <el-row>
         <el-tree
-          :data="treeData" 
-          :props="treeDefaultProps" 
+          :data="treeData"
+          :props="treeDefaultProps"
           :empty-text="emptyText"
-          node-key="id" 
+          node-key="id"
           ref="tree"
           :filter-node-method="filterNode"
           default-expand-all />

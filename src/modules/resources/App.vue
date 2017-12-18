@@ -1,6 +1,6 @@
 <template>
   <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">  
+    <el-header class="header">
       <el-breadcrumb
         separator-class="el-icon-arrow-right"
         class="breadcrumb">

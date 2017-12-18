@@ -1,6 +1,6 @@
 <template>
   <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">  
+    <el-header class="header">
       <el-breadcrumb
         separator-class="el-icon-arrow-right"
         class="breadcrumb">
@@ -63,7 +63,7 @@
             <el-button
               type="primary"
               icon="el-icon-circle-plus-outline"
-              @click="handleAdd()">添加</el-button>  
+              @click="handleAdd()">添加</el-button>
           </el-form-item>
         </el-row>
         <el-row v-show="isSearchCriteriaFormExpand">
@@ -128,7 +128,7 @@
                 class="el-icon-question"
                 v-show="scope.row.Mobile && !scope.row.MobileIsValid" />
               <span>{{ scope.row.Mobile }}</span>
-            </template>        
+            </template>
           </el-table-column>
           <el-table-column label="Email">
             <template slot-scope="scope">
@@ -136,7 +136,7 @@
                 class="el-icon-question"
                 v-show="scope.row.Email && !scope.row.EmailIsValid" />
               <span>{{ scope.row.Email }}</span>
-            </template>      
+            </template>
           </el-table-column>
           <el-table-column
             prop="StatusText"
@@ -381,7 +381,7 @@
       </el-dialog>
 
     </el-main>
-    <el-footer class="footer">    
+    <el-footer class="footer">
       <el-pagination
         @size-change="handlePaginationSizeChange"
         @current-change="handlePaginationCurrentChange"

@@ -1,6 +1,6 @@
 <template>
   <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">  
+    <el-header class="header">
       <el-breadcrumb
         separator-class="el-icon-arrow-right"
         class="breadcrumb">
@@ -73,7 +73,7 @@
             v-model.trim="mainForm.copyright"
             auto-complete="off"
             placeholder="请输入系统描述" />
-        </el-form-item>     
+        </el-form-item>
         <el-form-item
           label="系统小图标"
           prop="faviconURL">
@@ -82,7 +82,7 @@
             v-model.trim="mainForm.faviconURL"
             auto-complete="off"
             placeholder="请输入系统小图标地址" />
-        </el-form-item>      
+        </el-form-item>
         <el-form-item
           label="标题分隔符"
           prop="pageTitleSeparator">
@@ -94,9 +94,9 @@
         </el-form-item>
         <el-form-item>
           <el-button
-            type="primary" 
+            type="primary"
             @click="handleEditSiteConfig">确 认</el-button>
-        </el-form-item> 
+        </el-form-item>
       </el-form>
     </el-main>
   </el-container>

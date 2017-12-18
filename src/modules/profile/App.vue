@@ -1,13 +1,13 @@
 <template>
   <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">  
+    <el-header class="header">
       <el-breadcrumb
         separator-class="el-icon-arrow-right"
         class="breadcrumb">
         <el-breadcrumb-item>我的资料</el-breadcrumb-item>
       </el-breadcrumb>
     </el-header>
-    <el-main class="main"> 
+    <el-main class="main">
       <el-tabs
         v-model="activeTabName"
         type="card">
@@ -62,7 +62,7 @@
               <el-button
                 type="primary"
                 @click="handleChangeProfile">修改资料</el-button>
-            </el-form-item> 
+            </el-form-item>
           </el-form>
         </el-tab-pane>
         <el-tab-pane
@@ -109,7 +109,7 @@
               <el-button
                 type="primary"
                 @click="handleChangePassword">修改密码</el-button>
-            </el-form-item> 
+            </el-form-item>
           </el-form>
         </el-tab-pane>
       </el-tabs>

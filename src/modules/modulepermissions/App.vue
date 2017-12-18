@@ -1,26 +1,26 @@
 <template>
   <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">  
-      <el-breadcrumb 
+    <el-header class="header">
+      <el-breadcrumb
         separator-class="el-icon-arrow-right"
         class="breadcrumb">
         <el-breadcrumb-item>模块管理</el-breadcrumb-item>
         <el-breadcrumb-item>权限列表</el-breadcrumb-item>
       </el-breadcrumb>
     </el-header>
-    <el-main class="main"> 
+    <el-main class="main">
       <el-row>
         <el-button-group>
           <el-button
             type="primary"
             size="mini"
             icon="el-icon-refresh"
-            @click="handleExtractModulePermissions">提取模块权限</el-button>  
+            @click="handleExtractModulePermissions">提取模块权限</el-button>
           <el-button
             type="primary"
             size="mini"
             icon="el-icon-time"
-            @click="handleClearModulePermissions">清理模块权限</el-button>  
+            @click="handleClearModulePermissions">清理模块权限</el-button>
         </el-button-group>
       </el-row>
       <el-row>
@@ -36,7 +36,7 @@
           <el-table-column
             prop="moduleName"
             label="模块"
-            width="180" />    
+            width="180" />
           <el-table-column
             prop="name"
             label="名称" />

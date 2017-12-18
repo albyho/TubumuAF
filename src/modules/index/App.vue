@@ -3,29 +3,29 @@
     <el-header>
       <el-row>
         <el-col :span="16">系统管理</el-col>
-        <el-col 
-          :span="8" 
+        <el-col
+          :span="8"
           class="userinfo">
           <el-badge
             value="new"
             :hidden="!hasNewMessage">
             <i
-              class="el-icon-message newMessage" 
+              class="el-icon-message newMessage"
               @click="handleNewMessage" />
           </el-badge>
           <el-dropdown
-            trigger="hover" 
+            trigger="hover"
             :show-timeout="150">
             <span class="el-dropdown-link userinfo-inner">
-              <img 
-                :src="profileDisplay.headURL" 
+              <img
+                :src="profileDisplay.headURL"
                 v-show="profileDisplay.headURL"> [ {{ profileDisplay.groups.map(m => m.name).join(' - ') }} ] {{ profileDisplay.displayName || profileDisplay.username }}</span>
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
               <el-dropdown-item @click.native="profile">我的资料</el-dropdown-item>
               <el-dropdown-item @click.native="resources">我的文件</el-dropdown-item>
-              <el-dropdown-item 
-                divided 
+              <el-dropdown-item
+                divided
                 @click.native="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -34,7 +34,7 @@
     </el-header>
     <el-container class="el-container-inner">
       <el-aside
-        width="200" 
+        width="200"
         v-loading="isGetMenusLoading">
         <el-menu
           default-active="menuActiveIndex"
@@ -43,15 +43,15 @@
           @close="handleClose"
           @select="handleSelect">
           <xl-menu
-            v-for="(item, itemindex) in menus" 
+            v-for="(item, itemindex) in menus"
             :key="itemindex"
             :model="item"
             :index="itemindex.toString()" />
         </el-menu>
       </el-aside>
-      <el-main><iframe 
+      <el-main><iframe
         :src="mainFrameURL"
-        class="el-main-content" 
+        class="el-main-content"
         scrolling="yes" /></el-main>
     </el-container>
   </el-container>

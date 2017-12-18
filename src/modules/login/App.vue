@@ -1,7 +1,7 @@
 <template>
-  <el-form 
+  <el-form
     ref="mainForm"
-    :model="mainForm" 
+    :model="mainForm"
     :rules="mainFormRules"
     v-loading.fullscreen.lock="isLoading"
     label-position="left"
@@ -26,7 +26,7 @@
         auto-complete="off"
         @keyup.enter.native="handleFocus('validateCode')"
         placeholder="密码" />
-    </el-form-item>    
+    </el-form-item>
     <el-form-item prop="validateCode">
       <el-input
         ref="validateCode"

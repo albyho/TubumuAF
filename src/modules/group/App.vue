@@ -1,8 +1,8 @@
 <template>
   <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">  
-      <el-breadcrumb 
-        separator-class="el-icon-arrow-right" 
+    <el-header class="header">
+      <el-breadcrumb
+        separator-class="el-icon-arrow-right"
         class="breadcrumb">
         <el-breadcrumb-item>用户管理</el-breadcrumb-item>
         <el-breadcrumb-item>用户组列表</el-breadcrumb-item>
@@ -10,66 +10,66 @@
     </el-header>
     <el-main class="main">
       <el-row>
-        <el-input 
+        <el-input
           placeholder="输入关键字进行过滤"
-          size="mini" 
-          clearable 
-          v-model="filterText" 
+          size="mini"
+          clearable
+          v-model="filterText"
           class="filterText" />
-        <el-button 
-          type="primary" 
-          size="mini" 
-          icon="el-icon-circle-plus-outline" 
-          @click="handleAdd()">添加</el-button>  
+        <el-button
+          type="primary"
+          size="mini"
+          icon="el-icon-circle-plus-outline"
+          @click="handleAdd()">添加</el-button>
       </el-row>
       <el-row>
         <el-tree
-          :data="treeData" 
-          :props="treeDefaultProps" 
+          :data="treeData"
+          :props="treeDefaultProps"
           :empty-text="emptyText"
-          node-key="id" 
+          node-key="id"
           ref="tree"
           :filter-node-method="filterNode"
           :render-content="renderContent"
           :default-expand-all="true" />
       </el-row>
 
-      <el-dialog 
-        :visible.sync="mainFormDialogVisible" 
-        @submit.native.prevent 
-        :close-on-click-modal="false" 
+      <el-dialog
+        :visible.sync="mainFormDialogVisible"
+        @submit.native.prevent
+        :close-on-click-modal="false"
         width="600px">
         <span slot="title">
           {{ editActive ? '编辑' : '添加' }}
         </span>
-        <el-form 
-          ref="mainForm" 
-          :model="mainForm" 
-          :rules="mainFormRules" 
-          label-position="right" 
-          label-width="100px" 
+        <el-form
+          ref="mainForm"
+          :model="mainForm"
+          :rules="mainFormRules"
+          label-position="right"
+          label-width="100px"
           size="mini">
-          <el-tabs 
-            v-model="activeTabName" 
+          <el-tabs
+            v-model="activeTabName"
             type="card">
-            <el-tab-pane 
-              label="基本信息" 
+            <el-tab-pane
+              label="基本信息"
               name="first">
               <el-form-item label="所属分组">
-                <el-cascader 
-                  :options="editParentTreeData" 
-                  :props="editParentTreeDefaultProps" 
-                  clearable 
-                  change-on-select 
+                <el-cascader
+                  :options="editParentTreeData"
+                  :props="editParentTreeDefaultProps"
+                  clearable
+                  change-on-select
                   v-model="mainForm.parentIDPath" />
               </el-form-item>
-              <el-form-item 
-                label="用户组名称" 
+              <el-form-item
+                label="用户组名称"
                 prop="name">
-                <el-input 
-                  v-model.trim="mainForm.name" 
-                  auto-complete="off" 
-                  placeholder="请输入用户组名称" 
+                <el-input
+                  v-model.trim="mainForm.name"
+                  auto-complete="off"
+                  placeholder="请输入用户组名称"
                   ref="name" />
               </el-form-item>
               <el-form-item label="是否包含用户">
@@ -85,7 +85,7 @@
               <el-form-item label="限制角色">
                 <el-checkbox-group v-model="mainForm.limitRoleIDs">
                   <el-checkbox 
-                    v-for="role in editRoleListData" 
+                    v-for="role in editRoleListData"
                     :label="role.roleID" 
                     :key="role.roleID">{{ role.name }}</el-checkbox>
                 </el-checkbox-group>
@@ -96,9 +96,9 @@
               name="third">
               <el-form-item label="包含角色">
                 <el-checkbox-group v-model="mainForm.roleIDs">
-                  <el-checkbox 
-                    v-for="role in editRoleListData" 
-                    :label="role.roleID" 
+                  <el-checkbox
+                    v-for="role in editRoleListData"
+                    :label="role.roleID"
                     :key="role.roleID">{{ role.name }}</el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
@@ -107,8 +107,8 @@
               label="包含权限" 
               name="fourth">
               <el-form-item label="包含权限">
-                <el-tree 
-                  :data="editPermissionTreeData" 
+                <el-tree
+                  :data="editPermissionTreeData"
                   :props="editPermissionTreeDefaultProps"
                   node-key="id"
                   ref="editPermissionTree"
@@ -121,61 +121,61 @@
             </el-tab-pane>
           </el-tabs>
         </el-form>
-        <div 
-          slot="footer" 
+        <div
+          slot="footer"
           class="dialog-footer">
           <el-button @click="handleMainFormSure(false)">取 消</el-button>
-          <el-button 
-            type="primary" 
+          <el-button
+            type="primary"
             @click="handleMainFormSure(true)">确 定</el-button>
         </div>
       </el-dialog>
 
-      <el-dialog 
-        title="提示" 
+      <el-dialog
+        title="提示"
         :visible.sync="removeConfirmDialogVisible"
         width="320px"
         center>
         <span>删除该用户组后，相关的数据也将被删除。<br>确定要删除吗？</span>
-        <div 
-          slot="footer" 
+        <div
+          slot="footer"
           class="dialog-footer">
           <el-button @click="handleRemoveSure(false)">取 消</el-button>
-          <el-button 
-            type="primary" 
+          <el-button
+            type="primary"
             @click="handleRemoveSure(true)">确 定</el-button>
         </div>
       </el-dialog>
 
-      <el-dialog 
-        :visible.sync="moveFormDialogVisible" 
-        @submit.native.prevent 
-        :close-on-click-modal="false" 
+      <el-dialog
+        :visible.sync="moveFormDialogVisible"
+        @submit.native.prevent
+        :close-on-click-modal="false"
         width="600px">
         <span slot="title">
           移动节点: {{ moveActive ? moveActive.name : null }}
         </span>
-        <el-form 
-          ref="moveForm" 
-          :model="moveForm" 
-          :rules="moveFormRules" 
-          label-position="right" 
-          label-width="100px" 
+        <el-form
+          ref="moveForm"
+          :model="moveForm"
+          :rules="moveFormRules"
+          label-position="right"
+          label-width="100px"
           size="mini">
-          <el-form-item 
-            label="目标节点" 
+          <el-form-item
+            label="目标节点"
             prop="targetIDPath">
-            <el-cascader 
-              :options="editParentTreeData" 
+            <el-cascader
+              :options="editParentTreeData"
               :props="editParentTreeDefaultProps"
               clearable
-              change-on-select 
+              change-on-select
               v-model="moveForm.targetIDPath" />
           </el-form-item>
           <el-form-item label="位置">
             <template>
-              <el-radio 
-                v-model="moveForm.movingLocation" 
+              <el-radio
+                v-model="moveForm.movingLocation"
                 :label="0"
                 border>目标之下</el-radio>
               <el-radio
@@ -184,18 +184,18 @@
                 border>目标之上</el-radio>
             </template>
           </el-form-item>
-          <el-form-item 
+          <el-form-item
             label="作为子节点"
             v-if="moveForm.movingLocation === 0">
             <el-switch v-model="moveForm.isChild" />
           </el-form-item>
         </el-form>
-        <div 
+        <div
           slot="footer"
           class="dialog-footer">
           <el-button @click="handleMoveFormSure(false)">取 消</el-button>
-          <el-button 
-            type="primary" 
+          <el-button
+            type="primary"
             @click="handleMoveFormSure(true)">确 定</el-button>
         </div>
       </el-dialog>

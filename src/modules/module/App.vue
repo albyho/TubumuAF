@@ -1,6 +1,6 @@
 <template>
   <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">  
+    <el-header class="header">
       <el-breadcrumb
         separator-class="el-icon-arrow-right"
         class="breadcrumb">
@@ -8,7 +8,7 @@
         <el-breadcrumb-item>模块信息</el-breadcrumb-item>
       </el-breadcrumb>
     </el-header>
-    <el-main class="main"> 
+    <el-main class="main">
       <el-row>
         <el-table
           :data="item.modules"
@@ -18,7 +18,7 @@
           <el-table-column
             prop="Name"
             label="模块名称"
-            width="160" />    
+            width="160" />
           <el-table-column
             prop="Type"
             label="类型" />
@@ -31,8 +31,8 @@
             label="启用"
             width="60">
             <template slot-scope="scope">
-              <i 
-                class="el-icon-check" 
+              <i
+                class="el-icon-check"
                 v-show="scope.row.Enabled" />
             </template>
           </el-table-column>
@@ -79,7 +79,7 @@
           <el-table-column
             prop="Name"
             label="数据代理名称"
-            width="160" />    
+            width="160" />
           <el-table-column
             prop="Type"
             label="类型" />
@@ -107,7 +107,7 @@
           <el-table-column
             prop="Name"
             label="数据库链接名称"
-            width="160" />    
+            width="160" />
           <el-table-column
             prop="ConnectionString"
             label="链接字符串" />

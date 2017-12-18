@@ -1,6 +1,6 @@
 <template>
   <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">  
+    <el-header class="header">
       <el-breadcrumb
         separator-class="el-icon-arrow-right"
         class="breadcrumb">
@@ -15,7 +15,7 @@
             type="primary"
             size="mini"
             icon="el-icon-circle-plus-outline"
-            @click="handleAdd">添加</el-button>  
+            @click="handleAdd">添加</el-button>
         </el-col>
       </el-row>
       <el-table
@@ -27,7 +27,7 @@
           prop="name"
           label="名称" />
         <el-table-column
-          align="center" 
+          align="center"
           width="42">
           <template slot-scope="scope">
             <!-- 禁止拖动：不使用 v-show 和 :class，而是直接使用 v-if 也可行 -->

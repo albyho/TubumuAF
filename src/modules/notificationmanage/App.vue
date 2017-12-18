@@ -1,6 +1,6 @@
 <template>
   <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">  
+    <el-header class="header">
       <el-breadcrumb
         separator-class="el-icon-arrow-right"
         class="breadcrumb">
@@ -151,9 +151,9 @@
             <el-form-item
               label="消息"
               prop="message">
-            <quill-editor 
-              v-model="mainForm.message" 
-              ref="content" 
+            <quill-editor
+              v-model="mainForm.message"
+              ref="content"
               :options="editorOption" />
             </el-form-item>
         </el-form>
@@ -184,7 +184,7 @@
       </el-dialog>
 
     </el-main>
-    <el-footer class="footer">    
+    <el-footer class="footer">
       <el-pagination
         @size-change="handlePaginationSizeChange"
         @current-change="handlePaginationCurrentChange"

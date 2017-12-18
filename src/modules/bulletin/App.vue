@@ -1,61 +1,61 @@
 <template>
   <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">  
-      <el-breadcrumb 
-        separator-class="el-icon-arrow-right" 
+    <el-header class="header">
+      <el-breadcrumb
+        separator-class="el-icon-arrow-right"
         class="breadcrumb">
         <el-breadcrumb-item>系统管理</el-breadcrumb-item>
         <el-breadcrumb-item>系统公告</el-breadcrumb-item>
       </el-breadcrumb>
     </el-header>
     <el-main class="main">
-      <el-form 
-        ref="mainForm" 
-        :model="mainForm" 
-        :rules="mainFormRules" 
-        label-position="right" 
-        label-width="120px" 
+      <el-form
+        ref="mainForm"
+        :model="mainForm"
+        :rules="mainFormRules"
+        label-position="right"
+        label-width="120px"
         size="mini">
-        <el-form-item 
-          label="公告标题" 
+        <el-form-item
+          label="公告标题"
           prop="title">
-          <el-input 
-            v-model.trim="mainForm.title" 
-            auto-complete="off" 
-            placeholder="请输入公告标题" 
+          <el-input
+            v-model.trim="mainForm.title"
+            auto-complete="off"
+            placeholder="请输入公告标题"
             ref="title" />
         </el-form-item>
-        <el-form-item 
-          label="公告内容" 
+        <el-form-item
+          label="公告内容"
           prop="content">
-          <quill-editor 
-            v-model="mainForm.content" 
-            ref="content" 
+          <quill-editor
+            v-model="mainForm.content"
+            ref="content"
             :options="editorOption" />
         </el-form-item>
-        <el-form-item 
-          label="发布日期" 
+        <el-form-item
+          label="发布日期"
           prop="publishDate">
-          <el-date-picker 
-            v-model="mainForm.publishDate" 
-            align="right" 
-            type="date" 
-            placeholder="选择发布日期" 
-            :picker-options="publishDatePickerOptions" 
+          <el-date-picker
+            v-model="mainForm.publishDate"
+            align="right"
+            type="date"
+            placeholder="选择发布日期"
+            :picker-options="publishDatePickerOptions"
             ref="publishDate" />
         </el-form-item>
-        <el-form-item 
-          label="是否显示" 
+        <el-form-item
+          label="是否显示"
           prop="isShow">
-          <el-switch 
-            v-model="mainForm.isShow" 
+          <el-switch
+            v-model="mainForm.isShow"
             ref="isShow" />
         </el-form-item>
         <el-form-item>
-          <el-button 
-            type="primary" 
+          <el-button
+            type="primary"
             @click="handleEditBulletin">确 认</el-button>
-        </el-form-item> 
+        </el-form-item>
       </el-form>
     </el-main>
   </el-container>
