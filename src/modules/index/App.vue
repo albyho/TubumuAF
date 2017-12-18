@@ -189,7 +189,7 @@ export default {
     },
     handleNewMessage () {
       this.hasNewMessage = false
-      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E9%80%9A%E7%9F%A5%E4%B8%AD%E5%BF%83&Name=notification'
+      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E9%80%9A%E7%9F%A5%E4%B8%AD%E5%BF%83&Name=notification&t=' + (new Date().getTime())
     },
     showErrorMessage (message) {
       this.$message({

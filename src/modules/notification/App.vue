@@ -384,9 +384,9 @@ export default {
       const params = {
         notificationIDs: notificationIDs
       }
-      this.isLoading = true
+      // this.isLoading = true
       api.readNotifications(params).then(response => {
-        this.isLoading = false
+        // this.isLoading = false
         // 不重新获取数据，但设置 readTime 避免重复请求服务器
         // this.getPage()
         for (let item of this.page.list) {
@@ -398,7 +398,7 @@ export default {
           }
         }
       }, error => {
-        this.isLoading = false
+        // this.isLoading = false
         this.showErrorMessage(error.message)
       })
     },
