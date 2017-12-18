@@ -4,7 +4,7 @@
       <el-breadcrumb
         separator-class="el-icon-arrow-right"
         class="breadcrumb">
-        <el-breadcrumb-item>通知管理</el-breadcrumb-item>
+        <el-breadcrumb-item>通知中心</el-breadcrumb-item>
       </el-breadcrumb>
     </el-header>
     <el-main class="main">
@@ -15,6 +15,13 @@
         inline
         size="mini">
         <el-row>
+          <el-form-item>
+            <el-radio-group v-model="isReadedNumber" @change="handleIsReadChange">
+              <el-radio-button :label="1">未读</el-radio-button>
+              <el-radio-button :label="2">已读</el-radio-button>
+              <el-radio-button >全部</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item>
             <el-input
               placeholder="关键字(标题)"
@@ -42,10 +49,20 @@
                 icon="el-icon-search"
                 @click="handleSearchAll()">全部</el-button>
             </el-button-group>
-            <el-button
-              type="primary"
-              icon="el-icon-circle-plus-outline"
-              @click="handleAdd()">添加</el-button>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item>
+            <el-button-group>
+              <el-button
+                plain
+                icon="el-icon-view"
+                @click="handleReadMultiple()">设置已读</el-button>
+              <el-button
+                plain
+                icon="el-icon-remove-outline"
+                @click="handleDeleteMultiple()">删除通知</el-button>
+            </el-button-group>
           </el-form-item>
         </el-row>
       </el-form>
@@ -55,11 +72,17 @@
           size="small"
           style="width: 100%"
           :empty-text="emptyText"
+          @selection-change="handleSelectionChange"
+          @expand-change="handleExpandChange"
           @sort-change="handleSortChange">
           <el-table-column type="expand">
             <template slot-scope="props">
               <div v-html="props.row.message"></div>
             </template>
+          </el-table-column>
+          <el-table-column
+            type="selection"
+            width="56">
           </el-table-column>
           <el-table-column
             prop="notificationID"
@@ -85,16 +108,9 @@
             label="标题" />
           <el-table-column
             label="已读"
-            width="100" v-if="searchCriteriaForm.toUserID">
+            width="100">
             <template slot-scope="scope">
               <span>{{ scope.row.readTime ? '√' : '' }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="已删"
-            width="100" v-if="searchCriteriaForm.toUserID">
-            <template slot-scope="scope">
-              <span>{{ scope.row.deleteTime ? '√' : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -108,78 +124,58 @@
               <el-button
                 type="text"
                 size="small"
-                icon="el-icon-edit"
-                @click="handleEdit(scope.row)" />
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            width="42">
-            <template slot-scope="scope">
-              <el-button
-                type="text"
-                size="small"
                 icon="el-icon-delete"
-                @click="handleRemove(scope.row)" />
+                @click="handleDeleteOne(scope.row)" />
             </template>
           </el-table-column>
         </el-table>
       </el-row>
 
       <el-dialog
-        :visible.sync="mainFormDialogVisible"
-        @submit.native.prevent
-        :close-on-click-modal="false"
-        width="780px">
-        <span slot="title">
-          {{ editActive ? '编辑' : '添加' }}
-        </span>
-        <el-form
-          ref="mainForm"
-          :model="mainForm"
-          :rules="mainFormRules"
-          label-position="right"
-          label-width="80px"
-          size="mini">
-          <el-form-item
-              label="标题"
-              prop="title">
-              <el-input
-                v-model="mainForm.title"
-                type="text" />
-            </el-form-item>
-            <el-form-item
-              label="消息"
-              prop="message">
-            <quill-editor 
-              v-model="mainForm.message" 
-              ref="content" 
-              :options="editorOption" />
-            </el-form-item>
-        </el-form>
+        title="提示"
+        :visible.sync="deleteOneConfirmDialogVisible"
+        width="320px"
+        center>
+        <span>确定要删除该通知吗？</span>
         <div
           slot="footer"
           class="dialog-footer">
-          <el-button @click="handleMainFormSure(false)">取 消</el-button>
+          <el-button @click="handleDeleteOneSure(false)">取 消</el-button>
           <el-button
             type="primary"
-            @click="handleMainFormSure(true)">确 定</el-button>
+            @click="handleDeleteOneSure(true)">确 定</el-button>
         </div>
       </el-dialog>
 
       <el-dialog
         title="提示"
-        :visible.sync="removeConfirmDialogVisible"
+        :visible.sync="deleteMultipleConfirmDialogVisible"
         width="320px"
         center>
-        <span>删除该通知后，相关的数据也将被删除。<br>确定要删除吗？</span>
+        <span>确定要将选择的通知删除吗？</span>
         <div
           slot="footer"
           class="dialog-footer">
-          <el-button @click="handleRemoveSure(false)">取 消</el-button>
+          <el-button @click="handleDeleteMultipleSure(false)">取 消</el-button>
           <el-button
             type="primary"
-            @click="handleRemoveSure(true)">确 定</el-button>
+            @click="handleDeleteMultipleSure(true)">确 定</el-button>
+        </div>
+      </el-dialog>
+
+      <el-dialog
+        title="提示"
+        :visible.sync="readMultipleConfirmDialogVisible"
+        width="320px"
+        center>
+        <span>确定要将选择的通知设置为已读吗？</span>
+        <div
+          slot="footer"
+          class="dialog-footer">
+          <el-button @click="handleReadMultipleSure(false)">取 消</el-button>
+          <el-button
+            type="primary"
+            @click="handleReadMultipleSure(true)">确 定</el-button>
         </div>
       </el-dialog>
 
@@ -207,22 +203,20 @@ export default {
     return {
       // 主要数据
       isLoading: false,
-      editorOption: {
-        placeholder: '请输入消息'
-      },
       page: {
         list: null,
         totalItemCount: null,
         totalPageCount: null
       },
-      isSearchCriteriaFormExpand: false,
       searchCriteriaForm: {
         keyword: null,
         toUserID: null,
         creationDate: null,
         creationDateBegin: null,
-        creationDateEnd: null
+        creationDateEnd: null,
+        isReaded: false
       },
+      isReadedNumber: 1, // 1 未读 2 已读 undefined 全部
       pagingInfoForm: {
         pageNumber: 1,
         pageSize: 20,
@@ -232,9 +226,14 @@ export default {
           sortDir: 'DESC'
         }
       },
+      // 选中项
+      selection: null,
       // 删除
-      removeActive: null,                 // 暂存删除项
-      removeConfirmDialogVisible: false,  // 删除确认对话框是否可见
+      deleteOneActive: null,                      // 暂存删除项
+      deleteOneConfirmDialogVisible: false,       // 删除确认对话框是否可见
+      deleteMultipleConfirmDialogVisible: false,
+      // 已读
+      readMultipleConfirmDialogVisible: false,
 
       // 添加/编辑
       editActive: null,                   // 暂存编辑项，也可用来判断是否添加还是编辑
@@ -271,7 +270,7 @@ export default {
     getPage () {
       this.isLoading = true
       const params = _.extend({}, this.pagingInfoForm, this.searchCriteriaForm)
-      api.getNotificationsForManager(params).then(response => {
+      api.getNotifications(params).then(response => {
         this.isLoading = false
         this.page = response.data.page
       }, error => {
@@ -291,6 +290,8 @@ export default {
     handleSearchAll () {
       this.pagingInfoForm.pageNumber = 1
       this.searchCriteriaForm.keyword = null
+      this.searchCriteriaForm.creationDateBegin = null
+      this.searchCriteriaForm.creationDateEnd = null
       this.getPage()
     },
     handleSearch () {
@@ -301,98 +302,101 @@ export default {
       }
       this.getPage()
     },
-    handleAdd () {
-      this.editActive = null
-      this.mainFormDialogVisible = true
-      this.mainForm.notificationID = null
-      this.mainForm.title = null
-      this.mainForm.message = null
-      this.$nextTick(() => {
-        this.clearValidate('mainForm')
-      })
+    handleIsReadChange (val) {
+      // console.log('handleIsReadChange', val)
+      this.searchCriteriaForm.isReaded = !val ? null : val === 2
+      this.handleSearch()
     },
-    handleEdit (row) {
-      console.log('handleEdit', row)
-      this.editActive = row
-      this.mainFormDialogVisible = true
-      this.mainForm.notificationID = row.notificationID
-      this.mainForm.title = row.title
-      this.mainForm.message = row.message
-      this.$nextTick(() => {
-        this.clearValidate('mainForm')
-      })
+    handleDeleteOne (row) {
+      this.deleteOneActive = row
+      this.deleteOneConfirmDialogVisible = true
     },
-    handleMainFormSure (sure) {
-      console.log('handleMainFormSure', sure)
+    handleDeleteOneSure (sure) {
+      this.deleteOneConfirmDialogVisible = false
       if (sure) {
-        // 提交数据
-        if (this.editActive) {
-          this.edit()
-        } else {
-          this.add()
-        }
+        this.deleteOne()
       } else {
-        this.mainFormDialogVisible = false
-        // this.editActive = null // 注：添加状态 endActive 本就为 null
+        this.deleteOneActive = null
       }
     },
-    handleRemove (row) {
-      this.removeActive = row
-      this.removeConfirmDialogVisible = true
-    },
-    handleRemoveSure (sure) {
-      this.removeConfirmDialogVisible = false
-      if (sure) {
-        this.remove()
-      } else {
-        this.removeActive = null
-      }
-    },
-    add () {
-      this.$refs.mainForm.validate(valid => {
-        if (!valid) return false // 客户端校验未通过
-        this.isLoading = true
-        const params = this.mainForm
-        api.addNotification(params).then(response => {
-          this.isLoading = false
-          this.mainFormDialogVisible = false
-          this.getPage()
-        }, error => {
-          this.isLoading = false
-          this.showErrorMessage(error.message)
+    handleDeleteMultiple () {
+      if (!this.selection || this.selection.length === 0) {
+        this.$message({
+          message: '请选择要删除的记录',
+          type: 'warning'
         })
-      })
-    },
-    edit () {
-      if (!this.editActive) {
-        this.showErrorMessage('异常：无编辑目标')
         return
       }
-      this.$refs.mainForm.validate(valid => {
-        if (!valid) return false // 客户端校验未通过
-        this.isLoading = true
-        const params = this.mainForm
-        api.editNotification(params).then(response => {
-          this.isLoading = false
-          this.editActive = null
-          this.mainFormDialogVisible = false
-          this.getPage()
-        }, error => {
-          this.isLoading = false
-          this.showErrorMessage(error.message)
-        })
-      })
+      this.deleteMultipleConfirmDialogVisible = true
     },
-    remove () {
-      if (!this.removeActive) return
+    handleDeleteMultipleSure (sure) {
+      this.deleteMultipleConfirmDialogVisible = false
+      if (sure) {
+        this.deleteMultiple()
+      }
+    },
+    deleteOne () {
+      if (!this.deleteOneActive) return
+      this.delete([this.deleteOneActive.notificationID])
+    },
+    deleteMultiple () {
+      this.delete(this.selection.map(m => m.notificationID))
+    },
+    delete (notificationIDs) {
+      if (!notificationIDs || notificationIDs.length === 0) return
       const params = {
-        notificationID: this.removeActive.notificationID
+        notificationIDs: notificationIDs
       }
       this.isLoading = true
-      api.removeNotification(params).then(response => {
+      api.deleteNotifications(params).then(response => {
         this.isLoading = false
-        this.removeActive = null
+        this.deleteOneActive = null
         this.getPage()
+      }, error => {
+        this.isLoading = false
+        this.showErrorMessage(error.message)
+      })
+    },
+    handleReadOne (row) {
+      this.read([row.notificationID])
+    },
+    handleReadMultiple () {
+      if (!this.selection || this.selection.length === 0) {
+        this.$message({
+          message: '请选择要设置为已读的记录',
+          type: 'warning'
+        })
+        return
+      }
+      this.readMultipleConfirmDialogVisible = true
+    },
+    handleReadMultipleSure (sure) {
+      this.readMultipleConfirmDialogVisible = false
+      if (sure) {
+        this.readMultiple()
+      }
+    },
+    readMultiple () {
+      this.read(this.selection.map(m => m.notificationID))
+    },
+    read (notificationIDs) {
+      if (!notificationIDs || notificationIDs.length === 0) return
+      const params = {
+        notificationIDs: notificationIDs
+      }
+      this.isLoading = true
+      api.readNotifications(params).then(response => {
+        this.isLoading = false
+        // 不重新获取数据，但设置 readTime 避免重复请求服务器
+        // this.getPage()
+        for (let item of this.page.list) {
+          for (let notificationID of notificationIDs) {
+            if (item.notificationID === notificationID) {
+              item.readTime = new Date()
+              continue
+            }
+          }
+        }
       }, error => {
         this.isLoading = false
         this.showErrorMessage(error.message)
@@ -415,6 +419,15 @@ export default {
       this.pagingInfoForm.sortInfo.sortDir = val.order === 'descending' ? 'DESC' : 'ASC'
       this.pagingInfoForm.pageNumber = 1
       this.getPage()
+    },
+    handleSelectionChange (val) {
+      // console.log('handleSelectionChange', val)
+      this.selection = val
+    },
+    handleExpandChange (row, expandedRows) {
+      console.log('handleExpandChange', row, expandedRows)
+      if (row.readTime) return
+      this.handleReadOne(row)
     }
   }
 }

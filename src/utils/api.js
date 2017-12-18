@@ -115,11 +115,14 @@ export default {
   getNotifications (params) {
     return Vue.httpClient.post('/admin/getNotifications', params)
   },
-  readNotification (params) {
-    return Vue.httpClient.post('/admin/readNotification', params)
+  readNotifications (params) {
+    return Vue.httpClient.post('/admin/readNotifications', params)
   },
-  deleteNotification (params) {
-    return Vue.httpClient.post('/admin/deleteNotification', params)
+  deleteNotifications (params) {
+    return Vue.httpClient.post('/admin/deleteNotifications', params)
+  },
+  getNewestNotification (params) {
+    return Vue.httpClient.post('/admin/getNewestNotification', params)
   },
   // 暂未使用
   getGroups () {

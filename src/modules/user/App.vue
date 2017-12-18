@@ -84,7 +84,7 @@
           size="small"
           style="width: 100%"
           :empty-text="emptyText"
-          @sort-change="sortChange">
+          @sort-change="handleSortChange">
           <el-table-column
             prop="UserID"
             label="#"
@@ -819,9 +819,9 @@ export default {
         type: 'error'
       })
     },
-    sortChange (v) {
-      this.pagingInfoForm.sortInfo.sort = v.prop
-      this.pagingInfoForm.sortInfo.sortDir = v.order === 'descending' ? 'DESC' : 'ASC'
+    handleSortChange (val) {
+      this.pagingInfoForm.sortInfo.sort = val.prop
+      this.pagingInfoForm.sortInfo.sortDir = val.order === 'descending' ? 'DESC' : 'ASC'
       this.pagingInfoForm.pageNumber = 1
       this.getPage()
     },

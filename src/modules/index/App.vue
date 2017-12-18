@@ -65,7 +65,7 @@ export default {
     return {
       isLoading: false,
       isGetMenusLoading: false,
-      hasNewMessage: false,
+      hasNewMessage: null,
       mainFrameURL: '',
       profileDisplay: {
         username: '',
@@ -162,17 +162,19 @@ export default {
         hub.client.receviedMessage = function (data) {
           // console.log(data)
           // 错误码：
-          // 200 连接通知成功
+          // 200 连接通知成功 (暂未使用)
           // 201 新消息(可带url参数)
           // 202 清除新消息标记
           // 400 连接通知失败等错误
           if (data.code === 201) {
             _this.hasNewMessage = true
             _this.$notify.info({
+              dangerouslyUseHTMLString: true,
               title: data.title || '新的消息',
               message: data.message
             })
           } else if (data.code === 202) {
+            // 暂未使用 202
             _this.hasNewMessage = false
           } else if (data.code === 400) {
             _this.showErrorMessage(data.message)
@@ -186,7 +188,8 @@ export default {
       }
     },
     handleNewMessage () {
-      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=notification'
+      this.hasNewMessage = false
+      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E9%80%9A%E7%9F%A5%E4%B8%AD%E5%BF%83&Name=notification'
     },
     showErrorMessage (message) {
       this.$message({
