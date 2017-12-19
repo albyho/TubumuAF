@@ -54,7 +54,9 @@
           :data="page.list"
           size="small"
           style="width: 100%"
+          ref="mainTable"
           :empty-text="emptyText"
+          @row-click="handleRowClick"
           @sort-change="handleSortChange">
           <el-table-column type="expand">
             <template slot-scope="props">
@@ -409,6 +411,10 @@ export default {
         message: message,
         type: 'error'
       })
+    },
+    handleRowClick (row, event, column) {
+      if (column.id === 'el-table_1_column_1') return
+      this.$refs.mainTable.toggleRowExpansion(row)
     },
     handleSortChange (val) {
       this.pagingInfoForm.sortInfo.sort = val.prop
