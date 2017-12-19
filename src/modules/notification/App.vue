@@ -92,6 +92,16 @@
             width="60"
             sortable="custom" />
           <el-table-column
+            prop="title"
+            label="标题" />
+          <el-table-column
+            label="已读"
+            width="100">
+            <template slot-scope="scope">
+              <span>{{ scope.row.readTime ? '√' : '' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
             label="来自"
             width="100">
             <template slot-scope="scope">
@@ -103,16 +113,6 @@
             width="100">
             <template slot-scope="scope">
               <span>{{ scope.row.toUser ? scope.row.toUser.displayName : '全部' }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="title"
-            label="标题" />
-          <el-table-column
-            label="已读"
-            width="100">
-            <template slot-scope="scope">
-              <span>{{ scope.row.readTime ? '√' : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column

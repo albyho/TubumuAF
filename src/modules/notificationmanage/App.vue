@@ -58,7 +58,7 @@
           :empty-text="emptyText"
           @row-click="handleRowClick"
           @sort-change="handleSortChange">
-          <el-table-column type="expand">
+          <el-table-column type="expand" label="查看">
             <template slot-scope="props">
               <div v-html="props.row.message"></div>
             </template>
@@ -68,6 +68,16 @@
             label="#"
             width="60"
             sortable="custom" />
+          <el-table-column
+            prop="title"
+            label="标题" />
+          <el-table-column
+            label="已读"
+            width="100" v-if="searchCriteriaForm.toUserID">
+            <template slot-scope="scope">
+              <span>{{ scope.row.readTime ? '√' : '' }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
             label="来自"
             width="100">
@@ -80,16 +90,6 @@
             width="100">
             <template slot-scope="scope">
               <span>{{ scope.row.toUser ? scope.row.toUser.displayName : '全部' }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="title"
-            label="标题" />
-          <el-table-column
-            label="已读"
-            width="100" v-if="searchCriteriaForm.toUserID">
-            <template slot-scope="scope">
-              <span>{{ scope.row.readTime ? '√' : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column
