@@ -71,18 +71,20 @@
           :data="page.list"
           size="small"
           style="width: 100%"
+          ref="mainTable"
           :empty-text="emptyText"
           @selection-change="handleSelectionChange"
           @expand-change="handleExpandChange"
+          @row-click="handleRowClick"
           @sort-change="handleSortChange">
-          <el-table-column type="expand">
-            <template slot-scope="props">
-              <div v-html="props.row.message"></div>
-            </template>
-          </el-table-column>
           <el-table-column
             type="selection"
             width="56">
+          </el-table-column>
+          <el-table-column type="expand" label="查看">
+            <template slot-scope="props">
+              <div v-html="props.row.message"></div>
+            </template>
           </el-table-column>
           <el-table-column
             prop="notificationID"
@@ -423,6 +425,10 @@ export default {
     handleSelectionChange (val) {
       // console.log('handleSelectionChange', val)
       this.selection = val
+    },
+    handleRowClick (row, event, column) {
+      if (column.id === 'el-table_1_column_2') return
+      this.$refs.mainTable.toggleRowExpansion(row)
     },
     handleExpandChange (row, expandedRows) {
       console.log('handleExpandChange', row, expandedRows)
