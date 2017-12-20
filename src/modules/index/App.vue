@@ -37,6 +37,7 @@
         width="200"
         v-loading="isGetMenusLoading">
         <el-menu
+          unique-opened
           default-active="menuActiveIndex"
           class="el-menu-vertical-main"
           @open="handleOpen"
@@ -265,6 +266,14 @@ body {
           width: 199px;
           min-height: 600px;
           height: 100%;
+          .el-submenu .el-menu-item {
+            height: 36px;
+            line-height: 36px;
+          }
+          .el-menu-item, .el-submenu__title {
+            height: 40px;
+            line-height: 40px;
+          }
         }
       }
       .el-main {
