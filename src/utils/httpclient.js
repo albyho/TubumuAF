@@ -58,8 +58,8 @@ httpClient.interceptors.request.use(
     ) {
       // Content-Type 对于 POST、PUT 和 PATCH 才有意义
       config.headers = {
-        // 'Content-Type': 'application/x-www-form-urlencoded charset=utf-8'
-        'Content-Type': 'application/json charset=utf-8'
+        // 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        'Content-Type': 'application/json; charset=UTF-8'
       }
       // 序列化
       config.data = JSON.stringify(config.data)
