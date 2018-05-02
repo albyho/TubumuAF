@@ -31,7 +31,16 @@
           ref="tree"
           :filter-node-method="filterNode"
           :render-content="renderContent"
-          :default-expand-all="true" />
+          :default-expand-all="true" 
+          @node-drag-start="handleDragStart"
+          @node-drag-enter="handleDragEnter"
+          @node-drag-leave="handleDragLeave"
+          @node-drag-over="handleDragOver"
+          @node-drag-end="handleDragEnd"
+          @node-drop="handleDrop"
+          draggable
+          :allow-drop="allowDrop"
+          :allow-drag="allowDrag"/>
       </el-row>
 
       <el-dialog
@@ -501,6 +510,22 @@ export default {
         })
       })
     },
+    moveQuickly (sourceID, targetID, isChild, movingLocation) {
+      const params = {
+        sourceID: sourceID,
+        targetID: targetID,
+        isChild: isChild,
+        movingLocation: movingLocation
+      }
+      this.isLoading = true
+      api.moveGroup(params).then(response => {
+        this.isLoading = false
+        this.getTree()
+      }, error => {
+        this.isLoading = false
+        this.showErrorMessage(error.message)
+      })
+    },
     validateBaseData () {
       if (!this.editRoleListData) {
         this.showErrorMessage('基础数据缺失：角色列表')
@@ -563,7 +588,7 @@ export default {
       return (
         <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 10px;">
           <span>
-            <span>{ node.label } <icon name="user-times" v-show={ !data.isIncludeUser }></icon></span>
+            <span class="el-tree-node__label">{ node.label } <icon name="user-times" v-show={ !data.isIncludeUser }></icon></span>
           </span>
           <span>
             <span style="font-size: 12px;"> { data.limitRoles ? data.limitRoles.map(m => m.name).join(' ') : '' } </span>
@@ -592,6 +617,34 @@ export default {
             }}>删除</el-button>
           </span>
         </span>)
+    },
+    handleDragStart (node, ev) {
+      // console.log('drag start', node)
+    },
+    handleDragEnter (draggingNode, dropNode, ev) {
+      // console.log('tree drag enter: ', dropNode.label)
+    },
+    handleDragLeave (draggingNode, dropNode, ev) {
+      // console.log('tree drag leave: ', dropNode.label)
+    },
+    handleDragOver (draggingNode, dropNode, ev) {
+      // console.log('tree drag over: ', dropNode.label)
+    },
+    handleDragEnd (draggingNode, dropNode, dropType, ev) {
+      // console.log('tree drag end: ', dropNode && dropNode.label, dropType)
+    },
+    handleDrop (draggingNode, dropNode, dropType, ev) {
+      // console.log('tree drop: ', dropNode.label, dropType)
+      // 目标之上，不能为子节点；目标之前，可能是子节点。
+      this.moveQuickly(draggingNode.data.id, dropNode.data.id, dropType === 'before' ? null : dropType === 'inner', dropType === 'before' ? 1 : 0)
+    },
+    allowDrop (draggingNode, allowDrop, type) {
+      // 不允许以系统节点为目标
+      return !allowDrop.data.isSystem
+    },
+    allowDrag (draggingNode) {
+      // 不允许拖动系统节点
+      return !draggingNode.data.isSystem
     }
   }
 }
