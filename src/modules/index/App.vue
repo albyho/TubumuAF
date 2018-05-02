@@ -224,17 +224,18 @@ body {
       color: #fff;
       font-size: 16px;
       .el-badge {
-        margin-top: 2px;
         margin-right: 20px;
         height: 32px;
         line-height: 32px;
-        font-size: 24px;
+        font-size: 20px;
         .el-badge__content {
-          font-size: 8px;
-          padding: 0 4px;
-          height: 12px;
-          line-height: 12px;
-          border-radius: 8px;
+          font-size: 6px;
+          padding: 2px;
+          height: 8px;
+          line-height: 8px;
+          border-radius: 4px;
+          top: 4px;
+          right: 6px;
         }
         .newMessage {
           cursor: pointer;
