@@ -4,7 +4,7 @@
       <el-breadcrumb
         separator-class="el-icon-arrow-right"
         class="breadcrumb">
-        <el-breadcrumb-item>模块管理</el-breadcrumb-item>
+        <el-breadcrumb-item>系统管理</el-breadcrumb-item>
         <el-breadcrumb-item>模块信息</el-breadcrumb-item>
       </el-breadcrumb>
     </el-header>

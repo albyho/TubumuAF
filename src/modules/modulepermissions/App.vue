@@ -4,8 +4,8 @@
       <el-breadcrumb
         separator-class="el-icon-arrow-right"
         class="breadcrumb">
-        <el-breadcrumb-item>模块管理</el-breadcrumb-item>
-        <el-breadcrumb-item>权限列表</el-breadcrumb-item>
+        <el-breadcrumb-item>系统管理</el-breadcrumb-item>
+        <el-breadcrumb-item>模块权限</el-breadcrumb-item>
       </el-breadcrumb>
     </el-header>
     <el-main class="main">
