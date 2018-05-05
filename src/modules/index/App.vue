@@ -113,7 +113,7 @@ export default {
         currentMenu = list[menuIndexes[i]]
         if (i === menuIndexes.length - 1) {
           if (currentMenu.directly) {
-            this.directlyCall(currentMenu.link)
+            this.callDirectly(currentMenu.link)
           } else if (currentMenu.linkTarget) {
             window.open(currentMenu.link, currentMenu.linkTarget)
           } else {
@@ -126,10 +126,10 @@ export default {
       // console.log('handleSelect', index, indexPath, this.mainFrameURL)
     },
     profile () {
-      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=profile&Components=ckfinder'
+      this.mainFrameURL = '/Manager/Admin/View?IsCore=true&Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=profile&Components=ckfinder'
     },
     resources () {
-      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=resources&Components=ckfinder'
+      this.mainFrameURL = '/Manager/Admin/View?IsCore=true&Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=resources&Components=ckfinder'
     },
     logout () {
       this.isLoading = true
@@ -142,9 +142,9 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    directlyCall (url) {
+    callDirectly (url) {
       this.isLoading = true
-      api.directlyCall(url).then(response => {
+      api.callDirectly(url).then(response => {
         this.isLoading = false
         this.$message({
           message: response.data.message,
@@ -192,7 +192,7 @@ export default {
     },
     handleNewMessage () {
       this.hasNewMessage = false
-      this.mainFrameURL = '/Manager/Admin/ViewCore?Title=%E9%80%9A%E7%9F%A5%E4%B8%AD%E5%BF%83&Name=notification&t=' + (new Date().getTime())
+      this.mainFrameURL = '/Manager/Admin/View?IsCore=true&Title=%E9%80%9A%E7%9F%A5%E4%B8%AD%E5%BF%83&Name=notification&t=' + (new Date().getTime())
     },
     showErrorMessage (message) {
       this.$message({

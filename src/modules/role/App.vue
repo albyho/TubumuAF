@@ -78,7 +78,7 @@
           :model="mainForm"
           :rules="mainFormRules"
           label-position="right"
-          label-width="80px"
+          label-width="120px"
           size="mini">
           <el-form-item
             label="角色名称"

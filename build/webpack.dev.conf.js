@@ -87,3 +87,6 @@ for (let pathname in pages) {
 
   module.exports.plugins.push(new HtmlWebpackPlugin(conf));
 }
+
+// 修改3：热更新
+//__webpack_public_path__ = "http://localhost:" + (process.env.PORT || config.dev.port)

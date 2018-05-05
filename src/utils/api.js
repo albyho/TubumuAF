@@ -136,7 +136,7 @@ export default {
     return Vue.httpClient.get('/admin/getPermissionTree')
   },
   // 直接调用
-  directlyCall (url) {
+  callDirectly (url) {
     return Vue.httpClient.get(url)
   },
   // 下载文件

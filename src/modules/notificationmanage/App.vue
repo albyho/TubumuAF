@@ -142,21 +142,23 @@
           :model="mainForm"
           :rules="mainFormRules"
           label-position="right"
-          label-width="80px"
+          label-width="120px"
           size="mini">
           <el-form-item
               label="标题"
-              prop="title">
+              prop="title"
+              placeholder="请输入标题">
               <el-input
                 v-model="mainForm.title"
                 type="text" />
             </el-form-item>
             <el-form-item
               label="消息"
-              prop="message">
+              prop="message"
+              placeholder="请输入简称">
             <quill-editor
               v-model="mainForm.message"
-              ref="content"
+              ref="messageEditor"
               :options="editorOption" />
             </el-form-item>
         </el-form>
@@ -218,7 +220,6 @@ export default {
         totalItemCount: null,
         totalPageCount: null
       },
-      isSearchCriteriaFormExpand: false,
       searchCriteriaForm: {
         keyword: null,
         toUserID: null,

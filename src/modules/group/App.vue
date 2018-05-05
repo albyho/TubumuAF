@@ -56,7 +56,7 @@
           :model="mainForm"
           :rules="mainFormRules"
           label-position="right"
-          label-width="100px"
+          label-width="120px"
           size="mini">
           <el-tabs
             v-model="activeTabName"
@@ -635,7 +635,8 @@ export default {
     },
     handleDrop (draggingNode, dropNode, dropType, ev) {
       // console.log('tree drop: ', dropNode.label, dropType)
-      // 目标之上，不能为子节点；目标之前，可能是子节点。
+      // 目标之上(before)，不能为子节点；目标之下(inner)，可能是子节点。
+      // MovingLocation: 0 下 1 上
       this.moveQuickly(draggingNode.data.id, dropNode.data.id, dropType === 'before' ? null : dropType === 'inner', dropType === 'before' ? 1 : 0)
     },
     allowDrop (draggingNode, allowDrop, type) {

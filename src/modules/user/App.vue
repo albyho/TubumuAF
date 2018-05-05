@@ -211,7 +211,7 @@
                 <el-select
                   v-model="mainForm.roleID"
                   clearable
-                  placeholder="选择">
+                  placeholder="请选择">
                   <el-option
                     v-for="role in editGroupRoleListData"
                     :key="role.roleID"
@@ -842,10 +842,10 @@ export default {
           onInit: function (finder) {
             finder.on('files:choose', function (evt) {
               const file = evt.data.files.first()
-              _this.changeProfileForm[name] = file.getUrl()
+              _this.mainForm[name] = file.getUrl()
             })
             finder.on('file:choose:resizedImage', function (evt) {
-              _this.changeProfileForm[name] = evt.data.resizedUrl
+              _this.mainForm[name] = evt.data.resizedUrl
             })
           }
         })
