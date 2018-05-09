@@ -79,7 +79,7 @@ for (let pathname in pages) {
       if (key === pathname) {
         // necessary to consistently work with multiple chunks via CommonsChunkPlugin
         conf.chunksSortMode = 'dependency'
-        conf.chunks = ['manifestcore', 'vendorcore', pathname];
+        conf.chunks = ['manifest', 'vendor', pathname];
         conf.hash = true;
       }
     }

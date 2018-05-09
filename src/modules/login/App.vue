@@ -24,22 +24,22 @@
         type="password"
         v-model.trim="mainForm.password"
         auto-complete="off"
-        @keyup.enter.native="handleFocus('validateCode')"
+        @keyup.enter.native="handleFocus('validationCode')"
         placeholder="密码" />
     </el-form-item>
-    <el-form-item prop="validateCode">
+    <el-form-item prop="validationCode">
       <el-input
-        ref="validateCode"
+        ref="validationCode"
         type="text"
-        v-model.trim="mainForm.validateCode"
+        v-model.trim="mainForm.validationCode"
         auto-complete="off"
         @keyup.enter.native="handleSubmit"
         placeholder="验证码"
-        class="validateCode" />
+        class="validationCode" />
       <img
-        :src="refreshValidateCodeURL"
-        @click="handleRefreshValidateCode"
-        class="validateCodeImage">
+        :src="refreshValidationCodeURL"
+        @click="handleRefreshValidationCode"
+        class="validationCodeImage">
     </el-form-item>
     <!-- <el-checkbox v-model="isRemberPassword" class="remember">记住密码</el-checkbox> -->
     <el-form-item style="width:100%;">
@@ -61,12 +61,12 @@ export default {
   data () {
     return {
       isLoading: false,
-      refreshValidateCodeURLBase: baseURL + '/Admin/GetValidateCode',
-      refreshValidateCodeURL: null,
+      refreshValidationCodeURLBase: baseURL + '/Admin/GetValidationCode',
+      refreshValidationCodeURL: null,
       mainForm: {
         account: defaultAccount,
         password: defaultPassword,
-        validateCode: ''
+        validationCode: ''
       },
       mainFormRules: {
         account: [
@@ -80,7 +80,7 @@ export default {
           { min: 6, message: '最少支持6个字符', trigger: 'blur' },
           { max: 20, message: '最多支持20个字符', trigger: 'blur' }
         ],
-        validateCode: [
+        validationCode: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
           { max: 20, message: '最多支持20个字符', trigger: 'blur' }
         ]
@@ -89,7 +89,7 @@ export default {
     }
   },
   mounted () {
-    this.refreshValidateCodeURL = this.refreshValidateCodeURLBase
+    this.refreshValidationCodeURL = this.refreshValidationCodeURLBase
   },
   methods: {
     handleReset (e) {
@@ -106,16 +106,16 @@ export default {
         }, error => {
           this.isLoading = false
           this.showErrorMessage(error.message)
-          this.handleRefreshValidateCode(null)
+          this.handleRefreshValidationCode(null)
         })
       })
     },
-    handleRefreshValidateCode (e) {
-      // console.log('handleRefreshValidateCode')
-      this.refreshValidateCodeURL = this.refreshValidateCodeURLBase + '?' + (new Date().getTime())
-      this.mainForm.validateCode = ''
+    handleRefreshValidationCode (e) {
+      // console.log('handleRefreshValidationCode')
+      this.refreshValidationCodeURL = this.refreshValidationCodeURLBase + '?' + (new Date().getTime())
+      this.mainForm.validationCode = ''
       if (e) {
-        this.$refs.validateCode.focus()
+        this.$refs.validationCode.focus()
       }
     },
     handleFocus (el) {
@@ -166,11 +166,11 @@ export default {
   .remember {
     margin: 0px 0px 35px 0px;
   }
-  .validateCode {
+  .validationCode {
     width: 80px;
     vertical-align: middle;
   }
-  .validateCodeImage {
+  .validationCodeImage {
     height: 28px;
     vertical-align: middle;
     cursor: pointer;

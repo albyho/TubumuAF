@@ -148,19 +148,14 @@
             width="160" />
           <el-table-column
             align="center"
-            width="42">
+            fixed="right"
+            width="84">
             <template slot-scope="scope">
               <el-button
                 type="text"
                 size="small"
                 icon="el-icon-edit"
                 @click="handleEdit(scope.row)" />
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            width="42">
-            <template slot-scope="scope">
               <el-button
                 type="text"
                 size="small"
@@ -211,7 +206,7 @@
                 <el-select
                   v-model="mainForm.roleID"
                   clearable
-                  placeholder="请选择">
+                  placeholder="请选择角色">
                   <el-option
                     v-for="role in editGroupRoleListData"
                     :key="role.roleID"
@@ -624,11 +619,11 @@ export default {
       this.mainForm.username = null
       this.mainForm.displayName = null
       this.mainForm.realName = null
-      this.mainForm.realNameIsValid = null
+      this.mainForm.realNameIsValid = false
       this.mainForm.email = null
-      this.mainForm.emailIsValid = null
+      this.mainForm.emailIsValid = false
       this.mainForm.mobile = null
-      this.mainForm.mobileIsValid = null
+      this.mainForm.mobileIsValid = false
       this.mainForm.groupIDPath = []
       this.mainForm.groupID = null
       this.mainForm.roleID = null
