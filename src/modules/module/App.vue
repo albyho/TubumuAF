@@ -14,7 +14,7 @@
           :data="item.modules"
           size="small"
           style="width: 100%"
-          :empty-text="emptyText">
+          :empty-text="mainTableEmptyText">
           <el-table-column
             prop="Name"
             label="模块名称"
@@ -43,7 +43,7 @@
           :data="item.backgroundServices"
           size="small"
           style="width: 100%"
-          :empty-text="emptyText">
+          :empty-text="mainTableEmptyText">
           <el-table-column
             prop="Name"
             label="后台服务器名称"
@@ -75,7 +75,7 @@
           :data="item.providers"
           size="small"
           style="width: 100%"
-          :empty-text="emptyText">
+          :empty-text="mainTableEmptyText">
           <el-table-column
             prop="Name"
             label="数据代理名称"
@@ -103,7 +103,7 @@
           :data="item.connectionStrings"
           size="small"
           style="width: 100%"
-          :empty-text="emptyText">
+          :empty-text="mainTableEmptyText">
           <el-table-column
             prop="Name"
             label="数据库链接名称"
@@ -139,7 +139,7 @@ export default {
     this.getItem()
   },
   computed: {
-    emptyText: function () {
+    mainTableEmptyText: function () {
       return this.isLoading ? '加载中...' : '暂无数据'
     }
   },

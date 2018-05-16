@@ -83,7 +83,7 @@
           :data="page.list"
           size="small"
           style="width: 100%"
-          :empty-text="emptyText"
+          :empty-text="mainTableEmptyText"
           @sort-change="handleSortChange">
           <el-table-column
             prop="UserID"
@@ -536,7 +536,7 @@ export default {
     this.getPermissionTree()
   },
   computed: {
-    emptyText: function () {
+    mainTableEmptyText: function () {
       return this.isLoading ? '加载中...' : '暂无数据'
     }
   },

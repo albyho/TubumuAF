@@ -7,7 +7,7 @@
     </el-breadcrumb>
   </el-header>
   <el-main class="main">
-    <el-table :data="list" v-loading="isLoading" size="small" style="width: 100%" :empty-text="emptyText">
+    <el-table :data="list" v-loading="isLoading" size="small" style="width: 100%" :empty-text="mainTableEmptyText">
       <!-- <el-table-column prop="displayOrder" label="#" width="40"></el-table-column> -->
       <el-table-column prop="name" label="名称"></el-table-column>
       <!-- <el-table-column align="center" width="42">
@@ -70,7 +70,7 @@ export default {
     this.getList()
   },
   computed: {
-    emptyText: function () {
+    mainTableEmptyText: function () {
       return this.isLoading ? '加载中...' : '暂无数据'
     }
   },

@@ -26,7 +26,7 @@
         <el-tree
           :data="treeData"
           :props="treeDefaultProps"
-          :empty-text="emptyText"
+          :empty-text="mainTableEmptyText"
           node-key="id"
           ref="tree"
           :filter-node-method="filterNode"
@@ -289,7 +289,7 @@ export default {
     this.getPermissionTree()
   },
   computed: {
-    emptyText: function () {
+    mainTableEmptyText: function () {
       return this.isLoading ? '加载中...' : '暂无数据'
     }
   },

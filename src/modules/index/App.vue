@@ -53,7 +53,7 @@
       <el-main><iframe
         :src="mainFrameURL"
         class="el-main-content"
-        scrolling="yes" /></el-main>
+        scrolling="no" frameBorder="0" :width="iframeWidth" :height="iframeHeight"/></el-main>
     </el-container>
   </el-container>
 </template>
@@ -75,10 +75,23 @@ export default {
         groups: []
       },
       menus: null,
-      menuActiveIndex: '0-0'
+      menuActiveIndex: '0-0',
+      iframeWidth: document.documentElement.clientWidth - 200,
+      iframeHeight: document.documentElement.clientHeight - 60
     }
   },
+  created: function () {
+
+  },
   mounted: function () {
+    const self = this
+    window.onresize = function () {
+      self.iframeWidth = document.documentElement.clientWidth - 200
+      self.iframeHeight = document.documentElement.clientHeight - 60
+    }
+
+    window.onresize()
+
     this.isGetMenusLoading = true
     api.getMenus().then(response => {
       this.isGetMenusLoading = false
@@ -283,8 +296,8 @@ body {
         overflow: hidden;
         .el-main-content {
           border: 0;
-          width: 100%;
-          height: 100%;
+          /*width: 100%;
+          height: 100%;*/
         }
       }
     }

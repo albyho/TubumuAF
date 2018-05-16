@@ -56,7 +56,7 @@
           size="small"
           style="width: 100%"
           ref="mainTable"
-          :empty-text="emptyText"
+          :empty-text="mainTableEmptyText"
           @row-click="handleRowClick"
           @sort-change="handleSortChange">
           <el-table-column type="expand" label="查看">
@@ -106,19 +106,14 @@
             width="160" />
           <el-table-column
             align="center"
-            width="42">
+            fixed="right"
+            width="84">
             <template slot-scope="scope">
               <el-button
                 type="text"
                 size="small"
                 icon="el-icon-edit"
                 @click="handleEdit(scope.row)" />
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            width="42">
-            <template slot-scope="scope">
               <el-button
                 type="text"
                 size="small"
@@ -264,7 +259,7 @@ export default {
     this.getPage()
   },
   computed: {
-    emptyText: function () {
+    mainTableEmptyText: function () {
       return this.isLoading ? '加载中...' : '暂无数据'
     }
   },

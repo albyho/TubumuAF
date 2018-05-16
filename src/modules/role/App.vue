@@ -22,7 +22,7 @@
         :data="list"
         size="mini"
         style="width: 100%"
-        :empty-text="emptyText">
+        :empty-text="mainTableEmptyText">
         <el-table-column
           prop="name"
           label="名称" />
@@ -174,7 +174,7 @@ export default {
     this.getPermissionTree()
   },
   computed: {
-    emptyText: function () {
+    mainTableEmptyText: function () {
       return this.isLoading ? '加载中...' : '暂无数据'
     }
   },

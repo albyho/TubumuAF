@@ -72,7 +72,7 @@
           size="small"
           style="width: 100%"
           ref="mainTable"
-          :empty-text="emptyText"
+          :empty-text="mainTableEmptyText"
           @selection-change="handleSelectionChange"
           @expand-change="handleExpandChange"
           @row-click="handleRowClick"
@@ -261,7 +261,7 @@ export default {
     this.getPage()
   },
   computed: {
-    emptyText: function () {
+    mainTableEmptyText: function () {
       return this.isLoading ? '加载中...' : '暂无数据'
     }
   },

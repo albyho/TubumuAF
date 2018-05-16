@@ -28,7 +28,7 @@
           :data="list"
           size="mini"
           style="width: 100%"
-          :empty-text="emptyText">
+          :empty-text="mainTableEmptyText">
           <el-table-column
             prop="displayOrder"
             label="#"
@@ -60,7 +60,7 @@ export default {
     this.getList()
   },
   computed: {
-    emptyText: function () {
+    mainTableEmptyText: function () {
       return this.isLoading ? '加载中...' : '暂无数据'
     }
   },
