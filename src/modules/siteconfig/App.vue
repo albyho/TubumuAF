@@ -14,8 +14,7 @@
         :model="mainForm"
         :rules="mainFormRules"
         label-position="right"
-        label-width="120px"
-        size="mini">
+        label-width="120px">
         <el-form-item
           label="系统名称"
           prop="name">

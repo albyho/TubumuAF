@@ -13,8 +13,7 @@
         ref="searchCriteriaForm"
         class="searchCriteriaForm"
         :model="searchCriteriaForm"
-        inline
-        size="mini">
+        inline>
         <el-row>
           <el-form-item>
             <el-input
@@ -179,8 +178,7 @@
           :model="mainForm"
           :rules="mainFormRules"
           label-position="right"
-          label-width="160px"
-          size="mini">
+          label-width="160px">
           <el-tabs
             v-model="activeTabName"
             type="card">
@@ -359,22 +357,6 @@
         </div>
       </el-dialog>
 
-      <el-dialog
-        title="提示"
-        :visible.sync="removeConfirmDialogVisible"
-        width="320px"
-        center>
-        <span>删除该用户后，相关的数据也将被删除。<br>确定要删除吗？</span>
-        <div
-          slot="footer"
-          class="dialog-footer">
-          <el-button @click="handleRemoveSure(false)">取 消</el-button>
-          <el-button
-            type="primary"
-            @click="handleRemoveSure(true)">确 定</el-button>
-        </div>
-      </el-dialog>
-
     </el-main>
     <el-footer class="footer">
       <el-pagination
@@ -454,7 +436,6 @@ export default {
       },
       // 删除
       removeActive: null,                 // 暂存删除项
-      removeConfirmDialogVisible: false,  // 删除确认对话框是否可见
 
       // 添加/编辑
       editActive: null,                   // 暂存编辑项，也可用来判断是否添加还是编辑
@@ -690,15 +671,15 @@ export default {
     },
     handleRemove (row) {
       this.removeActive = row
-      this.removeConfirmDialogVisible = true
-    },
-    handleRemoveSure (sure) {
-      this.removeConfirmDialogVisible = false
-      if (sure) {
+      this.$confirm('删除该用户后，相关的数据也将被删除。是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
         this.remove()
-      } else {
+      }).catch(() => {
         this.removeActive = null
-      }
+      })
     },
     handleGroupCascaderChange (value) {
       this.mainForm.roleID = null

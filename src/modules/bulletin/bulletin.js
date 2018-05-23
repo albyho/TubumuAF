@@ -11,7 +11,7 @@ Vue.config.productionTip = false
 
 Vue.use(HttpClient)
 Vue.use(VueQuillEditor)
-Vue.use(ElementUI)
+Vue.use(ElementUI, { size: 'mini' })
 
 /* eslint-disable no-new */
 new Vue({

@@ -14,8 +14,7 @@
         :model="mainForm"
         :rules="mainFormRules"
         label-position="right"
-        label-width="120px"
-        size="mini">
+        label-width="120px">
         <el-form-item
           label="公告标题"
           prop="title">

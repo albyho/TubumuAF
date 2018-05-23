@@ -13,12 +13,10 @@
         <el-button-group>
           <el-button
             type="primary"
-            size="mini"
             icon="el-icon-refresh"
             @click="handleExtractModulePermissions">提取模块权限</el-button>
           <el-button
             type="primary"
-            size="mini"
             icon="el-icon-time"
             @click="handleClearModulePermissions">清理模块权限</el-button>
         </el-button-group>
@@ -26,7 +24,6 @@
       <el-row>
         <el-table
           :data="list"
-          size="mini"
           style="width: 100%"
           :empty-text="mainTableEmptyText">
           <el-table-column

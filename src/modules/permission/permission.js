@@ -9,7 +9,7 @@ import HttpClient from '@/utils/httpclient.js'
 Vue.config.productionTip = false
 
 // 全部引入
-Vue.use(ElementUI)
+Vue.use(ElementUI, { size: 'mini' })
 // 按需引入
 /*
 Vue.use(Form)

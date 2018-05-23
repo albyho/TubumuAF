@@ -19,8 +19,7 @@
             :model="changeProfileForm"
             :rules="changeProfileFormRules"
             label-position="right"
-            label-width="120px"
-            size="mini">
+            label-width="120px">
             <el-form-item
               label="昵称"
               prop="displayName">
@@ -73,8 +72,7 @@
             :model="changePasswordForm"
             :rules="changePasswordFormRules"
             label-position="right"
-            label-width="120px"
-            size="mini">
+            label-width="120px">
             <el-form-item
               label="当前密码"
               prop="currentPassword">

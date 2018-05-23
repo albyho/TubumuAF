@@ -12,7 +12,6 @@
       <el-row>
         <el-input
           placeholder="输入关键字进行过滤"
-          size="mini"
           clearable
           v-model="filterText"
           class="filterText" />

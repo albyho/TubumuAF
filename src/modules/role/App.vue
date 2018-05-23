@@ -13,14 +13,12 @@
         <el-col>
           <el-button
             type="primary"
-            size="mini"
             icon="el-icon-circle-plus-outline"
             @click="handleAdd">添加</el-button>
         </el-col>
       </el-row>
       <el-table
         :data="list"
-        size="mini"
         style="width: 100%"
         :empty-text="mainTableEmptyText">
         <el-table-column
@@ -78,8 +76,7 @@
           :model="mainForm"
           :rules="mainFormRules"
           label-position="right"
-          label-width="120px"
-          size="mini">
+          label-width="120px">
           <el-form-item
             label="角色名称"
             prop="name">
@@ -112,23 +109,6 @@
         </div>
       </el-dialog>
 
-      <!-- 删除对话框 -->
-      <el-dialog
-        title="提示"
-        :visible.sync="removeConfirmDialogVisible"
-        width="320px"
-        center>
-        <span>删除该角色后，相关的数据也将被删除。<br>确定要删除吗？</span>
-        <div
-          slot="footer"
-          class="dialog-footer">
-          <el-button @click="handleRemoveSure(false)">取 消</el-button>
-          <el-button
-            type="primary"
-            @click="handleRemoveSure(true)">确 定</el-button>
-        </div>
-      </el-dialog>
-
     </el-main>
   </el-container>
 </template>
@@ -146,7 +126,6 @@ export default {
 
       // 删除
       removeActive: null,           // 暂存删除项
-      removeConfirmDialogVisible: false,  // 删除确认对话框是否可见
 
       // 添加/编辑
       editActive: null,                   // 暂存编辑项，也可用来判断是否添加还是编辑
@@ -243,15 +222,15 @@ export default {
     },
     handleRemove (row) {
       this.removeActive = row
-      this.removeConfirmDialogVisible = true
-    },
-    handleRemoveSure (sure) {
-      this.removeConfirmDialogVisible = false
-      if (sure) {
+      this.$confirm('删除该角色后，相关的数据也将被删除。是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
         this.remove()
-      } else {
+      }).catch(() => {
         this.removeActive = null
-      }
+      })
     },
     add () {
       this.$refs.mainForm.validate(valid => {

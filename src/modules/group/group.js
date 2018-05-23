@@ -15,8 +15,7 @@ import Icon from 'vue-awesome/components/Icon'
 Vue.config.productionTip = false
 
 Vue.use(HttpClient)
-Vue.use(ElementUI)
-
+Vue.use(ElementUI, { size: 'mini' })
 Vue.component('icon', Icon)
 
 /* eslint-disable no-new */

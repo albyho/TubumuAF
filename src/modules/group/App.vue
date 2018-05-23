@@ -12,13 +12,11 @@
       <el-row>
         <el-input
           placeholder="输入关键字进行过滤"
-          size="mini"
           clearable
           v-model="filterText"
           class="filterText" />
         <el-button
           type="primary"
-          size="mini"
           icon="el-icon-circle-plus-outline"
           @click="handleAdd()">添加</el-button>
       </el-row>
@@ -56,8 +54,7 @@
           :model="mainForm"
           :rules="mainFormRules"
           label-position="right"
-          label-width="120px"
-          size="mini">
+          label-width="120px">
           <el-tabs
             v-model="activeTabName"
             type="card">
@@ -141,22 +138,6 @@
       </el-dialog>
 
       <el-dialog
-        title="提示"
-        :visible.sync="removeConfirmDialogVisible"
-        width="320px"
-        center>
-        <span>删除该用户组后，相关的数据也将被删除。<br>确定要删除吗？</span>
-        <div
-          slot="footer"
-          class="dialog-footer">
-          <el-button @click="handleRemoveSure(false)">取 消</el-button>
-          <el-button
-            type="primary"
-            @click="handleRemoveSure(true)">确 定</el-button>
-        </div>
-      </el-dialog>
-
-      <el-dialog
         :visible.sync="moveFormDialogVisible"
         @submit.native.prevent
         :close-on-click-modal="false"
@@ -169,8 +150,7 @@
           :model="moveForm"
           :rules="moveFormRules"
           label-position="right"
-          label-width="100px"
-          size="mini">
+          label-width="100px">
           <el-form-item
             label="目标节点"
             prop="targetIDPath">
@@ -232,7 +212,6 @@ export default {
 
       // 删除
       removeActive: null,                 // 暂存删除项
-      removeConfirmDialogVisible: false,  // 删除确认对话框是否可见
       // 移动
       moveActive: null,                   // 暂存移动项
       moveFormDialogVisible: false,       // 移动对话框是否可见
@@ -396,15 +375,15 @@ export default {
     },
     handleRemove (node, data) {
       this.removeActive = data
-      this.removeConfirmDialogVisible = true
-    },
-    handleRemoveSure (sure) {
-      this.removeConfirmDialogVisible = false
-      if (sure) {
+      this.$confirm('删除该用户组后，相关的数据也将被删除。是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
         this.remove()
-      } else {
+      }).catch(() => {
         this.removeActive = null
-      }
+      })
     },
     handleMove (node, data) {
       console.log('handleMove', node, data)

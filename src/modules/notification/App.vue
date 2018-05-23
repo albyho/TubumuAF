@@ -12,8 +12,7 @@
         ref="searchCriteriaForm"
         class="searchCriteriaForm"
         :model="searchCriteriaForm"
-        inline
-        size="mini">
+        inline>
         <el-row>
           <el-form-item>
             <el-radio-group v-model="isReadedNumber" @change="handleIsReadChange">

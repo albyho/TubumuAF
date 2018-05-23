@@ -9,7 +9,7 @@ import App from './App.vue'
 Vue.config.productionTip = false
 
 Vue.use(HttpClient)
-Vue.use(ElementUI)
+Vue.use(ElementUI, { size: 'mini' })
 
 // 全局注册
 Vue.component('xl-menu', XLMenu)
