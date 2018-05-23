@@ -53,7 +53,7 @@
       <el-main><iframe
         :src="mainFrameURL"
         class="el-main-content"
-        scrolling="no" frameBorder="0" :width="iframeWidth" :height="iframeHeight"/></el-main>
+        scrolling="auto" frameBorder="0" :width="iframeWidth" :height="iframeHeight" /></el-main>
     </el-container>
   </el-container>
 </template>

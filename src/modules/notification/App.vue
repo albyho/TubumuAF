@@ -68,7 +68,6 @@
       <el-row>
         <el-table
           :data="page.list"
-          size="small"
           style="width: 100%"
           ref="mainTable"
           :empty-text="mainTableEmptyText"
@@ -81,8 +80,8 @@
             width="56">
           </el-table-column>
           <el-table-column type="expand" label="查看">
-            <template slot-scope="props">
-              <div v-html="props.row.message"></div>
+            <template slot-scope="scope">
+              <div v-html="scope.row.message"></div>
             </template>
           </el-table-column>
           <el-table-column
@@ -467,7 +466,7 @@ export default {
   padding: 0;
 }
 .el-table .cell{
-  line-height: normal;
+  line-height: 32px;
 }
 
 </style>

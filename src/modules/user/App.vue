@@ -80,7 +80,6 @@
       <el-row>
         <el-table
           :data="page.list"
-          size="small"
           style="width: 100%"
           :empty-text="mainTableEmptyText"
           @sort-change="handleSortChange">
@@ -872,7 +871,7 @@ export default {
   padding: 0;
 }
 .el-table .cell{
-  line-height: normal;
+  line-height: 32px;
 }
 
 </style>

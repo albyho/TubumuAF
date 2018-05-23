@@ -12,7 +12,6 @@
       <el-row>
         <el-table
           :data="item.modules"
-          size="small"
           style="width: 100%"
           :empty-text="mainTableEmptyText">
           <el-table-column
@@ -41,7 +40,6 @@
       <el-row>
         <el-table
           :data="item.backgroundServices"
-          size="small"
           style="width: 100%"
           :empty-text="mainTableEmptyText">
           <el-table-column
@@ -73,7 +71,6 @@
       <el-row>
         <el-table
           :data="item.providers"
-          size="small"
           style="width: 100%"
           :empty-text="mainTableEmptyText">
           <el-table-column
@@ -101,7 +98,6 @@
       <el-row>
         <el-table
           :data="item.connectionStrings"
-          size="small"
           style="width: 100%"
           :empty-text="mainTableEmptyText">
           <el-table-column

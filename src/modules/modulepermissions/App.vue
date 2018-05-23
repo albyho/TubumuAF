@@ -124,7 +124,7 @@ export default {
   padding: 8px 0;
 }
 .el-table .cell{
-  line-height: normal;
+  line-height: 32px;
 }
 
 </style>
