@@ -114,17 +114,4 @@ export default {
 
 <style lang="scss">
 
-.el-row {
-  margin-bottom: 8px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-.el-table td {
-  padding: 8px 0;
-}
-.el-table .cell{
-  line-height: 32px;
-}
-
 </style>

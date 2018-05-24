@@ -111,12 +111,12 @@
                 type="text"
                 size="small"
                 icon="el-icon-edit"
-                @click="handleEdit(scope.row)" />
+                @click.stop="handleEdit(scope.row)" />
               <el-button
                 type="text"
                 size="small"
                 icon="el-icon-delete"
-                @click="handleRemove(scope.row)" />
+                @click.stop="handleRemove(scope.row)" />
             </template>
           </el-table-column>
         </el-table>
@@ -405,34 +405,12 @@ export default {
 
 <style lang="scss">
 
-.searchCriteriaForm {
-  .el-row {
-    margin-bottom: 8px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  .el-form-item {
-    margin-bottom: 4px;
-    margin-right: 4px;
-  }
-  .filterText {
-    width: 240px;
-    margin-right: 12px;
-  }
-}
-
 // 编辑对话框：附加角色
 .el-checkbox {
   display: block;
   margin: 0;
 }
 
-.el-table td {
-  padding: 0;
-}
-.el-table .cell{
-  line-height: 32px;
-}
+
 
 </style>

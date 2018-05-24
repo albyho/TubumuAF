@@ -867,11 +867,4 @@ export default {
   margin: 0;
 }
 
-.el-table td {
-  padding: 0;
-}
-.el-table .cell{
-  line-height: 32px;
-}
-
 </style>

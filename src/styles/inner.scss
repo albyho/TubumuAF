@@ -13,6 +13,38 @@
 }
 
 .footer {
-  padding: 0;
+  padding: 10px 0;
   height: 40px !important;
+}
+
+.searchCriteriaForm {
+  .el-row {
+    margin-bottom: 8px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .el-form-item {
+    margin-bottom: 4px;
+    margin-right: 4px;
+  }
+  .filterText {
+    width: 240px;
+    margin-right: 12px;
+  }
+}
+
+.el-row {
+  margin-bottom: 8px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.el-table td {
+  padding: 0;
+}
+
+.el-table .cell{
+  line-height: 32px;
 }

@@ -331,6 +331,7 @@ export default {
     setupSortable () {
       const el = document.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
       this.sortable = Sortable.create(el, {
+        ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
         group: 'name',
         handle: '.el-icon-rank',
         filter: '.ignore-elements',
@@ -353,11 +354,10 @@ export default {
 
 <style lang="scss">
 
-.el-table td {
-  padding: 4px 0;
-}
-.el-table .cell{
-  line-height: 32px;
+.sortable-ghost{
+  opacity: .8;
+  color: #fff;
+  background: #409eff;
 }
 
 </style>
