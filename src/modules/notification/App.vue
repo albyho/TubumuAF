@@ -125,7 +125,7 @@
                 type="text"
                 size="small"
                 icon="el-icon-delete"
-                @click="handleDeleteOne(scope.row)" />
+                @click.stop="handleDeleteOne(scope.row)" />
             </template>
           </el-table-column>
         </el-table>
