@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
-    "element-ui": "^2.4.0",
+    "element-ui": "^2.4.1",
     "font-awesome": "^4.7.0",
     "js-file-download": "^0.4.1",
     "lodash": "^4.17.10",
