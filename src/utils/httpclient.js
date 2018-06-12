@@ -78,11 +78,9 @@ httpClient.interceptors.request.use(
     }
 
     // 若是有做鉴权token , 就给头部带上token
-    /*
     if (localStorage.token) {
       config.headers.Authorization = localStorage.token
     }
-    */
     return config
   },
   error => {
