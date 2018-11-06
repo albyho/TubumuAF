@@ -5,7 +5,7 @@
         separator-class="el-icon-arrow-right"
         class="breadcrumb">
         <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>用户组列表</el-breadcrumb-item>
+        <el-breadcrumb-item>分组列表</el-breadcrumb-item>
       </el-breadcrumb>
     </el-header>
     <el-main class="main">
@@ -70,12 +70,12 @@
                   v-model="mainForm.parentIDPath" />
               </el-form-item>
               <el-form-item
-                label="用户组名称"
+                label="分组名称"
                 prop="name">
                 <el-input
                   v-model.trim="mainForm.name"
                   auto-complete="off"
-                  placeholder="请输入用户组名称"
+                  placeholder="请输入分组名称"
                   ref="name" />
               </el-form-item>
               <el-form-item label="是否包含用户">
@@ -239,7 +239,7 @@ export default {
       },
       mainFormRules: {
         name: [
-          { required: true, message: '请输入用户组名称', trigger: 'blur' },
+          { required: true, message: '请输入分组名称', trigger: 'blur' },
           { max: 50, message: '最多支持50个字符', trigger: 'blur' }
         ]
       },
@@ -375,7 +375,7 @@ export default {
     },
     handleRemove (node, data) {
       this.removeActive = data
-      this.$confirm('删除该用户组后，相关的数据也将被删除。是否继续?', '提示', {
+      this.$confirm('删除该分组后，相关的数据也将被删除。是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -522,18 +522,18 @@ export default {
       // console.log(this.mainForm.permissionIDs)
     },
     generateParentTree (data) {
-      // 在添加或编辑用户组时，需要将系统用户组排除
+      // 在添加或编辑分组时，需要将系统分组排除
       if (!this.treeData) {
         // this.treeData 实际上一定有值的
         this.editParentTreeData = []
         return
       }
       if (!data) {
-        // 添加时，过滤系统用户组。系统用户组只在第一级
+        // 添加时，过滤系统分组。系统分组只在第一级
         this.editParentTreeData = this.treeData.filter((element, index, array) => { return !element.isSystem })
       } else {
         this.editParentTreeData = _.cloneDeep(this.treeData)
-        // 编辑或移动时，过滤系统用户组和自身树(需递归)。系统用户组只在第一级
+        // 编辑或移动时，过滤系统分组和自身树(需递归)。系统分组只在第一级
         this.editParentTreeData = this.editParentTreeData.filter((element, index, array) => { return !element.isSystem })
         this.filterTree(this.editParentTreeData, data)
       }
@@ -647,7 +647,7 @@ export default {
   display: block;
   margin: 0;
 }
-// 用户组
+// 分组
 .el-cascader {
   width: 100%;
 }

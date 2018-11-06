@@ -66,7 +66,7 @@ export default {
   saveRoleName (params) {
     return Vue.httpClient.post('/admin/saveRoleName', params)
   },
-  // 用户组
+  // 分组
   getGroupTree () {
     return Vue.httpClient.get('/admin/getGroupTree')
   },

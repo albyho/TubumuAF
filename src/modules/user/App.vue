@@ -29,7 +29,7 @@
               clearable
               change-on-select
               filterable
-              placeholder="用户组"
+              placeholder="分组"
               v-model="searchCriteriaForm.groupIDPath" />
           </el-form-item>
           <el-form-item>
@@ -95,7 +95,7 @@
             sortable="custom" />
           <el-table-column
             prop="Group.name"
-            label="用户组"
+            label="分组"
             width="160" />
           <el-table-column
             label="角色"
@@ -317,8 +317,24 @@
               </el-form-item>
             </el-tab-pane>
             <el-tab-pane
-              label="附加角色"
+              label="附加分组"
               name="second">
+              <el-form-item label="附加分组">
+                <el-tree
+                  :data="editGroupTreeData"
+                  :props="editGroupTreeDefaultProps"
+                  node-key="id"
+                  ref="editGroupTree"
+                  empty-text=""
+                  show-checkbox
+                  default-expand-all
+                  check-strictly
+                  @check-change="handleGroupTreeCheckChange" />
+              </el-form-item>
+            </el-tab-pane>
+            <el-tab-pane
+              label="附加角色"
+              name="third">
               <el-form-item label="附加角色">
                 <el-checkbox-group v-model="mainForm.roleIDs">
                   <el-checkbox
@@ -330,7 +346,7 @@
             </el-tab-pane>
             <el-tab-pane
               label="附加权限"
-              name="third">
+              name="fourth">
               <el-form-item label="附加权限">
                 <el-tree
                   :data="editPermissionTreeData"
@@ -452,6 +468,7 @@ export default {
         mobileIsValid: false,             // bool
         groupIDPath: [],                  // Array 不能设置为 null。给 cascader 组件使用。
         groupID: null,                    // String
+        groupIDs: [],                     // Array 不能设置为 null
         roleID: null,                     // String
         roleIDs: [],                      // Array 不能设置为 null
         permissionIDs: null,              // Array
@@ -495,7 +512,7 @@ export default {
       },
       editGroupRoleListData: null,          // 用于编辑对话框内显示的角色列表
       editRoleListData: null,               // 用于编辑对话框内显示的角色列表
-      editGroupTreeData: [],                // 用于搜索 cascader /编辑对话框内显示的用户组树
+      editGroupTreeData: [],                // 用于搜索 cascader / 编辑对话框内显示的分组树
       editGroupTreeDefaultProps: {
         children: 'children',
         value: 'id',
@@ -606,6 +623,7 @@ export default {
       this.mainForm.mobileIsValid = false
       this.mainForm.groupIDPath = []
       this.mainForm.groupID = null
+      this.mainForm.groupIDs = []               // 不能设置为 null
       this.mainForm.roleID = null
       this.editGroupRoleListData = []
       this.mainForm.roleIDs = []                // 不能设置为 null
@@ -616,6 +634,7 @@ export default {
       this.mainForm.headURL = null
       this.mainForm.logoURL = null
       this.$nextTick(() => {
+        this.$refs.editGroupTree.setCheckedKeys([], true)
         this.$refs.editPermissionTree.setCheckedKeys([], true)
         this.clearValidate('mainForm')
       })
@@ -640,6 +659,7 @@ export default {
       this.mainForm.mobileIsValid = row.MobileIsValid
       this.getGroupIDPath(this.editGroupTreeData, row.Group.groupID)
       this.mainForm.groupID = row.Group.groupID
+      this.mainForm.groupIDs = row.Groups.map(m => m.groupID)
       this.mainForm.roleID = row.Role ? row.Role.roleID : null
       this.getGroupLimitRoles(this.editGroupTreeData, row.Group.groupID)
       this.mainForm.roleIDs = row.Roles.map(m => m.roleID)
@@ -650,6 +670,7 @@ export default {
       this.mainForm.headURL = row.headURL
       this.mainForm.logoURL = row.logoURL
       this.$nextTick(() => {
+        this.$refs.editGroupTree.setCheckedKeys(this.mainForm.groupIDs, true)
         this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
         this.clearValidate('mainForm')
       })
@@ -740,7 +761,7 @@ export default {
     },
     validateBaseData () {
       if (!this.editGroupTreeData || this.editGroupTreeData.length === 0) {
-        this.showErrorMessage('基础数据缺失：用户组列表')
+        this.showErrorMessage('基础数据缺失：分组列表')
         return false
       }
       if (!this.editRoleListData) {
@@ -752,6 +773,11 @@ export default {
         return false
       }
       return true
+    },
+    handleGroupTreeCheckChange (data, checked, indeterminate) {
+      // console.log(data, checked, indeterminate)
+      this.mainForm.groupIDs = this.$refs.editGroupTree.getCheckedKeys()
+      // console.log(this.mainForm.permissionIDs)
     },
     handlePermissionTreeCheckChange (data, checked, indeterminate) {
       // console.log(data, checked, indeterminate)
@@ -849,7 +875,7 @@ export default {
     width: 240px;
     margin-right: 12px;
   }
-  // 用户组
+  // 分组
   .el-cascader {
     width: 200px;
     margin-right: 12px;
