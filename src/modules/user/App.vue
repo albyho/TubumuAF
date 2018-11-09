@@ -33,16 +33,7 @@
               v-model="searchCriteriaForm.groupIDPath" />
           </el-form-item>
           <el-form-item>
-            <el-select
-              v-model="searchCriteriaForm.status"
-              clearable
-              placeholder="状态">
-              <el-option
-                v-for="item in editUserStatus"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value" />
-            </el-select>
+            <xl-userStatusSelect v-model="searchCriteriaForm.status" />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -191,9 +182,9 @@
                   :options="editGroupTreeData"
                   :props="editGroupTreeDefaultProps"
                   clearable
-                  filterable
-                  placeholder="试试搜索"
                   change-on-select
+                  filterable
+                  placeholder="请选择分组"
                   @change="handleGroupCascaderChange"
                   v-model="mainForm.groupIDPath" />
               </el-form-item>
@@ -223,12 +214,7 @@
               <el-form-item
                 label="状态"
                 :required="true">
-                <el-radio-group v-model="mainForm.status">
-                  <el-radio
-                    v-for="item in editUserStatus"
-                    :key="item.value"
-                    :label="item.value">{{ item.label }}</el-radio>
-                </el-radio-group>
+                <xl-userStatusRadioGroup v-model="mainForm.status" />
               </el-form-item>
               <el-form-item
                 label="登录密码"
@@ -517,13 +503,7 @@ export default {
         children: 'children',
         value: 'id',
         label: 'name'
-      },
-      editUserStatus: [
-        {label: '未设', value: 'NotSet'},
-        {label: '默认', value: 'Normal'},
-        {label: '待审', value: 'PendingApproval'},
-        {label: '删除', value: 'Removed'}
-      ]
+      }
     }
   },
   mounted () {
@@ -661,7 +641,7 @@ export default {
       this.mainForm.groupID = row.Group.groupID
       this.mainForm.groupIDs = row.Groups.map(m => m.groupID)
       this.mainForm.roleID = row.Role ? row.Role.roleID : null
-      this.getGroupLimitRoles(this.editGroupTreeData, row.Group.groupID)
+      this.getGroupAvailableRoles(this.editGroupTreeData, row.Group.groupID)
       this.mainForm.roleIDs = row.Roles.map(m => m.roleID)
       this.mainForm.permissionIDs = row.Permissions.map(m => m.permissionID)
       this.mainForm.password = null
@@ -702,10 +682,11 @@ export default {
       })
     },
     handleGroupCascaderChange (value) {
+      console.log(value)
       this.mainForm.roleID = null
       this.editGroupRoleListData = []
       if (value.length === 0) return
-      this.getGroupLimitRoles(this.editGroupTreeData, value[value.length - 1])
+      this.getGroupAvailableRoles(this.editGroupTreeData, value[value.length - 1])
     },
     add () {
       this.$refs.mainForm.validate(valid => {
@@ -796,15 +777,15 @@ export default {
         }
       }
     },
-    getGroupLimitRoles (tree, id) {
+    getGroupAvailableRoles (tree, id) {
       this.editGroupRoleListData = []
       if (!tree) return
       for (let node of tree) {
         if (node.id === id) {
-          this.editGroupRoleListData = node.limitRoles
+          this.editGroupRoleListData = node.availableRoles
           break
         } else {
-          this.getGroupLimitRoles(node.children, id)
+          this.getGroupAvailableRoles(node.children, id)
         }
       }
     },

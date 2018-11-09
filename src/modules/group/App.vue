@@ -89,7 +89,7 @@
               label="限制角色" 
               name="second">
               <el-form-item label="限制角色">
-                <el-checkbox-group v-model="mainForm.limitRoleIDs">
+                <el-checkbox-group v-model="mainForm.availableRoleIDs">
                   <el-checkbox 
                     v-for="role in editRoleListData"
                     :label="role.roleID" 
@@ -224,7 +224,7 @@ export default {
         name: null,                       // String
         roleIDs: [],                      // Array 不能设置为 null
         permissionIDs: null,              // Array
-        limitRoleIDs: [],                 // Array 不能设置为 null
+        availableRoleIDs: [],             // Array 不能设置为 null
         parentIDPath: [],                 // Array 不能设置为 null 如果 parentIDPath 无值则作为顶级节点,否则作为子节点。给 cascader 组件使用。
         parentID: null,                   // String
         isIncludeUser: null,              // Bool 是否包含用户
@@ -328,7 +328,7 @@ export default {
       this.mainForm.parentID = data ? data.id : null    // parentID 在提交数据前重新计算
       this.mainForm.roleIDs = []            // 不能设置为 null
       this.mainForm.permissionIDs = null
-      this.mainForm.limitRoleIDs = []       // 不能设置为 null
+      this.mainForm.availableRoleIDs = []       // 不能设置为 null
       this.mainForm.isIncludeUser = true    // 默认 true
       this.mainForm.isDisabled = false      // 默认 false
       this.$nextTick(() => {
@@ -351,7 +351,7 @@ export default {
       this.mainForm.parentID = data.parentID            // parentID 在提交数据前重新计算
       this.mainForm.roleIDs = data.roles.map(m => m.roleID)
       this.mainForm.permissionIDs = data.permissions.map(m => m.permissionID)
-      this.mainForm.limitRoleIDs = data.limitRoles.map(m => m.roleID)
+      this.mainForm.availableRoleIDs = data.availableRoles.map(m => m.roleID)
       this.mainForm.isIncludeUser = data.isIncludeUser
       this.mainForm.isDisabled = data.isDisabled
       this.$nextTick(() => {
@@ -570,7 +570,7 @@ export default {
             <span class="el-tree-node__label">{ node.label } <icon name="user-times" v-show={ !data.isIncludeUser }></icon></span>
           </span>
           <span>
-            <span style="font-size: 12px;"> { data.limitRoles ? data.limitRoles.map(m => m.name).join(' ') : '' } </span>
+            <span style="font-size: 12px;"> { data.availableRoles ? data.availableRoles.map(m => m.name).join(' ') : '' } </span>
           </span>
           <span v-show={ !data.isSystem }>
             <span style="font-size: 12px;" v-show={ data.isDisabled }>[停用] </span>
