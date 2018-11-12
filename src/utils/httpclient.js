@@ -108,12 +108,15 @@ httpClient.interceptors.response.use(
       json = response.data
     }
 
-    if (json && json.url) {
-      top.location = json.url
-    } else if (json && json.code !== SuccessCode) {
-      console.log(json)
-      return Promise.reject(new ApiError(json.message))
+    if (json) {
+      if (json.url) {
+        top.location = json.url
+      } else if (json.code !== SuccessCode) {
+        console.log(json)
+        return Promise.reject(new ApiError(json.message))
+      }
     }
+
     return response
   },
   error => {

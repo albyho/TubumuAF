@@ -647,8 +647,8 @@ export default {
       this.mainForm.password = null
       this.mainForm.passwordConfirm = null
       this.mainForm.description = row.Description
-      this.mainForm.headURL = row.headURL
-      this.mainForm.logoURL = row.logoURL
+      this.mainForm.headURL = row.HeadURL
+      this.mainForm.logoURL = row.LogoURL
       this.$nextTick(() => {
         this.$refs.editGroupTree.setCheckedKeys(this.mainForm.groupIDs, true)
         this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
