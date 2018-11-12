@@ -1,36 +1,20 @@
 <template>
-  <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">
-      <el-breadcrumb
-        separator-class="el-icon-arrow-right"
-        class="breadcrumb">
-        <el-breadcrumb-item>系统管理</el-breadcrumb-item>
-        <el-breadcrumb-item>模块信息</el-breadcrumb-item>
-      </el-breadcrumb>
-    </el-header>
-    <el-main class="main">
-      <el-row>
-        <el-table
-          :data="item.modules"
-          style="width: 100%"
-          :empty-text="mainTableEmptyText">
-          <el-table-column
-            prop="Name"
-            label="模块名称"
-            width="160" />
-          <el-table-column
-            prop="Type"
-            label="类型" />
-          <el-table-column
-            prop="DataProvider"
-            label="数据代理名称"
-            width="140" />
-          <el-table-column
-            prop="Enabled"
-            label="启用"
-            width="60">
-            <template slot-scope="scope">
-              <i
+<el-container v-loading.fullscreen.lock="isLoading">
+  <el-header class="header">
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+      <el-breadcrumb-item>系统管理</el-breadcrumb-item>
+      <el-breadcrumb-item>模块信息</el-breadcrumb-item>
+    </el-breadcrumb>
+  </el-header>
+  <el-main class="main">
+    <el-row>
+      <el-table :data="item.modules" style="width: 100%" :empty-text="mainTableEmptyText">
+        <el-table-column prop="Name" label="模块名称" width="160" />
+        <el-table-column prop="Type" label="类型" />
+        <el-table-column prop="DataProvider" label="数据代理名称" width="140" />
+        <el-table-column prop="Enabled" label="启用" width="60">
+          <template slot-scope="scope">
+            <i
                 class="el-icon-check"
                 v-show="scope.row.Enabled" />
             </template>
@@ -120,7 +104,7 @@
 import api from '@/utils/api'
 
 export default {
-  data () {
+  data() {
     return {
       isLoading: false,
       item: {
@@ -131,7 +115,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.getItem()
   },
   computed: {
@@ -140,7 +124,7 @@ export default {
     }
   },
   methods: {
-    getItem () {
+    getItem() {
       this.isLoading = true
       api.getModuleConfig().then(
         response => {
@@ -153,7 +137,7 @@ export default {
         }
       )
     },
-    showErrorMessage (message) {
+    showErrorMessage(message) {
       this.$message({
         message: message,
         type: 'error'
@@ -164,12 +148,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .el-row {
   margin-bottom: 20px;
+
   &:last-child {
     margin-bottom: 0;
   }
 }
-
 </style>

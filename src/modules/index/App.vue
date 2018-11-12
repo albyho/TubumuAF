@@ -1,17 +1,11 @@
 <template>
-  <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header>
-      <el-row>
-        <el-col :span="16">系统管理</el-col>
-        <el-col
-          :span="8"
-          class="userinfo">
-          <el-badge
-            value="new"
-            :hidden="!hasNewMessage">
-            <i
-              class="el-icon-message newMessage"
-              @click="handleNewMessage" />
+<el-container v-loading.fullscreen.lock="isLoading">
+  <el-header>
+    <el-row>
+      <el-col :span="16">系统管理</el-col>
+      <el-col :span="8" class="userinfo">
+        <el-badge value="new" :hidden="!hasNewMessage">
+          <i class="el-icon-message newMessage" @click="handleNewMessage" />
           </el-badge>
           <el-dropdown
             trigger="hover"
@@ -62,7 +56,7 @@
 import api from '@/utils/api'
 
 export default {
-  data () {
+  data() {
     return {
       isLoading: false,
       isGetMenusLoading: false,
@@ -112,13 +106,13 @@ export default {
     })
   },
   methods: {
-    handleOpen (index, indexPath) {
+    handleOpen(index, indexPath) {
       // console.log('open', index, indexPath)
     },
-    handleClose (index, indexPath) {
+    handleClose(index, indexPath) {
       // console.log('close', index, indexPath)
     },
-    handleSelect (index, indexPath) {
+    handleSelect(index, indexPath) {
       const menuIndexes = index.split('-')
       let list = this.menus
       let currentMenu = null
@@ -138,13 +132,13 @@ export default {
       }
       // console.log('handleSelect', index, indexPath, this.mainFrameURL)
     },
-    profile () {
+    profile() {
       this.mainFrameURL = '/Manager/Admin/View?IsCore=true&Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=profile&Components=ckfinder'
     },
-    resources () {
+    resources() {
       this.mainFrameURL = '/Manager/Admin/View?IsCore=true&Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=resources&Components=ckfinder'
     },
-    logout () {
+    logout() {
       this.isLoading = true
       api.logout().then(response => {
         // this.isLoading = false
@@ -155,7 +149,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    callDirectly (url) {
+    callDirectly(url) {
       this.isLoading = true
       api.callDirectly(url).then(response => {
         this.isLoading = false
@@ -168,7 +162,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    connectNotifictionServer () {
+    connectNotifictionServer() {
       const _this = this
       try {
         /* eslint-disable no-undef */
@@ -203,11 +197,11 @@ export default {
         console.log(e.message)
       }
     },
-    handleNewMessage () {
+    handleNewMessage() {
       this.hasNewMessage = false
       this.mainFrameURL = '/Manager/Admin/View?IsCore=true&Title=%E9%80%9A%E7%9F%A5%E4%B8%AD%E5%BF%83&Name=notification&t=' + (new Date().getTime())
     },
-    showErrorMessage (message) {
+    showErrorMessage(message) {
       this.$message({
         message: message,
         type: 'error'
@@ -223,24 +217,28 @@ export default {
 body {
   margin: 0;
   padding: 0;
+
   .el-container {
-	  position: absolute;
-	  top: 0;
-	  left: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
+
     .el-header {
       padding: 0 20px;
       height: 60px;
       line-height: 60px;
-		  background: $color-primary;
+      background: $color-primary;
       color: #fff;
       font-size: 16px;
+
       .el-badge {
         margin-right: 20px;
         height: 32px;
         line-height: 32px;
         font-size: 20px;
+
         .el-badge__content {
           font-size: 6px;
           padding: 2px;
@@ -250,50 +248,62 @@ body {
           top: 4px;
           right: 6px;
         }
+
         .newMessage {
           cursor: pointer;
         }
       }
+
       .userinfo {
-			  text-align: right;
-			  padding-right: 20px;
-			  float: right;
-			  .userinfo-inner {
-				  cursor: pointer;
-				  color: #fff;
-				  img {
-					  width: 40px;
-					  height: 40px;
-					  border-radius: 20px;
-					  margin: 10px 0px 10px 10px;
-					  float: right;
-				  }
-			 }
-		}
+        text-align: right;
+        padding-right: 20px;
+        float: right;
+
+        .userinfo-inner {
+          cursor: pointer;
+          color: #fff;
+
+          img {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            margin: 10px 0px 10px 10px;
+            float: right;
+          }
+        }
+      }
     }
+
     .el-container {
       top: 60px;
       height: calc(100% - 60px);
+
       .el-aside {
         height: 100%;
+
         .el-menu-vertical-main:not(.el-menu--collapse) {
           width: 199px;
           min-height: 600px;
           height: 100%;
+
           .el-submenu .el-menu-item {
             height: 36px;
             line-height: 36px;
           }
-          .el-menu-item, .el-submenu__title {
+
+          .el-menu-item,
+          .el-submenu__title {
             height: 40px;
             line-height: 40px;
           }
         }
       }
+
       .el-main {
         height: 100%;
         padding: 0;
         overflow: hidden;
+
         .el-main-content {
           border: 0;
           /*width: 100%;
@@ -304,4 +314,3 @@ body {
   }
 }
 </style>
-

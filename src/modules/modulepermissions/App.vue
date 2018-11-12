@@ -1,59 +1,40 @@
 <template>
-  <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">
-      <el-breadcrumb
-        separator-class="el-icon-arrow-right"
-        class="breadcrumb">
-        <el-breadcrumb-item>系统管理</el-breadcrumb-item>
-        <el-breadcrumb-item>模块权限</el-breadcrumb-item>
-      </el-breadcrumb>
-    </el-header>
-    <el-main class="main">
-      <el-row>
-        <el-button-group>
-          <el-button
-            type="primary"
-            icon="el-icon-refresh"
-            @click="handleExtractModulePermissions">提取模块权限</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-time"
-            @click="handleClearModulePermissions">清理模块权限</el-button>
-        </el-button-group>
-      </el-row>
-      <el-row>
-        <el-table
-          :data="list"
-          style="width: 100%"
-          :empty-text="mainTableEmptyText">
-          <el-table-column
-            prop="displayOrder"
-            label="#"
-            width="40" />
-          <el-table-column
-            prop="moduleName"
-            label="模块"
-            width="180" />
-          <el-table-column
-            prop="name"
-            label="名称" />
-        </el-table>
-      </el-row>
-    </el-main>
-  </el-container>
+<el-container v-loading.fullscreen.lock="isLoading">
+  <el-header class="header">
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+      <el-breadcrumb-item>系统管理</el-breadcrumb-item>
+      <el-breadcrumb-item>模块权限</el-breadcrumb-item>
+    </el-breadcrumb>
+  </el-header>
+  <el-main class="main">
+    <el-row>
+      <el-button-group>
+        <el-button type="primary" icon="el-icon-refresh" @click="handleExtractModulePermissions">提取模块权限</el-button>
+        <el-button type="primary" icon="el-icon-time" @click="handleClearModulePermissions">清理模块权限</el-button>
+      </el-button-group>
+    </el-row>
+    <el-row>
+      <el-table :data="list" style="width: 100%" :empty-text="mainTableEmptyText">
+        <el-table-column prop="displayOrder" label="#" width="40" />
+        <el-table-column prop="moduleName" label="模块" width="180" />
+        <el-table-column prop="name" label="名称" />
+      </el-table>
+    </el-row>
+  </el-main>
+</el-container>
 </template>
 
 <script>
 import api from '@/utils/api'
 
 export default {
-  data () {
+  data() {
     return {
       isLoading: false,
       list: null
     }
   },
-  mounted () {
+  mounted() {
     this.getList()
   },
   computed: {
@@ -62,7 +43,7 @@ export default {
     }
   },
   methods: {
-    getList () {
+    getList() {
       this.isLoading = true
       api.getPermissions().then(response => {
         this.isLoading = false
@@ -72,7 +53,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    handleExtractModulePermissions () {
+    handleExtractModulePermissions() {
       this.isLoading = true
       api.extractModulePermissions().then(response => {
         this.isLoading = false
@@ -87,7 +68,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    handleClearModulePermissions () {
+    handleClearModulePermissions() {
       this.isLoading = true
       api.clearModulePermissions().then(response => {
         this.isLoading = false
@@ -102,7 +83,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    showErrorMessage (message) {
+    showErrorMessage(message) {
       this.$message({
         message: message,
         type: 'error'

@@ -1,64 +1,38 @@
 <template>
-  <el-form
-    ref="mainForm"
-    :model="mainForm"
-    :rules="mainFormRules"
-    v-loading.fullscreen.lock="isLoading"
-    label-position="left"
-    label-width="0px"
-    class="container">
-    <h3 class="title">系统登录</h3>
-    <el-form-item prop="account">
-      <el-input
-        ref="account"
-        type="text"
-        v-model.trim="mainForm.account"
-        auto-complete="on"
-        @keyup.enter.native="handleFocus('password')"
-        placeholder="账号(用户名、手机号或邮箱)"
-        autofocus />
-    </el-form-item>
-    <el-form-item prop="password">
-      <el-input
-        ref="password"
-        type="password"
-        v-model.trim="mainForm.password"
-        auto-complete="off"
-        @keyup.enter.native="handleFocus('validationCode')"
-        placeholder="密码" />
-    </el-form-item>
-    <el-form-item prop="validationCode">
-      <el-input
-        ref="validationCode"
-        type="text"
-        v-model.trim="mainForm.validationCode"
-        auto-complete="off"
-        @keyup.enter.native="handleSubmit"
-        placeholder="验证码"
-        class="validationCode" />
-      <img
+<el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" v-loading.fullscreen.lock="isLoading" label-position="left" label-width="0px" class="container">
+  <h3 class="title">系统登录</h3>
+  <el-form-item prop="account">
+    <el-input ref="account" type="text" v-model.trim="mainForm.account" auto-complete="on" @keyup.enter.native="handleFocus('password')" placeholder="账号(用户名、手机号或邮箱)" autofocus />
+  </el-form-item>
+  <el-form-item prop="password">
+    <el-input ref="password" type="password" v-model.trim="mainForm.password" auto-complete="off" @keyup.enter.native="handleFocus('validationCode')" placeholder="密码" />
+  </el-form-item>
+  <el-form-item prop="validationCode">
+    <el-input ref="validationCode" type="text" v-model.trim="mainForm.validationCode" auto-complete="off" @keyup.enter.native="handleSubmit" placeholder="验证码" class="validationCode" />
+    <img
         :src="refreshValidationCodeURL"
         @click="handleRefreshValidationCode"
         class="validationCodeImage">
     </el-form-item>
     <!-- <el-checkbox v-model="isRemberPassword" class="remember">记住密码</el-checkbox> -->
     <el-form-item style="width:100%;">
-      <el-button
-        type="primary"
-        class="login"
-        @click="handleSubmit">登录</el-button>
-    <!-- <el-button @click.native.prevent="handleReset">重置</el-button> -->
+      <el-button type="primary" class="login" @click="handleSubmit">登录</el-button>
+      <!-- <el-button @click.native.prevent="handleReset">重置</el-button> -->
     </el-form-item>
-  </el-form>
+</el-form>
 </template>
 
 <script>
-import { baseURL, defaultAccount, defaultPassword } from '@/utils/config'
+import {
+  baseURL,
+  defaultAccount,
+  defaultPassword
+} from '@/utils/config'
 import api from '@/utils/api'
 const fileDownload = require('js-file-download')
 
 export default {
-  data () {
+  data() {
     return {
       isLoading: false,
       refreshValidationCodeURLBase: baseURL + '/Admin/GetValidationCode',
@@ -69,33 +43,66 @@ export default {
         validationCode: ''
       },
       mainFormRules: {
-        account: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
-          { min: 2, message: '最少支持2个字符', trigger: 'blur' },
-          { max: 20, message: '最多支持20个字符', trigger: 'blur' },
-          { pattern: /^([a-zA-Z][a-zA-Z0-9-_]*)|(1(3|4|5|7|8)\d{9})|([\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?)$/, message: '请输入合法的用户名、手机号或邮箱', trigger: 'blur' }
+        account: [{
+            required: true,
+            message: '请输入账号',
+            trigger: 'blur'
+          },
+          {
+            min: 2,
+            message: '最少支持2个字符',
+            trigger: 'blur'
+          },
+          {
+            max: 20,
+            message: '最多支持20个字符',
+            trigger: 'blur'
+          },
+          {
+            pattern: /^([a-zA-Z][a-zA-Z0-9-_]*)|(1(3|4|5|7|8)\d{9})|([\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?)$/,
+            message: '请输入合法的用户名、手机号或邮箱',
+            trigger: 'blur'
+          }
         ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, message: '最少支持6个字符', trigger: 'blur' },
-          { max: 20, message: '最多支持20个字符', trigger: 'blur' }
+        password: [{
+            required: true,
+            message: '请输入密码',
+            trigger: 'blur'
+          },
+          {
+            min: 6,
+            message: '最少支持6个字符',
+            trigger: 'blur'
+          },
+          {
+            max: 20,
+            message: '最多支持20个字符',
+            trigger: 'blur'
+          }
         ],
-        validationCode: [
-          { required: true, message: '请输入验证码', trigger: 'blur' },
-          { max: 20, message: '最多支持20个字符', trigger: 'blur' }
+        validationCode: [{
+            required: true,
+            message: '请输入验证码',
+            trigger: 'blur'
+          },
+          {
+            max: 20,
+            message: '最多支持20个字符',
+            trigger: 'blur'
+          }
         ]
       },
       isRemberPassword: true
     }
   },
-  mounted () {
+  mounted() {
     this.refreshValidationCodeURL = this.refreshValidationCodeURLBase
   },
   methods: {
-    handleReset (e) {
+    handleReset(e) {
       this.$refs.mainForm.resetFields()
     },
-    handleSubmit (e) {
+    handleSubmit(e) {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
@@ -110,7 +117,7 @@ export default {
         })
       })
     },
-    handleRefreshValidationCode (e) {
+    handleRefreshValidationCode(e) {
       // console.log('handleRefreshValidationCode')
       this.refreshValidationCodeURL = this.refreshValidationCodeURLBase + '?' + (new Date().getTime())
       this.mainForm.validationCode = ''
@@ -118,16 +125,16 @@ export default {
         this.$refs.validationCode.focus()
       }
     },
-    handleFocus (el) {
+    handleFocus(el) {
       this.$refs[el].focus()
     },
-    showErrorMessage (message) {
+    showErrorMessage(message) {
       this.$message({
         message: message,
         type: 'error'
       })
     },
-    testDownload () {
+    testDownload() {
       this.isLoading = true
       const url = 'http://192.168.0.108:9005/manager/api/Project/Report/ImportAttendance'
       const params = {
@@ -158,23 +165,28 @@ export default {
   padding: 35px 35px 15px 35px;
   background: #fff;
   border: 1px solid #eaeaea;
+
   .title {
     margin: 0px auto 40px auto;
     text-align: center;
     color: #505458;
   }
+
   .remember {
     margin: 0px 0px 35px 0px;
   }
+
   .validationCode {
     width: 80px;
     vertical-align: middle;
   }
+
   .validationCodeImage {
     height: 28px;
     vertical-align: middle;
     cursor: pointer;
   }
+
   .login {
     width: 100%;
   }

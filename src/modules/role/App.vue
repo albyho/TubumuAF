@@ -1,116 +1,58 @@
 <template>
-  <el-container v-loading.fullscreen.lock="isLoading">
-    <el-header class="header">
-      <el-breadcrumb
-        separator-class="el-icon-arrow-right"
-        class="breadcrumb">
-        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>角色列表</el-breadcrumb-item>
-      </el-breadcrumb>
-    </el-header>
-    <el-main class="main">
-      <el-row>
-        <el-col>
-          <el-button
-            type="primary"
-            icon="el-icon-circle-plus-outline"
-            @click="handleAdd">添加</el-button>
-        </el-col>
-      </el-row>
-      <el-table
-        :data="list"
-        style="width: 100%"
-        :empty-text="mainTableEmptyText">
-        <el-table-column
-          prop="name"
-          label="名称" />
-        <el-table-column
-          align="center"
-          width="42">
-          <template slot-scope="scope">
-            <!-- 禁止拖动：不使用 v-show 和 :class，而是直接使用 v-if 也可行 -->
-            <el-button
-              type="text"
-              size="small"
-              icon="el-icon-rank"
-              :class="{ 'ignore-elements': scope.row.isSystem }"
-              v-show="!scope.row.isSystem" />
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          width="42">
-          <template slot-scope="scope">
-            <el-button
-              type="text"
-              size="small"
-              icon="el-icon-edit"
-              @click="handleEdit(scope.row)" />
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          width="42">
-          <template slot-scope="scope">
-            <el-button
-              type="text"
-              size="small"
-              icon="el-icon-delete"
-              @click="handleRemove(scope.row)"
-              v-if="!scope.row.isSystem" />
-          </template>
-        </el-table-column>
-      </el-table>
+<el-container v-loading.fullscreen.lock="isLoading">
+  <el-header class="header">
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+      <el-breadcrumb-item>角色列表</el-breadcrumb-item>
+    </el-breadcrumb>
+  </el-header>
+  <el-main class="main">
+    <el-row>
+      <el-col>
+        <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAdd">添加</el-button>
+      </el-col>
+    </el-row>
+    <el-table :data="list" style="width: 100%" :empty-text="mainTableEmptyText">
+      <el-table-column prop="name" label="名称" />
+      <el-table-column align="center" width="42">
+        <template slot-scope="scope">
+          <!-- 禁止拖动：不使用 v-show 和 :class，而是直接使用 v-if 也可行 -->
+          <el-button type="text" size="small" icon="el-icon-rank" :class="{ 'ignore-elements': scope.row.isSystem }" v-show="!scope.row.isSystem" />
+        </template>
+      </el-table-column>
+      <el-table-column align="center" width="42">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)" />
+        </template>
+      </el-table-column>
+      <el-table-column align="center" width="42">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" icon="el-icon-delete" @click="handleRemove(scope.row)" v-if="!scope.row.isSystem" />
+        </template>
+      </el-table-column>
+    </el-table>
 
-      <!-- 添加/编辑对话框 -->
-      <el-dialog
-        :visible.sync="mainFormDialogVisible"
-        @submit.native.prevent
-        :close-on-click-modal="false"
-        width="400px">
-        <span slot="title">
+    <!-- 添加/编辑对话框 -->
+    <el-dialog :visible.sync="mainFormDialogVisible" @submit.native.prevent :close-on-click-modal="false" width="400px">
+      <span slot="title">
           {{ editActive ? '编辑' : '添加' }}
         </span>
-        <el-form
-          ref="mainForm"
-          :model="mainForm"
-          :rules="mainFormRules"
-          label-position="right"
-          label-width="120px">
-          <el-form-item
-            label="角色名称"
-            prop="name">
-            <el-input
-              ref="name"
-              v-model.trim="mainForm.name"
-              auto-complete="off"
-              placeholder="请输入角色名称" />
-          </el-form-item>
-          <el-form-item label="包含权限">
-            <el-tree
-              :data="editPermissionTreeData"
-              :props="editPermissionTreeDefaultProps"
-              node-key="id"
-              ref="editPermissionTree"
-              empty-text=""
-              show-checkbox
-              default-expand-all
-              check-strictly
-              @check-change="handlePermissionTreeCheckChange" />
-          </el-form-item>
-        </el-form>
-        <div
-          slot="footer"
-          class="dialog-footer">
-          <el-button @click="handleMainFormSure(false)">取 消</el-button>
-          <el-button
-            type="primary"
-            @click="handleMainFormSure(true)">确 定</el-button>
-        </div>
-      </el-dialog>
+      <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="120px">
+        <el-form-item label="角色名称" prop="name">
+          <el-input ref="name" v-model.trim="mainForm.name" auto-complete="off" placeholder="请输入角色名称" />
+        </el-form-item>
+        <el-form-item label="包含权限">
+          <el-tree :data="editPermissionTreeData" :props="editPermissionTreeDefaultProps" node-key="id" ref="editPermissionTree" empty-text="" show-checkbox default-expand-all check-strictly @check-change="handlePermissionTreeCheckChange" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="handleMainFormSure(false)">取 消</el-button>
+        <el-button type="primary" @click="handleMainFormSure(true)">确 定</el-button>
+      </div>
+    </el-dialog>
 
-    </el-main>
-  </el-container>
+  </el-main>
+</el-container>
 </template>
 
 <script>
@@ -118,37 +60,44 @@ import Sortable from 'sortablejs'
 import api from '@/utils/api'
 
 export default {
-  data () {
+  data() {
     return {
       // 主要数据
       isLoading: false,
-      list: null,                   // 主要数据列表
+      list: null, // 主要数据列表
 
       // 删除
-      removeActive: null,           // 暂存删除项
+      removeActive: null, // 暂存删除项
 
       // 添加/编辑
-      editActive: null,                   // 暂存编辑项，也可用来判断是否添加还是编辑
-      mainFormDialogVisible: false,       // 添加/编辑对话框是否可见
+      editActive: null, // 暂存编辑项，也可用来判断是否添加还是编辑
+      mainFormDialogVisible: false, // 添加/编辑对话框是否可见
       mainForm: {
         roleID: null,
         name: null,
         permissionIDs: null
       },
       mainFormRules: {
-        name: [
-          { required: true, message: '请输入角色名称', trigger: 'blur' },
-          { max: 50, message: '最多支持50个字符', trigger: 'blur' }
+        name: [{
+            required: true,
+            message: '请输入角色名称',
+            trigger: 'blur'
+          },
+          {
+            max: 50,
+            message: '最多支持50个字符',
+            trigger: 'blur'
+          }
         ]
       },
-      editPermissionTreeData: null,       // 用于编辑对话框内显示的权限树
+      editPermissionTreeData: null, // 用于编辑对话框内显示的权限树
       editPermissionTreeDefaultProps: {
         children: 'children',
         label: 'name'
       }
     }
   },
-  mounted () {
+  mounted() {
     this.getList()
     this.getPermissionTree()
   },
@@ -158,7 +107,7 @@ export default {
     }
   },
   methods: {
-    getList () {
+    getList() {
       this.isLoading = true
       api.getRoles().then(response => {
         this.isLoading = false
@@ -171,14 +120,14 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    getPermissionTree () {
+    getPermissionTree() {
       api.getPermissionTree().then(response => {
         this.editPermissionTreeData = response.data.tree
       }, error => {
         this.showErrorMessage(error.message)
       })
     },
-    handleAdd () {
+    handleAdd() {
       if (!this.validateBaseData()) {
         return
       }
@@ -193,7 +142,7 @@ export default {
         this.clearValidate('mainForm')
       })
     },
-    handleEdit (row) {
+    handleEdit(row) {
       if (!this.validateBaseData()) {
         this.showErrorMessage('基础数据缺失：权限列表')
       }
@@ -207,7 +156,7 @@ export default {
         this.clearValidate('mainForm')
       })
     },
-    handleMainFormSure (sure) {
+    handleMainFormSure(sure) {
       if (sure) {
         // 提交数据
         if (this.editActive) {
@@ -220,7 +169,7 @@ export default {
         // this.editActive = null // 注：添加状态 endActive 本就为 null
       }
     },
-    handleRemove (row) {
+    handleRemove(row) {
       this.removeActive = row
       this.$confirm('删除该角色后，相关的数据也将被删除。是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -232,7 +181,7 @@ export default {
         this.removeActive = null
       })
     },
-    add () {
+    add() {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
@@ -250,7 +199,7 @@ export default {
         })
       })
     },
-    edit () {
+    edit() {
       if (!this.editActive) {
         this.showErrorMessage('异常：无编辑目标')
         return
@@ -275,7 +224,7 @@ export default {
         })
       })
     },
-    remove () {
+    remove() {
       if (!this.removeActive) return
       const params = {
         roleID: this.removeActive.roleID
@@ -291,7 +240,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    move (sourceDisplayOrder, targetDisplayOrder) {
+    move(sourceDisplayOrder, targetDisplayOrder) {
       const params = {
         sourceDisplayOrder: sourceDisplayOrder,
         targetDisplayOrder: targetDisplayOrder
@@ -304,31 +253,31 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    validateBaseData () {
+    validateBaseData() {
       if (!this.editPermissionTreeData) {
         this.showErrorMessage('基础数据缺失：权限列表')
         return false
       }
       return true
     },
-    handlePermissionTreeCheckChange (data, checked, indeterminate) {
+    handlePermissionTreeCheckChange(data, checked, indeterminate) {
       // console.log(data, checked, indeterminate)
       this.mainForm.permissionIDs = this.$refs.editPermissionTree.getCheckedKeys()
       // console.log(this.mainForm.permissionIDs)
     },
-    resetForm (formName) {
+    resetForm(formName) {
       this.$refs[formName].resetFields()
     },
-    clearValidate (formName) {
+    clearValidate(formName) {
       this.$refs[formName].clearValidate()
     },
-    showErrorMessage (message) {
+    showErrorMessage(message) {
       this.$message({
         message: message,
         type: 'error'
       })
     },
-    setupSortable () {
+    setupSortable() {
       const el = document.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
       this.sortable = Sortable.create(el, {
         ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
@@ -353,11 +302,9 @@ export default {
 </script>
 
 <style lang="scss">
-
-.sortable-ghost{
+.sortable-ghost {
   opacity: .8;
   color: #fff;
   background: #409eff;
 }
-
 </style>
