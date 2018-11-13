@@ -20,7 +20,7 @@
           prop="title">
           <el-input
             v-model.trim="mainForm.title"
-            auto-complete="off"
+            autocomplete="off"
             placeholder="请输入公告标题"
             ref="title" />
         </el-form-item>

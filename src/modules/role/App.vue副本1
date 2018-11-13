@@ -39,7 +39,7 @@
     <el-dialog title="编辑角色" :visible.sync="dialogFormVisible" width="40%">
       <el-form ref="form" :model="form" size="small">
         <el-form-item label="角色名称">
-          <el-input v-model="form.name" auto-complete="off"></el-input>
+          <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

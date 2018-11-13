@@ -26,7 +26,7 @@
               <el-input
                 ref="displayName"
                 v-model.trim="changeProfileForm.displayName"
-                auto-complete="off"
+                autocomplete="off"
                 placeholder="请输入昵称" />
             </el-form-item>
             <el-form-item
@@ -35,7 +35,7 @@
               <el-input
                 ref="headURL"
                 v-model.trim="changeProfileForm.headURL"
-                auto-complete="off"
+                autocomplete="off"
                 placeholder="请输入头像 URL">
                 <el-button
                   slot="append"
@@ -48,7 +48,7 @@
               prop="logoURL">
               <el-input
                 v-model.trim="changeProfileForm.logoURL"
-                auto-complete="off"
+                autocomplete="off"
                 placeholder="请输入Logo URL"
                 ref="logoURL">
                 <el-button
@@ -80,7 +80,7 @@
                 ref="currentPassword"
                 type="password"
                 v-model.trim="changePasswordForm.currentPassword"
-                auto-complete="off"
+                autocomplete="off"
                 placeholder="请输入当前密码" />
             </el-form-item>
             <el-form-item
@@ -90,7 +90,7 @@
                 ref="newPassword"
                 type="password"
                 v-model.trim="changePasswordForm.newPassword"
-                auto-complete="off"
+                autocomplete="off"
                 placeholder="请输入新密码" />
             </el-form-item>
             <el-form-item
@@ -100,7 +100,7 @@
                 ref="newPasswordConfirm"
                 type="password"
                 v-model.trim="changePasswordForm.newPasswordConfirm"
-                auto-complete="off"
+                autocomplete="off"
                 placeholder="请确认新密码" />
             </el-form-item>
             <el-form-item>

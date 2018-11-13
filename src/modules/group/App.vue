@@ -74,7 +74,7 @@
                 prop="name">
                 <el-input
                   v-model.trim="mainForm.name"
-                  auto-complete="off"
+                  autocomplete="off"
                   placeholder="请输入分组名称"
                   ref="name" />
               </el-form-item>

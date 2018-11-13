@@ -147,10 +147,13 @@ export default {
   },
   // 床柜项目
   // 床柜
+  getHospitalDeviceInfoBasePage (params) {
+    return Vue.httpClient.post('/hospitaldevice/getHospitalDeviceInfoBasePage', params)
+  },
   getHospitalDeviceBasePage (params) {
     return Vue.httpClient.post('/hospitaldevice/getHospitalDeviceBasePage', params)
   },
-  setIsDeleted (params) {
+  setHospitalDeviceIsDeleted (params) {
     return Vue.httpClient.post('/hospitaldevice/setIsDeleted', params)
   },
   addHospitalDevice (params) {
@@ -171,5 +174,47 @@ export default {
   },
   editHospital (params) {
     return Vue.httpClient.post('/hospital/edit', params)
+  },
+  // 科室
+  getHospitalDepartmentBasePage (params) {
+    return Vue.httpClient.post('/hospitaldepartment/getHospitalDepartmentBasePage', params)
+  },
+  setHospitalDepartmentIsDeleted (params) {
+    return Vue.httpClient.post('/hospitaldepartment/setIsDeleted', params)
+  },
+  addHospitalDepartment (params) {
+    return Vue.httpClient.post('/hospitaldepartment/add', params)
+  },
+  editHospitalDepartment (params) {
+    return Vue.httpClient.post('/hospitaldepartment/edit', params)
+  },
+  // 病房
+  getHospitalSickroomBasePage (params) {
+    return Vue.httpClient.post('/hospitalsickroom/getHospitalSickroomBasePage', params)
+  },
+  setHospitalSickroomIsDeleted (params) {
+    return Vue.httpClient.post('/hospitalsickroom/setIsDeleted', params)
+  },
+  addHospitalSickroom (params) {
+    return Vue.httpClient.post('/hospitalsickroom/add', params)
+  },
+  editHospitalSickroom (params) {
+    return Vue.httpClient.post('/hospitalsickroom/edit', params)
+  },
+  // 床位
+  getHospitalBunkBasePage (params) {
+    return Vue.httpClient.post('/hospitalbunk/getHospitalBunkBasePage', params)
+  },
+  setHospitalBunkIsDeleted (params) {
+    return Vue.httpClient.post('/hospitalbunk/setIsDeleted', params)
+  },
+  addHospitalBunk (params) {
+    return Vue.httpClient.post('/hospitalbunk/add', params)
+  },
+  editHospitalBunk (params) {
+    return Vue.httpClient.post('/hospitalbunk/edit', params)
+  },
+  editHospitalBunkDevice (params) {
+    return Vue.httpClient.post('/hospitalbunk/setDevice', params)
   }
 }

@@ -21,7 +21,7 @@
           <el-input
             ref="name"
             v-model.trim="mainForm.name"
-            auto-complete="off"
+            autocomplete="off"
             placeholder="请输入系统名称" />
         </el-form-item>
         <el-form-item
@@ -30,7 +30,7 @@
           <el-input
             ref="host"
             v-model.trim="mainForm.host"
-            auto-complete="off"
+            autocomplete="off"
             placeholder="请输入系统地址" />
         </el-form-item>
         <el-form-item
@@ -39,7 +39,7 @@
           <el-input
             ref="title"
             v-model.trim="mainForm.title"
-            auto-complete="off"
+            autocomplete="off"
             placeholder="请输入系统主标题" />
         </el-form-item>
         <el-form-item
@@ -48,7 +48,7 @@
           <el-input
             ref="keywords"
             v-model.trim="mainForm.keywords"
-            auto-complete="off"
+            autocomplete="off"
             placeholder="请输入系统关键字" />
         </el-form-item>
         <el-form-item
@@ -59,7 +59,7 @@
             type="textarea"
             :rows="4"
             v-model.trim="mainForm.description"
-            auto-complete="off"
+            autocomplete="off"
             placeholder="请输入系统描述" />
         </el-form-item>
         <el-form-item
@@ -70,7 +70,7 @@
             type="textarea"
             :rows="4"
             v-model.trim="mainForm.copyright"
-            auto-complete="off"
+            autocomplete="off"
             placeholder="请输入系统描述" />
         </el-form-item>
         <el-form-item
@@ -79,7 +79,7 @@
           <el-input
             ref="faviconURL"
             v-model.trim="mainForm.faviconURL"
-            auto-complete="off"
+            autocomplete="off"
             placeholder="请输入系统小图标地址" />
         </el-form-item>
         <el-form-item
@@ -88,7 +88,7 @@
           <el-input
             ref="pageTitleSeparator"
             v-model="mainForm.pageTitleSeparator"
-            auto-complete="off"
+            autocomplete="off"
             placeholder="请输入标题分隔符" />
         </el-form-item>
         <el-form-item>

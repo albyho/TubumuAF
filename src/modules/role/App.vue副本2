@@ -39,7 +39,7 @@
 
       <el-form ref="form" :model="form" :rules="rules" label-position="right" label-width="80px" size="small">
         <el-form-item label="角色名称" prop="name">
-          <el-input v-model="form.name" auto-complete="off" placeholder="请输入角色名称" ref="name"></el-input>
+          <el-input v-model="form.name" autocomplete="off" placeholder="请输入角色名称" ref="name"></el-input>
         </el-form-item>
 
         <el-form-item label="包含权限">

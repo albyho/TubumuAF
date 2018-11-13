@@ -4,6 +4,7 @@ import ElementUI from 'element-ui'
 import XLUserStatusSelect from '@/components/XLUserStatusSelect.vue'
 import XLUserStatusRadioGroup from '@/components/XLUserStatusRadioGroup.vue'
 import XLGroupCascader from '@/components/XLGroupCascader.vue'
+import XLDatePicker from '@/components/XLDatePicker.vue'
 import 'element-ui/lib/theme-chalk/index.css'
 import '../../styles/inner.scss'
 
@@ -18,6 +19,7 @@ Vue.use(ElementUI, { size: 'mini' })
 Vue.component('xl-userStatusSelect', XLUserStatusSelect)
 Vue.component('xl-userStatusRadioGroup', XLUserStatusRadioGroup)
 Vue.component('xl-groupCascader', XLGroupCascader)
+Vue.component('xl-datePicker', XLDatePicker)
 
 /* eslint-disable no-new */
 new Vue({

@@ -2,22 +2,21 @@
 <el-container v-loading.fullscreen.lock="isLoading">
   <el-header class="header">
     <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-      <el-breadcrumb-item>床柜管理</el-breadcrumb-item>
-      <el-breadcrumb-item>床柜信息列表</el-breadcrumb-item>
+      <el-breadcrumb-item>医院管理</el-breadcrumb-item>
+      <el-breadcrumb-item to="/" replace>医院信息列表</el-breadcrumb-item>
+      <el-breadcrumb-item>{{ $route.query.hospitalName }}</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{name: 'department', params: { hospitalID: $route.params.hospitalID }, query: { hospitalName: $route.query.hospitalName }}">科室信息列表</el-breadcrumb-item>
+      <el-breadcrumb-item>{{ $route.query.departmentName }}</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{name: 'sickroom', params: { hospitalID: $route.params.hospitalID, hospitalDepartmentID: $route.params.hospitalDepartmentID }, query: { hospitalName: $route.query.hospitalName, departmentName: $route.query.departmentName }}">病床信息列表</el-breadcrumb-item>
+      <el-breadcrumb-item>{{ $route.query.sickroomName }}</el-breadcrumb-item>
+      <el-breadcrumb-item>病床信息列表</el-breadcrumb-item>
     </el-breadcrumb>
   </el-header>
   <el-main class="main">
     <el-form ref="searchCriteriaForm" class="searchCriteriaForm" :model="searchCriteriaForm" inline>
       <el-row>
         <el-form-item>
-          <el-input placeholder="关键字(序列号/位置/地址)" clearable v-model="searchCriteriaForm.keyword" class="filterText" />
-        </el-form-item>
-        <el-form-item>
-          <el-radio-group v-model="searchCriteriaForm.isEnabled">
-            <el-radio-button>全部</el-radio-button>
-            <el-radio-button :label="true">启用</el-radio-button>
-            <el-radio-button :label="false">禁用</el-radio-button>
-          </el-radio-group>
+          <el-input placeholder="关键字(病床名称)" clearable v-model="searchCriteriaForm.keyword" class="filterText" />
         </el-form-item>
         <el-form-item>
           <el-radio-group v-model="searchCriteriaForm.isDeleted">
@@ -32,29 +31,21 @@
             <el-button type="primary" icon="el-icon-search" @click="handleSearchAll ()">全部</el-button>
           </el-button-group>
           <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAdd()">添加</el-button>
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleImport()">导入</el-button>
         </el-form-item>
       </el-row>
     </el-form>
     <el-row>
       <el-table :data="page.list" style="width: 100%" :empty-text="mainTableEmptyText" @sort-change="handleSortChange">
-        <el-table-column prop="HospitalDeviceID" label="#" width="60" sortable="custom"/>
-        <el-table-column prop="Serial" label="序列号" sortable="custom" width="80"/>
-        <el-table-column label="位置">
+        <el-table-column prop="HospitalBunkID" label="#" width="60" sortable="custom"/>
+        <el-table-column prop="Name" label="病床名称" sortable="custom"/>
+        <el-table-column label="床柜" width="160">
           <template slot-scope="scope">
-            {{ scope.row.Hospital.HospitalID ? scope.row.Hospital.Name + '/' + scope.row.Department.Name + '/' + scope.row.Sickroom.Name + '/' + scope.row.Bunk.Name : ''}}
-          </template>
-        </el-table-column>
-        <el-table-column prop="HospitalAssociatedDate" label="设置时间" width="160" />
-        <el-table-column prop="Hospital.Address" label="地址"/>
-        <el-table-column label="启用" width="60">
-          <template slot-scope="scope">
-            {{ scope.row.IsEnabled ? '√' : '×' }}
+            <el-button type="primary" plain size="small" @click="handleSetDevice(scope.row)">{{ !!scope.row.Device.HospitalDeviceID ? scope.row.Device.Serial : '设置' }}</el-button>
           </template>
         </el-table-column>
         <el-table-column label="删除" width="60">
           <template slot-scope="scope">
-            {{ scope.row.IsDeleted ? '√' : '×' }}
+            {{ scope.row.IsDeleted ? '√' : '' }}
           </template>
         </el-table-column>
         <el-table-column align="center" fixed="right" width="84">
@@ -71,14 +62,8 @@
           {{ editActive ? '编辑' : '添加' }}
         </span>
       <el-form ref="mainForm" :model="mainForm" :rules="mainFormRules" label-position="right" label-width="160px">
-        <el-form-item label="序列号" prop="serial">
-          <el-input ref="serial" v-model.trim="mainForm.serial" autocomplete="off" placeholder="请输入序列号" :disabled="!!editActive" />
-        </el-form-item>
-        <el-form-item label="启用" :required="true">
-          <el-radio-group v-model="mainForm.isEnabled">
-            <el-radio :label="true">启用</el-radio>
-            <el-radio :label="false">禁用</el-radio>
-          </el-radio-group>
+        <el-form-item label="病床名称" prop="name">
+          <el-input ref="name" v-model.trim="mainForm.name" autocomplete="off" placeholder="请输入病床名称"/>
         </el-form-item>
         <el-form-item label="备注">
           <el-input type="textarea" :rows="4" v-model.trim="mainForm.remark" />
@@ -90,18 +75,18 @@
       </div>
     </el-dialog>
 
-    <el-dialog :visible.sync="importFormDialogVisible" @submit.native.prevent :close-on-click-modal="false" width="600px">
+    <el-dialog :visible.sync="setDeviceFormDialogVisible" @submit.native.prevent :close-on-click-modal="false" width="600px">
       <span slot="title">
-          导入
+        设置床柜
         </span>
-      <el-form ref="importForm" :model="importForm" :rules="importFormRules" label-position="right" label-width="160px">
-        <el-form-item label="序列号段" prop="serials">
-          <el-input ref="serials" v-model.trim="importForm.serials" autocomplete="off" placeholder="请输入序列号段" />
+      <el-form ref="setDeviceForm" :model="setDeviceForm" :rules="setDeviceFormRules" label-position="right" label-width="160px">
+        <el-form-item label="床柜序列号" prop="serial">
+          <el-input ref="serial" v-model.trim="setDeviceForm.serial" clearable autocomplete="off" placeholder="请输入床柜序列号"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="handleImportFormSure(false)">取 消</el-button>
-        <el-button type="primary" @click="handleImportFormSure(true)">确 定</el-button>
+        <el-button @click="handleSetDeviceFormSure (false)">取 消</el-button>
+        <el-button type="primary" @click="handleSetDeviceFormSure (true)">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -117,6 +102,7 @@ import api from '@/utils/api'
 import _ from 'lodash'
 
 export default {
+  props: ['hospitalID', 'hospitalDepartmentID', 'hospitalSickroomID'],
   data () {
     return {
       // 主要数据
@@ -127,8 +113,10 @@ export default {
         totalPageCount: null
       },
       searchCriteriaForm: {
+        hospitalID: this.hospitalID,
+        hospitalDepartmentID: this.hospitalDepartmentID,
+        hospitalSickroomID: this.hospitalSickroomID,
         keyword: null,
-        isEnabled: true,
         isDeleted: false
       },
       pagingInfoForm: {
@@ -136,7 +124,7 @@ export default {
         pageSize: 20,
         isExcludeMetaData: false,
         sortInfo: {
-          sort: 'HospitalDeviceID',
+          sort: 'HospitalBunkID',
           sortDir: 'ASC'
         }
       },
@@ -147,32 +135,32 @@ export default {
       editActive: null, // 暂存编辑项，也可用来判断是否添加还是编辑
       mainFormDialogVisible: false, // 添加/编辑对话框是否可见
       mainForm: {
-        hospitalDeviceID: null, // Int
-        serial: null, // String
-        isEnabled: false, // bool
+        hospitalID: this.hospitalID,
+        hospitalDepartmentID: this.hospitalDepartmentID,
+        hospitalSickroomID: this.hospitalSickroomID,
+        hospitalBunkID: null, // Int
+        name: null, // String
         remark: null // String
       },
       mainFormRules: {
-        serial: [{
-          pattern: /^\d{8}$/,
-          message: '请输入正确的床柜序列号',
-          trigger: 'blur'
-        }],
-        remark: [{
-          max: 1000,
-          message: '最多支持1000个字符',
-          trigger: 'blur'
-        }]
+        name: [
+          { required: true, message: '请输入病床名称', trigger: 'blur' },
+          { max: 100, message: '最多支持100个字符', trigger: 'blur' }
+        ],
+        remark: [
+          { max: 1000, message: '最多支持1000个字符', trigger: 'blur' }
+        ]
       },
-      // 导入
-      importFormDialogVisible: false, // 添加/编辑对话框是否可见
-      importForm: {
-        serials: null // String
+      // 床柜
+      setDeviceActive: null,
+      setDeviceFormDialogVisible: false,
+      setDeviceForm: {
+        hospitalBunkID: null, // Int
+        serial: null // String
       },
-      importFormRules: {
-        serials: [
-          { required: true, message: '请输入序列号段', trigger: 'blur' },
-          { pattern: /^(\d{8}((,\d{8})*|(-\d{8})*|(,\d{8}-\d{8})*)*)$/, message: '请输入正确的格式("数字"、"数字-数字"的以逗号分隔的任意组合', trigger: 'blur' }
+      setDeviceFormRules: {
+        serial: [
+          { pattern: /^\d{8}$/, message: '请输入正确的床柜序列号', trigger: 'blur' }
         ]
       }
     }
@@ -192,7 +180,7 @@ export default {
     getPage () {
       this.isLoading = true
       const params = _.extend({}, this.pagingInfoForm, this.searchCriteriaForm)
-      api.getHospitalDeviceBasePage(params).then(response => {
+      api.getHospitalBunkBasePage(params).then(response => {
         this.isLoading = false
         this.page = response.data.page
       }, error => {
@@ -212,7 +200,6 @@ export default {
     handleSearchAll () {
       this.pagingInfoForm.pageNumber = 1
       this.searchCriteriaForm.keyword = null
-      this.searchCriteriaForm.isEnabled = true
       this.searchCriteriaForm.isDeleted = false
       this.getPage()
     },
@@ -226,9 +213,8 @@ export default {
       }
       this.editActive = null
       this.mainFormDialogVisible = true
-      this.mainForm.hospitalDeviceID = null
-      this.mainForm.serial = null
-      this.mainForm.isEnabled = true // 默认 正常
+      this.mainForm.hospitalBunkID = null
+      this.mainForm.name = null
       this.mainForm.remark = null
       this.$nextTick(() => {
         this.clearValidate('mainForm')
@@ -241,22 +227,24 @@ export default {
       }
       this.editActive = row
       this.mainFormDialogVisible = true
-      this.mainForm.hospitalDeviceID = row.HospitalDeviceID
-      this.mainForm.serial = row.Serial
-      this.mainForm.isEnabled = row.IsEnabled
+      this.mainForm.hospitalBunkID = row.HospitalBunkID
+      this.mainForm.name = row.Name
       this.mainForm.remark = row.Remark
       this.$nextTick(() => {
         this.clearValidate('mainForm')
       })
     },
-    handleImport () {
-      if (!this.validateBaseData()) {
+    handleSetDevice (row) {
+      console.log('handleSetDevice', row)
+      if (!this.validateBaseData() || !row) {
         return
       }
-      this.importFormDialogVisible = true
-      this.importForm.serials = null
+      this.setDeviceActive = row
+      this.setDeviceFormDialogVisible = true
+      this.setDeviceForm.hospitalBunkID = row.HospitalBunkID
+      this.setDeviceForm.serial = row.Device.Serial
       this.$nextTick(() => {
-        this.clearValidate('importForm')
+        this.clearValidate('setDeviceForm')
       })
     },
     handleMainFormSure (sure) {
@@ -272,17 +260,21 @@ export default {
         this.mainFormDialogVisible = false
       }
     },
-    handleImportFormSure (sure) {
-      console.log('handleImportFormSure', sure)
+    handleSetDeviceFormSure (sure) {
+      console.log('handleSetDeviceFormSure', sure)
       if (sure) {
-        this.import()
+        this.setDevice()
       } else {
-        this.importFormDialogVisible = false
+        this.setDeviceFormDialogVisible = false
       }
+    },
+    handleRecycle () {
+      this.setDeviceForm.serial = null
+      this.setDevice()
     },
     handleDelete (row) {
       this.deleteActive = row
-      this.$confirm(row.IsDeleted ? '确定要恢复该货柜吗？' : '逻辑删除，相关数据依然会得以保留。是否继续?', '提示', {
+      this.$confirm(row.IsDeleted ? '确定要恢复该病床吗？' : '逻辑删除，相关数据依然会得以保留。是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -297,7 +289,8 @@ export default {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
         const params = this.mainForm
-        api.addHospitalDevice(params).then(response => {
+        console.log(this.mainForm)
+        api.addHospitalBunk(params).then(response => {
           this.isLoading = false
           this.mainFormDialogVisible = false
           this.getPage()
@@ -316,7 +309,7 @@ export default {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
         const params = this.mainForm
-        api.editHospitalDevice(params).then(response => {
+        api.editHospitalBunk(params).then(response => {
           this.isLoading = false
           this.editActive = null
           this.mainFormDialogVisible = false
@@ -330,11 +323,11 @@ export default {
     delete () {
       if (!this.deleteActive) return
       const params = {
-        hospitalDeviceID: this.deleteActive.HospitalDeviceID,
+        hospitalBunkID: this.deleteActive.HospitalBunkID,
         isDeleted: !this.deleteActive.IsDeleted
       }
       this.isLoading = true
-      api.setHospitalDeviceIsDeleted(params).then(response => {
+      api.setHospitalBunkIsDeleted(params).then(response => {
         this.isLoading = false
         this.deleteActive = null
         this.getPage()
@@ -343,15 +336,19 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    import () {
-      this.$refs.importForm.validate(valid => {
+    setDevice () {
+      if (!this.setDeviceActive) {
+        this.showErrorMessage('异常：无编辑目标')
+        return
+      }
+      this.$refs.setDeviceForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
-        const params = this.importForm
-        api.importHospitalDevice(params).then(response => {
+        const params = this.setDeviceForm
+        api.editHospitalBunkDevice(params).then(response => {
           this.isLoading = false
-          this.editActive = null
-          this.importFormDialogVisible = false
+          this.setDeviceActive = null
+          this.setDeviceFormDialogVisible = false
           this.getPage()
         }, error => {
           this.isLoading = false

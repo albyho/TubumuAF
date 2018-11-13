@@ -16,7 +16,7 @@
           <xl-userStatusSelect v-model="searchCriteriaForm.status" />
         </el-form-item>
         <el-form-item>
-          <el-date-picker v-model="searchCriteriaForm.creationDate" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="创建日期开始" end-placeholder="创建日期结束" />
+          <xl-datePicker v-model="searchCriteriaForm.creationDate" />
         </el-form-item>
         <el-form-item>
           <el-button-group>
@@ -30,8 +30,8 @@
     <el-row>
       <el-table :data="page.list" style="width: 100%" :empty-text="mainTableEmptyText" @sort-change="handleSortChange">
         <el-table-column prop="UserID" label="#" width="60" sortable="custom" />
-        <el-table-column prop="Hospital.HospitalName" label="医院" />
-        <el-table-column prop="Hospital.Address" label="地址" />
+        <el-table-column prop="Hospital.Name" label="医院" min-width="240" />
+        <el-table-column prop="Hospital.Address" label="地址" min-width="240" />
         <el-table-column prop="Username" label="用户名" width="100" />
         <el-table-column label="手机号码" width="120">
           <template slot-scope="scope">
@@ -52,13 +52,18 @@
           <el-table-column
             align="center"
             fixed="right"
-            width="42">
+            width="122">
             <template slot-scope="scope">
               <el-button
                 type="text"
                 size="small"
                 icon="el-icon-edit"
                 @click="handleEdit(scope.row)" />
+              <el-button
+                type="primary"
+                size="small"
+                icon="el-icon-tickets"
+                @click="handlePushDepartment(scope.row)">科室</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -80,10 +85,10 @@
           label-width="160px">
           <el-form-item 
             label="医院名称"
-            prop="hospitalName">
+            prop="name">
             <el-input
-              v-model.trim="mainForm.hospitalName"
-              auto-complete="off"
+              v-model.trim="mainForm.name"
+              autocomplete="off"
               placeholder="请输入医院名称" />
           </el-form-item>
           <el-form-item 
@@ -91,7 +96,7 @@
             prop="address">
             <el-input
               v-model.trim="mainForm.address"
-              auto-complete="off"
+              autocomplete="off"
               placeholder="请输入医院地址" />
           </el-form-item>
           <el-form-item
@@ -100,7 +105,7 @@
             <el-input
               ref="username"
               v-model.trim="mainForm.username"
-              auto-complete="off"
+              autocomplete="off"
               placeholder="请输入用户名" />
           </el-form-item>
           <el-form-item
@@ -171,7 +176,7 @@
             <el-input
               ref="headURL"
               v-model.trim="mainForm.headURL"
-              auto-complete="off"
+              autocomplete="off"
               placeholder="请输入头像 URL">
               <el-button
                 slot="append"
@@ -185,7 +190,7 @@
             <el-input
               ref="logoURL"
               v-model.trim="mainForm.logoURL"
-              auto-complete="off"
+              autocomplete="off"
               placeholder="请输入Logo URL">
               <el-button
                 slot="append"
@@ -298,11 +303,11 @@ export default {
         description: null, // String
         headURL: null, // String
         logoURL: null, // String
-        hospitalName: null, // String
+        name: null, // String
         address: null // String
       },
       mainFormRules: {
-        hospitalName: [
+        name: [
           { required: true, message: '请输入医院名称', trigger: 'blur' },
           { max: 100, message: '最多支持100个字符', trigger: 'blur' }
         ],
@@ -317,29 +322,20 @@ export default {
         displayName: [
           { max: 20, message: '最多支持20个字符', trigger: 'blur' }
         ],
-        realName: [{
-          max: 100,
-          message: '最多支持100个字符',
-          trigger: 'blur'
-        }],
-        mobile: [{
-          pattern: /^1\d{10}$/,
-          message: '请输入正确的手机号码',
-          trigger: 'blur'
-        }],
-        email: [{
-          pattern: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/,
-          message: '请输入正确的邮箱',
-          trigger: 'blur'
-        }],
-        password: [{
-          validator: validatePassord,
-          trigger: 'blur'
-        }],
-        passwordConfirm: [{
-          validator: validatePassordConfirm,
-          trigger: 'blur'
-        }]
+        realName: [
+          { max: 100, message: '最多支持100个字符', trigger: 'blur' }
+        ],
+        mobile: [
+          { pattern: /^1\d{10}$/, message: '请输入正确的手机号码', trigger: 'blur' }
+        ],
+        email: [
+          { pattern: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/, message: '请输入正确的邮箱', trigger: 'blur' } ],
+        password: [
+          { validator: validatePassord, trigger: 'blur' }
+        ],
+        passwordConfirm: [
+          { validator: validatePassordConfirm, trigger: 'blur' }
+        ]
       }
     }
   },
@@ -413,7 +409,7 @@ export default {
       this.mainForm.description = null
       this.mainForm.headURL = null
       this.mainForm.logoURL = null
-      this.mainForm.hospitalName = null
+      this.mainForm.name = null
       this.mainForm.address = null
       this.$nextTick(() => {
         this.clearValidate('mainForm')
@@ -441,7 +437,7 @@ export default {
       this.mainForm.description = row.Description
       this.mainForm.headURL = row.HeadURL
       this.mainForm.logoURL = row.LogoURL
-      this.mainForm.hospitalName = row.Hospital.HospitalName
+      this.mainForm.name = row.Hospital.Name
       this.mainForm.address = row.Hospital.Address
       this.$nextTick(() => {
         this.clearValidate('mainForm')
@@ -543,6 +539,13 @@ export default {
       } catch (e) {
         console.log(e.message)
       }
+    },
+    handlePushDepartment (row) {
+      this.$router.push({
+        name: 'department',
+        params: { hospitalID: row.UserID },
+        query: { hospitalName: row.Hospital.Name }
+      })
     }
   }
 }
@@ -572,6 +575,13 @@ export default {
   .el-select {
     width: 120px;
     margin-right: 12px;
+  }
+}
+
+.el-table__body-wrapper {
+  .el-button--small {
+    padding: 4px 8px;
+    font-size: 10px;
   }
 }
 </style>

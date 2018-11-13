@@ -208,7 +208,7 @@
                 <el-input
                   ref="username"
                   v-model.trim="mainForm.username"
-                  auto-complete="off"
+                  autocomplete="off"
                   placeholder="请输入用户名" />
               </el-form-item>
               <el-form-item
@@ -279,7 +279,7 @@
                 <el-input
                   ref="headURL"
                   v-model.trim="mainForm.headURL"
-                  auto-complete="off"
+                  autocomplete="off"
                   placeholder="请输入头像 URL">
                   <el-button
                     slot="append"
@@ -293,7 +293,7 @@
                 <el-input
                   ref="logoURL"
                   v-model.trim="mainForm.logoURL"
-                  auto-complete="off"
+                  autocomplete="off"
                   placeholder="请输入Logo URL">
                   <el-button
                     slot="append"

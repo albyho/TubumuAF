@@ -83,7 +83,7 @@
             <el-input
               ref="name"
               v-model.trim="mainForm.name"
-              auto-complete="off"
+              autocomplete="off"
               placeholder="请输入角色名称" />
           </el-form-item>
           <el-form-item label="包含权限">

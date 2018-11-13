@@ -13,7 +13,7 @@
         ref="account"
         type="text"
         v-model.trim="mainForm.account"
-        auto-complete="on"
+        autocomplete="on"
         @keyup.enter.native="handleFocus('password')"
         placeholder="账号(用户名、手机号或邮箱)"
         autofocus />
@@ -23,7 +23,7 @@
         ref="password"
         type="password"
         v-model.trim="mainForm.password"
-        auto-complete="off"
+        autocomplete="off"
         @keyup.enter.native="handleFocus('validationCode')"
         placeholder="密码" />
     </el-form-item>
@@ -32,7 +32,7 @@
         ref="validationCode"
         type="text"
         v-model.trim="mainForm.validationCode"
-        auto-complete="off"
+        autocomplete="off"
         @keyup.enter.native="handleSubmit"
         placeholder="验证码"
         class="validationCode" />
