@@ -79,7 +79,7 @@
                   ref="name" />
               </el-form-item>
               <el-form-item label="是否包含用户">
-                <el-switch v-model="mainForm.isIncludeUser" />
+                <el-switch v-model="mainForm.isContainsUser" />
               </el-form-item>
               <el-form-item label="是否停用">
                 <el-switch v-model="mainForm.isDisabled" />
@@ -227,7 +227,7 @@ export default {
         availableRoleIDs: [],             // Array 不能设置为 null
         parentIDPath: [],                 // Array 不能设置为 null 如果 parentIDPath 无值则作为顶级节点,否则作为子节点。给 cascader 组件使用。
         parentID: null,                   // String
-        isIncludeUser: null,              // Bool 是否包含用户
+        isContainsUser: null,             // Bool 是否包含用户
         isDisabled: null                  // Bool 是否停用
       },
       moveForm: {
@@ -329,7 +329,7 @@ export default {
       this.mainForm.roleIDs = []            // 不能设置为 null
       this.mainForm.permissionIDs = null
       this.mainForm.availableRoleIDs = []       // 不能设置为 null
-      this.mainForm.isIncludeUser = true    // 默认 true
+      this.mainForm.isContainsUser = true    // 默认 true
       this.mainForm.isDisabled = false      // 默认 false
       this.$nextTick(() => {
         this.$refs.editPermissionTree.setCheckedKeys([], true)
@@ -352,7 +352,7 @@ export default {
       this.mainForm.roleIDs = data.roles.map(m => m.roleID)
       this.mainForm.permissionIDs = data.permissions.map(m => m.permissionID)
       this.mainForm.availableRoleIDs = data.availableRoles.map(m => m.roleID)
-      this.mainForm.isIncludeUser = data.isIncludeUser
+      this.mainForm.isContainsUser = data.isContainsUser
       this.mainForm.isDisabled = data.isDisabled
       this.$nextTick(() => {
         this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
@@ -567,7 +567,7 @@ export default {
       return (
         <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 10px;">
           <span>
-            <span class="el-tree-node__label">{ node.label } <icon name="user-times" v-show={ !data.isIncludeUser }></icon></span>
+            <span class="el-tree-node__label">{ node.label } <icon name="user-times" v-show={ !data.isContainsUser }></icon></span>
           </span>
           <span>
             <span style="font-size: 12px;"> { data.availableRoles ? data.availableRoles.map(m => m.name).join(' ') : '' } </span>

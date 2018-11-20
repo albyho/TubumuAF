@@ -58,13 +58,7 @@
         </el-row>
         <el-row v-show="isSearchCriteriaFormExpand">
           <el-form-item>
-            <el-date-picker
-              v-model="searchCriteriaForm.creationDate"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="创建日期开始"
-              end-placeholder="创建日期结束" />
+            <xl-datePicker v-model="searchCriteriaForm.creationDate" />
           </el-form-item>
         </el-row>
       </el-form>
@@ -82,7 +76,7 @@
           <el-table-column
             prop="Username"
             label="用户名"
-            width="100"
+            width="160"
             sortable="custom" />
           <el-table-column
             prop="Group.name"
@@ -119,7 +113,9 @@
               <span>{{ scope.row.Mobile }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="Email">
+          <el-table-column 
+            label="Email"
+            width="140">
             <template slot-scope="scope">
               <i
                 class="el-icon-question"
@@ -134,7 +130,7 @@
           <el-table-column
             prop="CreationDate"
             label="创建时间"
-            width="160" />
+            width="140" />
           <el-table-column
             align="center"
             fixed="right"
