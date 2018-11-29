@@ -15,16 +15,18 @@
     "analyz": "cross-env NODE_ENV=production npm_config_report=true npm run build"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.8",
+    "@fortawesome/free-solid-svg-icons": "^5.5.0",
+    "@fortawesome/vue-fontawesome": "^0.1.2",
     "axios": "^0.17.1",
-    "element-ui": "^2.4.10",
+    "element-ui": "^2.4.11",
     "font-awesome": "^4.7.0",
     "js-file-download": "^0.4.4",
     "lodash": "^4.17.11",
     "sortablejs": "^1.6.1",
     "vue": "^2.5.17",
-    "vue-awesome": "^2.3.8",
     "vue-quill-editor": "^2.3.3",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.2.6",

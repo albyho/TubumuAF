@@ -567,7 +567,7 @@ export default {
       return (
         <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 10px;">
           <span>
-            <span class="el-tree-node__label">{ node.label } <icon name="user-times" v-show={ !data.isContainsUser }></icon></span>
+            <span class="el-tree-node__label">{ node.label } <font-awesome-icon slot="prefix" icon="user-times" v-show={ !data.isContainsUser }/></span>
           </span>
           <span>
             <span style="font-size: 12px;"> { data.availableRoles ? data.availableRoles.map(m => m.name).join(' ') : '' } </span>

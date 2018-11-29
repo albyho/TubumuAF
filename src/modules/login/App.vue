@@ -16,7 +16,9 @@
         autocomplete="on"
         @keyup.enter.native="handleFocus('password')"
         placeholder="账号(用户名、手机号或邮箱)"
-        autofocus />
+        autofocus>
+          <font-awesome-icon slot="prefix" icon="user-secret" />
+      </el-input>
     </el-form-item>
     <el-form-item prop="password">
       <el-input
@@ -25,7 +27,9 @@
         v-model.trim="mainForm.password"
         autocomplete="off"
         @keyup.enter.native="handleFocus('validationCode')"
-        placeholder="密码" />
+        placeholder="密码">
+          <font-awesome-icon slot="prefix" icon="key" />
+      </el-input>
     </el-form-item>
     <el-form-item prop="validationCode">
       <el-input
