@@ -144,32 +144,5 @@ export default {
     return Vue.httpClient.post(url, params, {
       responseType: 'arraybuffer'
     })
-  },
-  // 床柜项目
-  // 床柜
-  getHospitalDeviceBasePage (params) {
-    return Vue.httpClient.post('/hospitaldevice/getHospitalDeviceBasePage', params)
-  },
-  setIsDeleted (params) {
-    return Vue.httpClient.post('/hospitaldevice/setIsDeleted', params)
-  },
-  addHospitalDevice (params) {
-    return Vue.httpClient.post('/hospitaldevice/add', params)
-  },
-  editHospitalDevice (params) {
-    return Vue.httpClient.post('/hospitaldevice/edit', params)
-  },
-  importHospitalDevice (params) {
-    return Vue.httpClient.post('/hospitaldevice/import', params)
-  },
-  // 医院
-  getHospitalUserInfoBasePage (params) {
-    return Vue.httpClient.post('/hospital/getHospitalUserInfoBasePage', params)
-  },
-  addHospital (params) {
-    return Vue.httpClient.post('/hospital/add', params)
-  },
-  editHospital (params) {
-    return Vue.httpClient.post('/hospital/edit', params)
   }
 }

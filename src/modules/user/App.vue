@@ -1,52 +1,103 @@
 <template>
-<el-container v-loading.fullscreen.lock="isLoading">
-  <el-header class="header">
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
-  </el-header>
-  <el-main class="main">
-    <el-form ref="searchCriteriaForm" class="searchCriteriaForm" :model="searchCriteriaForm" inline>
+  <el-container v-loading.fullscreen.lock="isLoading">
+    <el-header class="header">
+      <el-breadcrumb
+        separator-class="el-icon-arrow-right"
+        class="breadcrumb">
+        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+        <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+      </el-breadcrumb>
+    </el-header>
+    <el-main class="main">
+      <el-form
+        ref="searchCriteriaForm"
+        class="searchCriteriaForm"
+        :model="searchCriteriaForm"
+        inline>
+        <el-row>
+          <el-form-item>
+            <el-input
+              placeholder="关键字(用户名/真实名称/昵称/邮箱/手机号)"
+              clearable
+              v-model="searchCriteriaForm.keyword"
+              class="filterText" />
+          </el-form-item>
+          <el-form-item>
+            <el-cascader
+              :options="editGroupTreeData"
+              :props="editGroupTreeDefaultProps"
+              clearable
+              change-on-select
+              filterable
+              placeholder="分组"
+              v-model="searchCriteriaForm.groupIDPath" />
+          </el-form-item>
+          <el-form-item>
+            <xl-userStatusSelect v-model="searchCriteriaForm.status" />
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              plain
+              @click="isSearchCriteriaFormExpand =! isSearchCriteriaFormExpand"
+              :icon="isSearchCriteriaFormExpand ? 'el-icon-caret-top' : 'el-icon-caret-bottom'" />
+            <el-button-group>
+              <el-button
+                type="primary"
+                icon="el-icon-search"
+                @click="handleSearch()">搜索</el-button>
+              <el-button
+                type="primary"
+                icon="el-icon-search"
+                @click="handleSearchAll()">全部</el-button>
+            </el-button-group>
+            <el-button
+              type="primary"
+              icon="el-icon-circle-plus-outline"
+              @click="handleAdd()">添加</el-button>
+          </el-form-item>
+        </el-row>
+        <el-row v-show="isSearchCriteriaFormExpand">
+          <el-form-item>
+            <xl-datePicker v-model="searchCriteriaForm.creationDate" />
+          </el-form-item>
+        </el-row>
+      </el-form>
       <el-row>
-        <el-form-item>
-          <el-input placeholder="关键字(用户名/真实名称/昵称/邮箱/手机号)" clearable v-model="searchCriteriaForm.keyword" class="filterText" />
-        </el-form-item>
-        <el-form-item>
-          <el-cascader :options="editGroupTreeData" :props="editGroupTreeDefaultProps" clearable change-on-select filterable placeholder="分组" v-model="searchCriteriaForm.groupIDPath" />
-        </el-form-item>
-        <el-form-item>
-          <xl-userStatusSelect v-model="searchCriteriaForm.status" />
-        </el-form-item>
-        <el-form-item>
-          <el-button plain @click="isSearchCriteriaFormExpand = !isSearchCriteriaFormExpand" :icon="isSearchCriteriaFormExpand ? 'el-icon-caret-top' : 'el-icon-caret-bottom'" />
-          <el-button-group>
-            <el-button type="primary" icon="el-icon-search" @click="handleSearch()">搜索</el-button>
-            <el-button type="primary" icon="el-icon-search" @click="handleSearchAll()">全部</el-button>
-          </el-button-group>
-          <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAdd()">添加</el-button>
-        </el-form-item>
-      </el-row>
-      <el-row v-show="isSearchCriteriaFormExpand">
-        <el-form-item>
-          <el-date-picker v-model="searchCriteriaForm.creationDate" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="创建日期开始" end-placeholder="创建日期结束" />
-        </el-form-item>
-      </el-row>
-    </el-form>
-    <el-row>
-      <el-table :data="page.list" style="width: 100%" :empty-text="mainTableEmptyText" @sort-change="handleSortChange">
-        <el-table-column prop="UserID" label="#" width="60" sortable="custom" />
-        <el-table-column prop="Username" label="用户名" width="100" sortable="custom" />
-        <el-table-column prop="Group.name" label="分组" width="160" />
-        <el-table-column label="角色" width="100">
-          <template slot-scope="scope">
-            <span>{{ scope.row.Role ? scope.row.Role.name : '' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="DisplayName" label="昵称" width="100" />
-        <el-table-column label="真实名称" width="100">
-          <template slot-scope="scope">
-            <i
+        <el-table
+          :data="page.list"
+          style="width: 100%"
+          :empty-text="mainTableEmptyText"
+          @sort-change="handleSortChange">
+          <el-table-column
+            prop="UserID"
+            label="#"
+            width="60"
+            sortable="custom" />
+          <el-table-column
+            prop="Username"
+            label="用户名"
+            width="160"
+            sortable="custom" />
+          <el-table-column
+            prop="Group.name"
+            label="分组"
+            width="160" />
+          <el-table-column
+            label="角色"
+            width="100">
+            <template slot-scope="scope">
+              <span>{{ scope.row.Role ? scope.row.Role.name : '' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="DisplayName"
+            label="昵称"
+            width="100" />
+          <el-table-column
+            label="真实名称"
+            width="100">
+            <template slot-scope="scope">
+              <i
                 class="el-icon-question"
                 v-show="scope.row.RealName && !scope.row.RealNameIsValid" />
               <span>{{ scope.row.RealName }}</span>
@@ -62,7 +113,9 @@
               <span>{{ scope.row.Mobile }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="Email">
+          <el-table-column 
+            label="Email"
+            width="140">
             <template slot-scope="scope">
               <i
                 class="el-icon-question"
@@ -77,7 +130,7 @@
           <el-table-column
             prop="CreationDate"
             label="创建时间"
-            width="160" />
+            width="140" />
           <el-table-column
             align="center"
             fixed="right"
@@ -151,7 +204,7 @@
                 <el-input
                   ref="username"
                   v-model.trim="mainForm.username"
-                  auto-complete="off"
+                  autocomplete="off"
                   placeholder="请输入用户名" />
               </el-form-item>
               <el-form-item
@@ -222,7 +275,7 @@
                 <el-input
                   ref="headURL"
                   v-model.trim="mainForm.headURL"
-                  auto-complete="off"
+                  autocomplete="off"
                   placeholder="请输入头像 URL">
                   <el-button
                     slot="append"
@@ -236,7 +289,7 @@
                 <el-input
                   ref="logoURL"
                   v-model.trim="mainForm.logoURL"
-                  auto-complete="off"
+                  autocomplete="off"
                   placeholder="请输入Logo URL">
                   <el-button
                     slot="append"
@@ -321,7 +374,7 @@ import api from '@/utils/api'
 import _ from 'lodash'
 
 export default {
-  data() {
+  data () {
     const validatePassord = (rule, value, callback) => {
       // 编辑时未输入密码，无需验证
       if (this.editActive && (!value || value.length === 0)) {
@@ -362,7 +415,7 @@ export default {
       isSearchCriteriaFormExpand: false,
       searchCriteriaForm: {
         keyword: null,
-        groupIDs: null, // 服务器期待一个数组
+        groupIDs: null,         // 服务器期待一个数组
         creationDate: null,
         creationDateBegin: null,
         creationDateEnd: null,
@@ -379,89 +432,69 @@ export default {
         }
       },
       // 删除
-      removeActive: null, // 暂存删除项
+      removeActive: null,                 // 暂存删除项
 
       // 添加/编辑
-      editActive: null, // 暂存编辑项，也可用来判断是否添加还是编辑
-      mainFormDialogVisible: false, // 添加/编辑对话框是否可见
+      editActive: null,                   // 暂存编辑项，也可用来判断是否添加还是编辑
+      mainFormDialogVisible: false,       // 添加/编辑对话框是否可见
       mainForm: {
-        userID: null, // Int
-        status: null, // Int
-        username: null, // String
-        displayName: null, // String
-        realName: null, // String
-        realNameIsValid: false, // bool
-        email: null, // String
-        emailIsValid: false, // bool
-        mobile: null, // String
-        mobileIsValid: false, // bool
-        groupIDPath: [], // Array 不能设置为 null。给 cascader 组件使用。
-        groupID: null, // String
-        groupIDs: [], // Array 不能设置为 null
-        roleID: null, // String
-        roleIDs: [], // Array 不能设置为 null
-        permissionIDs: null, // Array
-        password: null, // String
-        passwordConfirm: null, // String
-        description: null, // String
-        headURL: null, // String
-        logoURL: null // String
+        userID: null,                     // Int
+        status: null,                     // Int
+        username: null,                   // String
+        displayName: null,                // String
+        realName: null,                   // String
+        realNameIsValid: false,           // bool
+        email: null,                      // String
+        emailIsValid: false,              // bool
+        mobile: null,                     // String
+        mobileIsValid: false,             // bool
+        groupIDPath: [],                  // Array 不能设置为 null。给 cascader 组件使用。
+        groupID: null,                    // String
+        groupIDs: [],                     // Array 不能设置为 null
+        roleID: null,                     // String
+        roleIDs: [],                      // Array 不能设置为 null
+        permissionIDs: null,              // Array
+        password: null,                   // String
+        passwordConfirm: null,            // String
+        description: null,                // String
+        headURL: null,                    // String
+        logoURL: null                     // String
       },
       mainFormRules: {
-        username: [{
-            required: true,
-            message: '请输入用户名',
-            trigger: 'blur'
-          },
-          {
-            max: 20,
-            message: '最多支持20个字符',
-            trigger: 'blur'
-          }
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { max: 20, message: '最多支持20个字符', trigger: 'blur' }
         ],
-        displayName: [{
-          max: 20,
-          message: '最多支持20个字符',
-          trigger: 'blur'
-        }],
-        realName: [{
-          max: 100,
-          message: '最多支持100个字符',
-          trigger: 'blur'
-        }],
-        mobile: [{
-          pattern: /^1\d{10}$/,
-          message: '请输入正确的手机号码',
-          trigger: 'blur'
-        }],
-        email: [{
-          pattern: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/,
-          message: '请输入正确的邮箱',
-          trigger: 'blur'
-        }],
-        groupIDPath: [{
-          required: true,
-          type: 'array',
-          message: '请选择分组',
-          trigger: 'change'
-        }],
-        password: [{
-          validator: validatePassord,
-          trigger: 'blur'
-        }],
-        passwordConfirm: [{
-          validator: validatePassordConfirm,
-          trigger: 'blur'
-        }]
+        displayName: [
+          { max: 20, message: '最多支持20个字符', trigger: 'blur' }
+        ],
+        realName: [
+          { max: 100, message: '最多支持100个字符', trigger: 'blur' }
+        ],
+        mobile: [
+          { pattern: /^1\d{10}$/, message: '请输入正确的手机号码', trigger: 'blur' }
+        ],
+        email: [
+          { pattern: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/, message: '请输入正确的邮箱', trigger: 'blur' }
+        ],
+        groupIDPath: [
+          { required: true, type: 'array', message: '请选择分组', trigger: 'change' }
+        ],
+        password: [
+          { validator: validatePassord, trigger: 'blur' }
+        ],
+        passwordConfirm: [
+          { validator: validatePassordConfirm, trigger: 'blur' }
+        ]
       },
-      editPermissionTreeData: null, // 用于编辑对话框内显示的权限树
+      editPermissionTreeData: null,         // 用于编辑对话框内显示的权限树
       editPermissionTreeDefaultProps: {
         children: 'children',
         label: 'name'
       },
-      editGroupRoleListData: null, // 用于编辑对话框内显示的角色列表
-      editRoleListData: null, // 用于编辑对话框内显示的角色列表
-      editGroupTreeData: [], // 用于搜索 cascader / 编辑对话框内显示的分组树
+      editGroupRoleListData: null,          // 用于编辑对话框内显示的角色列表
+      editRoleListData: null,               // 用于编辑对话框内显示的角色列表
+      editGroupTreeData: [],                // 用于搜索 cascader / 编辑对话框内显示的分组树
       editGroupTreeDefaultProps: {
         children: 'children',
         value: 'id',
@@ -469,7 +502,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.getPage()
     this.getGroupTree()
     this.getRoleBases()
@@ -484,7 +517,7 @@ export default {
 
   },
   methods: {
-    getPage() {
+    getPage () {
       this.isLoading = true
       const params = _.extend({}, this.pagingInfoForm, this.searchCriteriaForm)
       api.getUsers(params).then(response => {
@@ -495,37 +528,37 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    handlePaginationSizeChange(val) {
+    handlePaginationSizeChange (val) {
       this.pagingInfoForm.pageSize = val
       this.pagingInfoForm.pageNumber = 1
       this.getPage()
     },
-    handlePaginationCurrentChange(val) {
+    handlePaginationCurrentChange (val) {
       this.pagingInfoForm.pageNumber = val
       this.getPage()
     },
-    getGroupTree() {
+    getGroupTree () {
       api.getGroupTree().then(response => {
         this.editGroupTreeData = response.data.tree
       }, error => {
         this.showErrorMessage(error.message)
       })
     },
-    getRoleBases() {
+    getRoleBases () {
       api.getRoleBases().then(response => {
         this.editRoleListData = response.data.list
       }, error => {
         this.showErrorMessage(error.message)
       })
     },
-    getPermissionTree() {
+    getPermissionTree () {
       api.getPermissionTree().then(response => {
         this.editPermissionTreeData = response.data.tree
       }, error => {
         this.showErrorMessage(error.message)
       })
     },
-    handleSearchAll() {
+    handleSearchAll () {
       this.pagingInfoForm.pageNumber = 1
       this.searchCriteriaForm.keyword = null
       this.searchCriteriaForm.groupIDs = null
@@ -536,17 +569,18 @@ export default {
       this.searchCriteriaForm.groupIDPath = []
       this.getPage()
     },
-    handleSearch() {
+    handleSearch () {
       this.pagingInfoForm.pageNumber = 1
       if (this.searchCriteriaForm.creationDate && this.searchCriteriaForm.creationDate.length === 2) {
         this.searchCriteriaForm.creationDateBegin = this.searchCriteriaForm.creationDate[0]
         this.searchCriteriaForm.creationDateEnd = this.searchCriteriaForm.creationDate[1]
       }
-      this.searchCriteriaForm.groupIDs = this.searchCriteriaForm.groupIDPath && this.searchCriteriaForm.groupIDPath.length ? [this.searchCriteriaForm.groupIDPath[this.searchCriteriaForm.groupIDPath.length - 1]] :
-        null
+      this.searchCriteriaForm.groupIDs = this.searchCriteriaForm.groupIDPath && this.searchCriteriaForm.groupIDPath.length
+          ? [this.searchCriteriaForm.groupIDPath[this.searchCriteriaForm.groupIDPath.length - 1]]
+          : null
       this.getPage()
     },
-    handleAdd() {
+    handleAdd () {
       if (!this.validateBaseData()) {
         return
       }
@@ -554,7 +588,7 @@ export default {
       this.editActive = null
       this.mainFormDialogVisible = true
       this.mainForm.userID = null
-      this.mainForm.status = 'Normal' // 默认 正常
+      this.mainForm.status = 'Normal'            // 默认 正常
       this.mainForm.username = null
       this.mainForm.displayName = null
       this.mainForm.realName = null
@@ -565,10 +599,10 @@ export default {
       this.mainForm.mobileIsValid = false
       this.mainForm.groupIDPath = []
       this.mainForm.groupID = null
-      this.mainForm.groupIDs = [] // 不能设置为 null
+      this.mainForm.groupIDs = []               // 不能设置为 null
       this.mainForm.roleID = null
       this.editGroupRoleListData = []
-      this.mainForm.roleIDs = [] // 不能设置为 null
+      this.mainForm.roleIDs = []                // 不能设置为 null
       this.mainForm.permissionIDs = null
       this.mainForm.password = null
       this.mainForm.passwordConfirm = null
@@ -581,7 +615,7 @@ export default {
         this.clearValidate('mainForm')
       })
     },
-    handleEdit(row) {
+    handleEdit (row) {
       console.log('handleEdit', row)
       if (!this.validateBaseData() || !row) {
         return
@@ -590,7 +624,7 @@ export default {
       this.editActive = row
       this.mainFormDialogVisible = true
       this.mainForm.userID = row.UserID
-      this.mainForm.status = row.Status // 默认 正常
+      this.mainForm.status = row.Status            // 默认 正常
       this.mainForm.username = row.Username
       this.mainForm.displayName = row.DisplayName
       this.mainForm.realName = row.RealName
@@ -617,7 +651,7 @@ export default {
         this.clearValidate('mainForm')
       })
     },
-    handleMainFormSure(sure) {
+    handleMainFormSure (sure) {
       console.log('handleMainFormSure', sure)
       if (sure) {
         // 提交数据
@@ -628,9 +662,10 @@ export default {
         }
       } else {
         this.mainFormDialogVisible = false
+        // this.editActive = null // 注：添加状态 endActive 本就为 null
       }
     },
-    handleRemove(row) {
+    handleRemove (row) {
       this.removeActive = row
       this.$confirm('删除该用户后，相关的数据也将被删除。是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -642,14 +677,14 @@ export default {
         this.removeActive = null
       })
     },
-    handleGroupCascaderChange(value) {
+    handleGroupCascaderChange (value) {
       console.log(value)
       this.mainForm.roleID = null
       this.editGroupRoleListData = []
       if (value.length === 0) return
       this.getGroupAvailableRoles(this.editGroupTreeData, value[value.length - 1])
     },
-    add() {
+    add () {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
@@ -665,7 +700,7 @@ export default {
         })
       })
     },
-    edit() {
+    edit () {
       if (!this.editActive) {
         this.showErrorMessage('异常：无编辑目标')
         return
@@ -686,7 +721,7 @@ export default {
         })
       })
     },
-    remove() {
+    remove () {
       if (!this.removeActive) return
       const params = {
         userID: this.removeActive.UserID
@@ -701,7 +736,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    validateBaseData() {
+    validateBaseData () {
       if (!this.editGroupTreeData || this.editGroupTreeData.length === 0) {
         this.showErrorMessage('基础数据缺失：分组列表')
         return false
@@ -716,17 +751,17 @@ export default {
       }
       return true
     },
-    handleGroupTreeCheckChange(data, checked, indeterminate) {
+    handleGroupTreeCheckChange (data, checked, indeterminate) {
       // console.log(data, checked, indeterminate)
       this.mainForm.groupIDs = this.$refs.editGroupTree.getCheckedKeys()
       // console.log(this.mainForm.permissionIDs)
     },
-    handlePermissionTreeCheckChange(data, checked, indeterminate) {
+    handlePermissionTreeCheckChange (data, checked, indeterminate) {
       // console.log(data, checked, indeterminate)
       this.mainForm.permissionIDs = this.$refs.editPermissionTree.getCheckedKeys()
       // console.log(this.mainForm.permissionIDs)
     },
-    getGroupIDPath(tree, id) {
+    getGroupIDPath (tree, id) {
       if (!tree) return
       for (let node of tree) {
         if (node.id === id) {
@@ -738,7 +773,7 @@ export default {
         }
       }
     },
-    getGroupAvailableRoles(tree, id) {
+    getGroupAvailableRoles (tree, id) {
       this.editGroupRoleListData = []
       if (!tree) return
       for (let node of tree) {
@@ -750,31 +785,31 @@ export default {
         }
       }
     },
-    resetForm(formName) {
+    resetForm (formName) {
       this.$refs[formName].resetFields()
     },
-    clearValidate(formName) {
+    clearValidate (formName) {
       this.$refs[formName].clearValidate()
     },
-    showErrorMessage(message) {
+    showErrorMessage (message) {
       this.$message({
         message: message,
         type: 'error'
       })
     },
-    handleSortChange(val) {
+    handleSortChange (val) {
       this.pagingInfoForm.sortInfo.sort = val.prop
       this.pagingInfoForm.sortInfo.sortDir = val.order === 'descending' ? 'DESC' : 'ASC'
       this.pagingInfoForm.pageNumber = 1
       this.getPage()
     },
-    handleChangeHeadURLBrowser() {
+    handleChangeHeadURLBrowser () {
       this.popupCKFinder('headURL')
     },
-    handleChangeLogoURLBrowser() {
+    handleChangeLogoURLBrowser () {
       this.popupCKFinder('logoURL')
     },
-    popupCKFinder(name) {
+    popupCKFinder (name) {
       const _this = this
       try {
         /* eslint-disable no-undef */
@@ -801,31 +836,27 @@ export default {
 </script>
 
 <style lang="scss">
+
 .searchCriteriaForm {
   .el-row {
     margin-bottom: 8px;
-
     &:last-child {
       margin-bottom: 0;
     }
   }
-
   .el-form-item {
     margin-bottom: 4px;
     margin-right: 4px;
   }
-
   .filterText {
     width: 240px;
     margin-right: 12px;
   }
-
   // 分组
   .el-cascader {
     width: 200px;
     margin-right: 12px;
   }
-
   // 用户状态
   .el-select {
     width: 120px;
@@ -838,4 +869,5 @@ export default {
   display: block;
   margin: 0;
 }
+
 </style>
