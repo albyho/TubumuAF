@@ -56,7 +56,7 @@
 import api from '@/utils/api'
 
 export default {
-  data() {
+  data () {
     return {
       isLoading: false,
       isGetMenusLoading: false,
@@ -106,13 +106,13 @@ export default {
     })
   },
   methods: {
-    handleOpen(index, indexPath) {
+    handleOpen (index, indexPath) {
       // console.log('open', index, indexPath)
     },
-    handleClose(index, indexPath) {
+    handleClose (index, indexPath) {
       // console.log('close', index, indexPath)
     },
-    handleSelect(index, indexPath) {
+    handleSelect (index, indexPath) {
       const menuIndexes = index.split('-')
       let list = this.menus
       let currentMenu = null
@@ -132,13 +132,13 @@ export default {
       }
       // console.log('handleSelect', index, indexPath, this.mainFrameURL)
     },
-    profile() {
+    profile () {
       this.mainFrameURL = '/Manager/Admin/View?IsCore=true&Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=profile&Components=ckfinder'
     },
-    resources() {
+    resources () {
       this.mainFrameURL = '/Manager/Admin/View?IsCore=true&Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=resources&Components=ckfinder'
     },
-    logout() {
+    logout () {
       this.isLoading = true
       api.logout().then(response => {
         // this.isLoading = false
@@ -149,7 +149,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    callDirectly(url) {
+    callDirectly (url) {
       this.isLoading = true
       api.callDirectly(url).then(response => {
         this.isLoading = false
@@ -162,7 +162,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    connectNotifictionServer() {
+    connectNotifictionServer () {
       const _this = this
       try {
         /* eslint-disable no-undef */
@@ -197,11 +197,11 @@ export default {
         console.log(e.message)
       }
     },
-    handleNewMessage() {
+    handleNewMessage () {
       this.hasNewMessage = false
       this.mainFrameURL = '/Manager/Admin/View?IsCore=true&Title=%E9%80%9A%E7%9F%A5%E4%B8%AD%E5%BF%83&Name=notification&t=' + (new Date().getTime())
     },
-    showErrorMessage(message) {
+    showErrorMessage (message) {
       this.$message({
         message: message,
         type: 'error'

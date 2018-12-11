@@ -104,7 +104,7 @@
 import api from '@/utils/api'
 
 export default {
-  data() {
+  data () {
     return {
       isLoading: false,
       item: {
@@ -115,7 +115,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.getItem()
   },
   computed: {
@@ -124,7 +124,7 @@ export default {
     }
   },
   methods: {
-    getItem() {
+    getItem () {
       this.isLoading = true
       api.getModuleConfig().then(
         response => {
@@ -137,7 +137,7 @@ export default {
         }
       )
     },
-    showErrorMessage(message) {
+    showErrorMessage (message) {
       this.$message({
         message: message,
         type: 'error'

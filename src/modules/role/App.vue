@@ -60,7 +60,7 @@ import Sortable from 'sortablejs'
 import api from '@/utils/api'
 
 export default {
-  data() {
+  data () {
     return {
       // 主要数据
       isLoading: false,
@@ -79,15 +79,15 @@ export default {
       },
       mainFormRules: {
         name: [{
-            required: true,
-            message: '请输入角色名称',
-            trigger: 'blur'
-          },
-          {
-            max: 50,
-            message: '最多支持50个字符',
-            trigger: 'blur'
-          }
+          required: true,
+          message: '请输入角色名称',
+          trigger: 'blur'
+        },
+        {
+          max: 50,
+          message: '最多支持50个字符',
+          trigger: 'blur'
+        }
         ]
       },
       editPermissionTreeData: null, // 用于编辑对话框内显示的权限树
@@ -97,7 +97,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.getList()
     this.getPermissionTree()
   },
@@ -107,7 +107,7 @@ export default {
     }
   },
   methods: {
-    getList() {
+    getList () {
       this.isLoading = true
       api.getRoles().then(response => {
         this.isLoading = false
@@ -120,14 +120,14 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    getPermissionTree() {
+    getPermissionTree () {
       api.getPermissionTree().then(response => {
         this.editPermissionTreeData = response.data.tree
       }, error => {
         this.showErrorMessage(error.message)
       })
     },
-    handleAdd() {
+    handleAdd () {
       if (!this.validateBaseData()) {
         return
       }
@@ -142,7 +142,7 @@ export default {
         this.clearValidate('mainForm')
       })
     },
-    handleEdit(row) {
+    handleEdit (row) {
       if (!this.validateBaseData()) {
         this.showErrorMessage('基础数据缺失：权限列表')
       }
@@ -156,7 +156,7 @@ export default {
         this.clearValidate('mainForm')
       })
     },
-    handleMainFormSure(sure) {
+    handleMainFormSure (sure) {
       if (sure) {
         // 提交数据
         if (this.editActive) {
@@ -169,7 +169,7 @@ export default {
         // this.editActive = null // 注：添加状态 endActive 本就为 null
       }
     },
-    handleRemove(row) {
+    handleRemove (row) {
       this.removeActive = row
       this.$confirm('删除该角色后，相关的数据也将被删除。是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -181,7 +181,7 @@ export default {
         this.removeActive = null
       })
     },
-    add() {
+    add () {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
@@ -199,7 +199,7 @@ export default {
         })
       })
     },
-    edit() {
+    edit () {
       if (!this.editActive) {
         this.showErrorMessage('异常：无编辑目标')
         return
@@ -224,7 +224,7 @@ export default {
         })
       })
     },
-    remove() {
+    remove () {
       if (!this.removeActive) return
       const params = {
         roleID: this.removeActive.roleID
@@ -240,7 +240,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    move(sourceDisplayOrder, targetDisplayOrder) {
+    move (sourceDisplayOrder, targetDisplayOrder) {
       const params = {
         sourceDisplayOrder: sourceDisplayOrder,
         targetDisplayOrder: targetDisplayOrder
@@ -253,31 +253,31 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    validateBaseData() {
+    validateBaseData () {
       if (!this.editPermissionTreeData) {
         this.showErrorMessage('基础数据缺失：权限列表')
         return false
       }
       return true
     },
-    handlePermissionTreeCheckChange(data, checked, indeterminate) {
+    handlePermissionTreeCheckChange (data, checked, indeterminate) {
       // console.log(data, checked, indeterminate)
       this.mainForm.permissionIDs = this.$refs.editPermissionTree.getCheckedKeys()
       // console.log(this.mainForm.permissionIDs)
     },
-    resetForm(formName) {
+    resetForm (formName) {
       this.$refs[formName].resetFields()
     },
-    clearValidate(formName) {
+    clearValidate (formName) {
       this.$refs[formName].clearValidate()
     },
-    showErrorMessage(message) {
+    showErrorMessage (message) {
       this.$message({
         message: message,
         type: 'error'
       })
     },
-    setupSortable() {
+    setupSortable () {
       const el = document.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
       this.sortable = Sortable.create(el, {
         ghostClass: 'sortable-ghost', // Class name for the drop placeholder,

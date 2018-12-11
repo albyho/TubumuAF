@@ -44,7 +44,7 @@
 import api from '@/utils/api'
 
 export default {
-  data() {
+  data () {
     return {
       // 主要数据
       isLoading: false,
@@ -60,31 +60,31 @@ export default {
       },
       mainFormRules: {
         name: [{
-            required: true,
-            message: '请输入系统名称',
-            trigger: 'blur'
-          },
-          {
-            max: 50,
-            message: '最多支持50个字符',
-            trigger: 'blur'
-          }
+          required: true,
+          message: '请输入系统名称',
+          trigger: 'blur'
+        },
+        {
+          max: 50,
+          message: '最多支持50个字符',
+          trigger: 'blur'
+        }
         ],
         host: [{
-            required: true,
-            message: '请输入系统地址',
-            trigger: 'blur'
-          },
-          {
-            max: 100,
-            message: '最多支持100个字符',
-            trigger: 'blur'
-          },
-          {
-            pattern: /^https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\\.,@?^=%&amp;:/~\\+#]*[\w\-\\@?^=%&amp;/~\\+#])?$/,
-            message: '请输入正确的网址',
-            trigger: 'blur'
-          }
+          required: true,
+          message: '请输入系统地址',
+          trigger: 'blur'
+        },
+        {
+          max: 100,
+          message: '最多支持100个字符',
+          trigger: 'blur'
+        },
+        {
+          pattern: /^https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\\.,@?^=%&amp;:/~\\+#]*[\w\-\\@?^=%&amp;/~\\+#])?$/,
+          message: '请输入正确的网址',
+          trigger: 'blur'
+        }
         ],
         title: [{
           max: 100,
@@ -119,11 +119,11 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.getSiteConfig()
   },
   methods: {
-    getSiteConfig() {
+    getSiteConfig () {
       this.isLoading = true
       api.getSiteConfig().then(response => {
         this.isLoading = false
@@ -133,10 +133,10 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    handleEditSiteConfig() {
+    handleEditSiteConfig () {
       this.editSiteConfig()
     },
-    editSiteConfig() {
+    editSiteConfig () {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
@@ -154,7 +154,7 @@ export default {
         })
       })
     },
-    showErrorMessage(message) {
+    showErrorMessage (message) {
       this.$message({
         message: message,
         type: 'error'

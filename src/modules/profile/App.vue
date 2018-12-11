@@ -52,7 +52,7 @@
 import api from '@/utils/api'
 
 export default {
-  data() {
+  data () {
     return {
       isLoading: false,
       activeTabName: 'first',
@@ -63,15 +63,15 @@ export default {
       },
       changeProfileFormRules: {
         displayName: [{
-            max: 20,
-            message: '最多支持20个字符',
-            trigger: 'blur'
-          },
-          {
-            pattern: /^[a-zA-Z\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9-_\u4E00-\u9FA5\uF900-\uFA2D]*$/,
-            message: '昵称包含非法字符',
-            trigger: 'blur'
-          }
+          max: 20,
+          message: '最多支持20个字符',
+          trigger: 'blur'
+        },
+        {
+          pattern: /^[a-zA-Z\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9-_\u4E00-\u9FA5\uF900-\uFA2D]*$/,
+          message: '昵称包含非法字符',
+          trigger: 'blur'
+        }
         ],
         head: [{
           max: 200,
@@ -91,52 +91,52 @@ export default {
       },
       changePasswordFormRules: {
         currentPassword: [{
-            required: true,
-            message: '请输入当前密码',
-            trigger: 'blur'
-          },
-          {
-            min: 20,
-            message: '最少支持6个字符',
-            trigger: 'blur'
-          },
-          {
-            max: 20,
-            message: '最多支持20个字符',
-            trigger: 'blur'
-          }
+          required: true,
+          message: '请输入当前密码',
+          trigger: 'blur'
+        },
+        {
+          min: 20,
+          message: '最少支持6个字符',
+          trigger: 'blur'
+        },
+        {
+          max: 20,
+          message: '最多支持20个字符',
+          trigger: 'blur'
+        }
         ],
         newPassword: [{
-            required: true,
-            message: '请输入新密码',
-            trigger: 'blur'
-          },
-          {
-            min: 20,
-            message: '最少支持6个字符',
-            trigger: 'blur'
-          },
-          {
-            max: 20,
-            message: '最多支持20个字符',
-            trigger: 'blur'
-          }
+          required: true,
+          message: '请输入新密码',
+          trigger: 'blur'
+        },
+        {
+          min: 20,
+          message: '最少支持6个字符',
+          trigger: 'blur'
+        },
+        {
+          max: 20,
+          message: '最多支持20个字符',
+          trigger: 'blur'
+        }
         ],
         newPasswordConfirm: [{
-            required: true,
-            message: '请确认新密码',
-            trigger: 'blur'
-          },
-          {
-            min: 20,
-            message: '最少支持6个字符',
-            trigger: 'blur'
-          },
-          {
-            max: 20,
-            message: '最多支持20个字符',
-            trigger: 'blur'
-          }
+          required: true,
+          message: '请确认新密码',
+          trigger: 'blur'
+        },
+        {
+          min: 20,
+          message: '最少支持6个字符',
+          trigger: 'blur'
+        },
+        {
+          max: 20,
+          message: '最多支持20个字符',
+          trigger: 'blur'
+        }
         ]
       }
     }
@@ -145,7 +145,7 @@ export default {
     this.getProfile()
   },
   methods: {
-    getProfile() {
+    getProfile () {
       this.isLoading = true
       api.getProfile().then(response => {
         this.isLoading = false
@@ -158,7 +158,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    handleChangeProfile() {
+    handleChangeProfile () {
       this.$refs.changeProfileForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
@@ -175,7 +175,7 @@ export default {
         })
       })
     },
-    handleChangePassword() {
+    handleChangePassword () {
       this.$refs.changePasswordForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
@@ -196,13 +196,13 @@ export default {
         })
       })
     },
-    handleChangeHeadURLBrowser() {
+    handleChangeHeadURLBrowser () {
       this.popupCKFinder('headURL')
     },
-    handleChangeLogoURLBrowser() {
+    handleChangeLogoURLBrowser () {
       this.popupCKFinder('logoURL')
     },
-    popupCKFinder(name) {
+    popupCKFinder (name) {
       const _this = this
       try {
         /* eslint-disable no-undef */
@@ -224,7 +224,7 @@ export default {
         console.log(e.message)
       }
     },
-    showErrorMessage(message) {
+    showErrorMessage (message) {
       this.$message({
         message: message,
         type: 'error'

@@ -93,7 +93,7 @@ import api from '@/utils/api'
 import _ from 'lodash'
 
 export default {
-  data() {
+  data () {
     return {
       // 主要数据
       isLoading: false,
@@ -134,31 +134,31 @@ export default {
       },
       mainFormRules: {
         title: [{
-            required: true,
-            message: '请输入标题',
-            trigger: 'blur'
-          },
-          {
-            max: 100,
-            message: '最多支持100个字符',
-            trigger: 'blur'
-          }
+          required: true,
+          message: '请输入标题',
+          trigger: 'blur'
+        },
+        {
+          max: 100,
+          message: '最多支持100个字符',
+          trigger: 'blur'
+        }
         ],
         message: [{
-            required: true,
-            message: '请输入消息',
-            trigger: 'blur'
-          },
-          {
-            max: 1000,
-            message: '最多支持1000个字符',
-            trigger: 'blur'
-          }
+          required: true,
+          message: '请输入消息',
+          trigger: 'blur'
+        },
+        {
+          max: 1000,
+          message: '最多支持1000个字符',
+          trigger: 'blur'
+        }
         ]
       }
     }
   },
-  mounted() {
+  mounted () {
     this.getPage()
   },
   computed: {
@@ -170,7 +170,7 @@ export default {
 
   },
   methods: {
-    getPage() {
+    getPage () {
       this.isLoading = true
       const params = _.extend({}, this.pagingInfoForm, this.searchCriteriaForm)
       api.getNotificationsForManager(params).then(response => {
@@ -181,21 +181,21 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    handlePaginationSizeChange(val) {
+    handlePaginationSizeChange (val) {
       this.pagingInfoForm.pageSize = val
       this.pagingInfoForm.pageNumber = 1
       this.getPage()
     },
-    handlePaginationCurrentChange(val) {
+    handlePaginationCurrentChange (val) {
       this.pagingInfoForm.pageNumber = val
       this.getPage()
     },
-    handleSearchAll() {
+    handleSearchAll () {
       this.pagingInfoForm.pageNumber = 1
       this.searchCriteriaForm.keyword = null
       this.getPage()
     },
-    handleSearch() {
+    handleSearch () {
       this.pagingInfoForm.pageNumber = 1
       if (this.searchCriteriaForm.creationDate && this.searchCriteriaForm.creationDate.length === 2) {
         this.searchCriteriaForm.creationDateBegin = this.searchCriteriaForm.creationDate[0]
@@ -203,7 +203,7 @@ export default {
       }
       this.getPage()
     },
-    handleAdd() {
+    handleAdd () {
       this.editActive = null
       this.mainFormDialogVisible = true
       this.mainForm.notificationID = null
@@ -213,7 +213,7 @@ export default {
         this.clearValidate('mainForm')
       })
     },
-    handleEdit(row) {
+    handleEdit (row) {
       console.log('handleEdit', row)
       this.editActive = row
       this.mainFormDialogVisible = true
@@ -224,7 +224,7 @@ export default {
         this.clearValidate('mainForm')
       })
     },
-    handleMainFormSure(sure) {
+    handleMainFormSure (sure) {
       console.log('handleMainFormSure', sure)
       if (sure) {
         // 提交数据
@@ -237,7 +237,7 @@ export default {
         this.mainFormDialogVisible = false
       }
     },
-    handleRemove(row) {
+    handleRemove (row) {
       this.removeActive = row
       this.$confirm('删除该通知后，相关的数据也将被删除。是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -249,7 +249,7 @@ export default {
         this.removeActive = null
       })
     },
-    add() {
+    add () {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
@@ -264,7 +264,7 @@ export default {
         })
       })
     },
-    edit() {
+    edit () {
       if (!this.editActive) {
         this.showErrorMessage('异常：无编辑目标')
         return
@@ -284,7 +284,7 @@ export default {
         })
       })
     },
-    remove() {
+    remove () {
       if (!this.removeActive) return
       const params = {
         notificationID: this.removeActive.notificationID
@@ -299,23 +299,23 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    resetForm(formName) {
+    resetForm (formName) {
       this.$refs[formName].resetFields()
     },
-    clearValidate(formName) {
+    clearValidate (formName) {
       this.$refs[formName].clearValidate()
     },
-    showErrorMessage(message) {
+    showErrorMessage (message) {
       this.$message({
         message: message,
         type: 'error'
       })
     },
-    handleRowClick(row, event, column) {
+    handleRowClick (row, event, column) {
       if (column.id === 'el-table_1_column_1') return
       this.$refs.mainTable.toggleRowExpansion(row)
     },
-    handleSortChange(val) {
+    handleSortChange (val) {
       this.pagingInfoForm.sortInfo.sort = val.prop
       this.pagingInfoForm.sortInfo.sortDir = val.order === 'descending' ? 'DESC' : 'ASC'
       this.pagingInfoForm.pageNumber = 1

@@ -32,7 +32,7 @@
 import api from '@/utils/api'
 
 export default {
-  data() {
+  data () {
     return {
       // 主要数据
       isLoading: false,
@@ -40,7 +40,7 @@ export default {
         placeholder: '请输入公共内容'
       },
       publishDatePickerOptions: {
-        disabledDate(time) {
+        disabledDate (time) {
           return time.getTime() > Date.now()
         }
       },
@@ -64,11 +64,11 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.getBulletin()
   },
   methods: {
-    getBulletin() {
+    getBulletin () {
       this.isLoading = true
       api.getBulletin().then(response => {
         this.isLoading = false
@@ -78,10 +78,10 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    handleEditBulletin() {
+    handleEditBulletin () {
       this.editSiteConfig()
     },
-    editSiteConfig() {
+    editSiteConfig () {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
@@ -98,7 +98,7 @@ export default {
         })
       })
     },
-    showErrorMessage(message) {
+    showErrorMessage (message) {
       this.$message({
         message: message,
         type: 'error'

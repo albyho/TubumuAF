@@ -11,17 +11,17 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       // 主要数据
       isLoading: false
     }
   },
-  mounted() {
+  mounted () {
     this.showCKFinder()
   },
   methods: {
-    showCKFinder() {
+    showCKFinder () {
       try {
         /* eslint-disable no-undef */
         CKFinder.widget('main', {

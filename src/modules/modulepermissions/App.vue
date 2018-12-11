@@ -28,13 +28,13 @@
 import api from '@/utils/api'
 
 export default {
-  data() {
+  data () {
     return {
       isLoading: false,
       list: null
     }
   },
-  mounted() {
+  mounted () {
     this.getList()
   },
   computed: {
@@ -43,7 +43,7 @@ export default {
     }
   },
   methods: {
-    getList() {
+    getList () {
       this.isLoading = true
       api.getPermissions().then(response => {
         this.isLoading = false
@@ -53,7 +53,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    handleExtractModulePermissions() {
+    handleExtractModulePermissions () {
       this.isLoading = true
       api.extractModulePermissions().then(response => {
         this.isLoading = false
@@ -68,7 +68,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    handleClearModulePermissions() {
+    handleClearModulePermissions () {
       this.isLoading = true
       api.clearModulePermissions().then(response => {
         this.isLoading = false
@@ -83,7 +83,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    showErrorMessage(message) {
+    showErrorMessage (message) {
       this.$message({
         message: message,
         type: 'error'

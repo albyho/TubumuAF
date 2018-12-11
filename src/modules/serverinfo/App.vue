@@ -14,18 +14,18 @@
 import api from '@/utils/api'
 
 export default {
-  data() {
+  data () {
     return {
       // 主要数据
       isLoading: false,
       content: null
     }
   },
-  mounted() {
+  mounted () {
     this.getServerInfo()
   },
   methods: {
-    getServerInfo() {
+    getServerInfo () {
       this.isLoading = true
       api.getServerInfo().then(response => {
         this.isLoading = false
@@ -35,7 +35,7 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    showErrorMessage(message) {
+    showErrorMessage (message) {
       this.$message({
         message: message,
         type: 'error'

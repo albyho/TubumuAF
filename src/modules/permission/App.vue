@@ -21,7 +21,7 @@
 import api from '@/utils/api'
 
 export default {
-  data() {
+  data () {
     return {
       isLoading: false,
       treeData: null,
@@ -32,7 +32,7 @@ export default {
       filterText: null
     }
   },
-  mounted() {
+  mounted () {
     this.getTree()
   },
   computed: {
@@ -41,12 +41,12 @@ export default {
     }
   },
   watch: {
-    filterText(val) {
+    filterText (val) {
       this.$refs.tree.filter(val)
     }
   },
   methods: {
-    getTree() {
+    getTree () {
       this.isLoading = true
       api.getPermissionTree().then(response => {
         this.isLoading = false
@@ -56,13 +56,13 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    filterNode(value, data) {
+    filterNode (value, data) {
       if (!value) {
         return true
       }
       return data.name.indexOf(value) !== -1
     },
-    showErrorMessage(message) {
+    showErrorMessage (message) {
       this.$message({
         message: message,
         type: 'error'
