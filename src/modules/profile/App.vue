@@ -50,6 +50,7 @@
 
 <script>
 import api from '@/utils/api'
+import md5 from 'js-md5'
 
 export default {
   data () {
@@ -96,13 +97,13 @@ export default {
           trigger: 'blur'
         },
         {
-          min: 20,
+          min: 6,
           message: '最少支持6个字符',
           trigger: 'blur'
         },
         {
-          max: 20,
-          message: '最多支持20个字符',
+          max: 32,
+          message: '最多支持32个字符',
           trigger: 'blur'
         }
         ],
@@ -112,13 +113,13 @@ export default {
           trigger: 'blur'
         },
         {
-          min: 20,
+          min: 6,
           message: '最少支持6个字符',
           trigger: 'blur'
         },
         {
-          max: 20,
-          message: '最多支持20个字符',
+          max: 32,
+          message: '最多支持32个字符',
           trigger: 'blur'
         }
         ],
@@ -128,13 +129,13 @@ export default {
           trigger: 'blur'
         },
         {
-          min: 20,
+          min: 6,
           message: '最少支持6个字符',
           trigger: 'blur'
         },
         {
-          max: 20,
-          message: '最多支持20个字符',
+          max: 32,
+          message: '最多支持32个字符',
           trigger: 'blur'
         }
         ]
@@ -180,12 +181,15 @@ export default {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
         const params = {
-          currentPassword: this.changePasswordForm.currentPassword,
-          newPassword: this.changePasswordForm.newPassword,
-          newPasswordConfirm: this.changePasswordForm.newPasswordConfirm
+          currentPassword: md5(this.changePasswordForm.currentPassword),
+          newPassword: md5(this.changePasswordForm.newPassword),
+          newPasswordConfirm: md5(this.changePasswordForm.newPasswordConfirm)
         }
         api.changePassword(params).then(response => {
           this.isLoading = false
+          this.changePasswordForm.currentPassword = null
+          this.changePasswordForm.newPassword = null
+          this.changePasswordForm.newPasswordConfirm = null
           this.$message({
             message: response.data.message,
             type: 'success'

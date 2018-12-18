@@ -58,7 +58,9 @@
 
 <script>
 import { baseURL, defaultAccount, defaultPassword } from '@/utils/config'
+import _ from 'lodash'
 import api from '@/utils/api'
+import md5 from 'js-md5'
 const fileDownload = require('js-file-download')
 
 export default {
@@ -82,11 +84,11 @@ export default {
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
           { min: 6, message: '最少支持6个字符', trigger: 'blur' },
-          { max: 20, message: '最多支持20个字符', trigger: 'blur' }
+          { max: 32, message: '最多支持32个字符', trigger: 'blur' }
         ],
         validationCode: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
-          { max: 20, message: '最多支持20个字符', trigger: 'blur' }
+          { max: 32, message: '最多支持32个字符', trigger: 'blur' }
         ]
       },
       isRemberPassword: true
@@ -103,7 +105,8 @@ export default {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
-        const params = this.mainForm
+        const params = _.cloneDeep(this.mainForm)
+        params.password = md5(params.password)
         api.login(params).then(response => {
           // this.isLoading = false
           // httpClient 对 response.data.url 有拦截处理

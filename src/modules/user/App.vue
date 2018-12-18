@@ -131,6 +131,16 @@
             prop="CreationDate"
             label="创建时间"
             width="140" />
+          <el-table-column label="开发" width="60">
+            <template slot-scope="scope">
+              {{ scope.row.IsDeveloper ? '√' : '×' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="测试" width="60">
+            <template slot-scope="scope">
+              {{ scope.row.IsTester ? '√' : '×' }}
+            </template>
+          </el-table-column>
           <el-table-column
             align="center"
             fixed="right"
@@ -297,6 +307,12 @@
                     @click="handleChangeLogoURLBrowser" />
                 </el-input>
               </el-form-item>
+              <el-form-item label="是否是开发人员">
+                <el-switch v-model="mainForm.isDeveloper" />
+              </el-form-item>
+              <el-form-item label="是否是测试人员">
+                <el-switch v-model="mainForm.isTester" />
+              </el-form-item>
             </el-tab-pane>
             <el-tab-pane
               label="附加分组"
@@ -372,6 +388,7 @@
 <script>
 import api from '@/utils/api'
 import _ from 'lodash'
+import md5 from 'js-md5'
 
 export default {
   data () {
@@ -384,8 +401,8 @@ export default {
         callback(new Error('请输入登录密码'))
       } else if (value.length < 6) {
         callback(new Error('请输入至少6位密码'))
-      } else if (value.length > 20) {
-        callback(new Error('密码请保持在20位以内'))
+      } else if (value.length > 32) {
+        callback(new Error('密码请保持在32位以内'))
       } else {
         callback()
       }
@@ -458,7 +475,9 @@ export default {
         passwordConfirm: null,            // String
         description: null,                // String
         headURL: null,                    // String
-        logoURL: null                     // String
+        logoURL: null,                    // String
+        isDeveloper: false,               // bool
+        isTester: false                   // bool
       },
       mainFormRules: {
         username: [
@@ -609,6 +628,8 @@ export default {
       this.mainForm.description = null
       this.mainForm.headURL = null
       this.mainForm.logoURL = null
+      this.mainForm.isDeveloper = false
+      this.mainForm.isTester = false
       this.$nextTick(() => {
         this.$refs.editGroupTree.setCheckedKeys([], true)
         this.$refs.editPermissionTree.setCheckedKeys([], true)
@@ -645,6 +666,8 @@ export default {
       this.mainForm.description = row.Description
       this.mainForm.headURL = row.HeadURL
       this.mainForm.logoURL = row.LogoURL
+      this.mainForm.isDeveloper = row.IsDeveloper
+      this.mainForm.isTester = row.IsTester
       this.$nextTick(() => {
         this.$refs.editGroupTree.setCheckedKeys(this.mainForm.groupIDs, true)
         this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
@@ -689,7 +712,13 @@ export default {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
         this.mainForm.groupID = this.mainForm.groupIDPath[this.mainForm.groupIDPath.length - 1]
-        const params = this.mainForm
+        const params = _.cloneDeep(this.mainForm)
+        if (this.params.password) {
+          params.password = md5(params.password)
+        }
+        if (params.passwordConfirm) {
+          params.passwordConfirm = md5(params.passwordConfirm)
+        }
         api.addUser(params).then(response => {
           this.isLoading = false
           this.mainFormDialogVisible = false
@@ -709,7 +738,13 @@ export default {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
         this.mainForm.groupID = this.mainForm.groupIDPath[this.mainForm.groupIDPath.length - 1]
-        const params = this.mainForm
+        const params = _.cloneDeep(this.mainForm)
+        if (params.password) {
+          params.password = md5(params.password)
+        }
+        if (params.passwordConfirm) {
+          params.passwordConfirm = md5(params.passwordConfirm)
+        }
         api.editUser(params).then(response => {
           this.isLoading = false
           this.editActive = null
