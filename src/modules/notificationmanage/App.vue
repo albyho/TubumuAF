@@ -31,9 +31,9 @@
             <div v-html="scope.row.message"></div>
           </template>
         </el-table-column>
-        <el-table-column prop="notificationID" label="#" width="60" sortable="custom" />
+        <el-table-column prop="notificationId" label="#" width="60" sortable="custom" />
         <el-table-column prop="title" label="标题" />
-        <el-table-column label="已读" width="100" v-if="searchCriteriaForm.toUserID">
+        <el-table-column label="已读" width="100" v-if="searchCriteriaForm.toUserId">
           <template slot-scope="scope">
             <span>{{ scope.row.readTime ? '√' : '' }}</span>
           </template>
@@ -48,7 +48,7 @@
             <span>{{ scope.row.toUser ? scope.row.toUser.displayName : '全部' }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="已删" width="100" v-if="searchCriteriaForm.toUserID">
+        <el-table-column label="已删" width="100" v-if="searchCriteriaForm.toUserId">
           <template slot-scope="scope">
             <span>{{ scope.row.deleteTime ? '√' : '' }}</span>
           </template>
@@ -83,14 +83,21 @@
 
   </el-main>
   <el-footer class="footer">
-    <el-pagination @size-change="handlePaginationSizeChange" @current-change="handlePaginationCurrentChange" :current-page="pagingInfoForm.pageNumber" :page-sizes="[20, 50, 100, 200, 400]" :page-size="pagingInfoForm.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="page.totalItemCount" v-if="page.totalItemCount" />
+    <el-pagination
+    @size-change="handlePaginationSizeChange"
+    @current-change="handlePaginationCurrentChange"
+    :current-page="searchCriteriaForm.pagingInfo.pageNumber"
+    :page-sizes="[20, 50, 100, 200, 400]"
+    :page-size="searchCriteriaForm.pagingInfo.pageSize"
+    layout="total, sizes, prev, pager, next, jumper"
+    :total="page.totalItemCount"
+    v-if="page.totalItemCount" />
   </el-footer>
 </el-container>
 </template>
 
 <script>
 import api from '@/utils/api'
-import _ from 'lodash'
 
 export default {
   data () {
@@ -107,18 +114,18 @@ export default {
       },
       searchCriteriaForm: {
         keyword: null,
-        toUserID: null,
+        toUserId: null,
         creationDate: null,
         creationDateBegin: null,
-        creationDateEnd: null
-      },
-      pagingInfoForm: {
-        pageNumber: 1,
-        pageSize: 20,
-        isExcludeMetaData: false,
-        sortInfo: {
-          sort: 'NotificationID',
-          sortDir: 'DESC'
+        creationDateEnd: null,
+        pagingInfo: {
+          pageNumber: 1,
+          pageSize: 20,
+          isExcludeMetaData: false,
+          sortInfo: {
+            sort: 'NotificationId',
+            sortDir: 'DESC'
+          }
         }
       },
       // 删除
@@ -128,7 +135,7 @@ export default {
       editActive: null, // 暂存编辑项，也可用来判断是否添加还是编辑
       mainFormDialogVisible: false, // 添加/编辑对话框是否可见
       mainForm: {
-        notificationID: null, // Int
+        notificationId: null, // Int
         title: null, // String
         message: null // String
       },
@@ -172,7 +179,7 @@ export default {
   methods: {
     getPage () {
       this.isLoading = true
-      const params = _.extend({}, this.pagingInfoForm, this.searchCriteriaForm)
+      const params = this.searchCriteriaForm
       api.getNotificationsForManager(params).then(response => {
         this.isLoading = false
         this.page = response.data.page
@@ -182,21 +189,21 @@ export default {
       })
     },
     handlePaginationSizeChange (val) {
-      this.pagingInfoForm.pageSize = val
-      this.pagingInfoForm.pageNumber = 1
+      this.searchCriteriaForm.pageInfo.pageSize = val
+      this.searchCriteriaForm.pageInfo.pageNumber = 1
       this.getPage()
     },
     handlePaginationCurrentChange (val) {
-      this.pagingInfoForm.pageNumber = val
+      this.searchCriteriaForm.pageInfo.pageNumber = val
       this.getPage()
     },
     handleSearchAll () {
-      this.pagingInfoForm.pageNumber = 1
+      this.searchCriteriaForm.pageInfo.pageNumber = 1
       this.searchCriteriaForm.keyword = null
       this.getPage()
     },
     handleSearch () {
-      this.pagingInfoForm.pageNumber = 1
+      this.searchCriteriaForm.pageInfo.pageNumber = 1
       if (this.searchCriteriaForm.creationDate && this.searchCriteriaForm.creationDate.length === 2) {
         this.searchCriteriaForm.creationDateBegin = this.searchCriteriaForm.creationDate[0]
         this.searchCriteriaForm.creationDateEnd = this.searchCriteriaForm.creationDate[1]
@@ -206,7 +213,7 @@ export default {
     handleAdd () {
       this.editActive = null
       this.mainFormDialogVisible = true
-      this.mainForm.notificationID = null
+      this.mainForm.notificationId = null
       this.mainForm.title = null
       this.mainForm.message = null
       this.$nextTick(() => {
@@ -217,7 +224,7 @@ export default {
       console.log('handleEdit', row)
       this.editActive = row
       this.mainFormDialogVisible = true
-      this.mainForm.notificationID = row.notificationID
+      this.mainForm.notificationId = row.notificationId
       this.mainForm.title = row.title
       this.mainForm.message = row.message
       this.$nextTick(() => {
@@ -287,7 +294,7 @@ export default {
     remove () {
       if (!this.removeActive) return
       const params = {
-        notificationID: this.removeActive.notificationID
+        notificationId: this.removeActive.notificationId
       }
       this.isLoading = true
       api.removeNotification(params).then(response => {
@@ -316,9 +323,9 @@ export default {
       this.$refs.mainTable.toggleRowExpansion(row)
     },
     handleSortChange (val) {
-      this.pagingInfoForm.sortInfo.sort = val.prop
-      this.pagingInfoForm.sortInfo.sortDir = val.order === 'descending' ? 'DESC' : 'ASC'
-      this.pagingInfoForm.pageNumber = 1
+      this.searchCriteriaForm.pageInfo.sortInfo.sort = val.prop
+      this.searchCriteriaForm.pageInfo.sortInfo.sortDir = val.order === 'descending' ? 'DESC' : 'ASC'
+      this.searchCriteriaForm.pageInfo.pageNumber = 1
       this.getPage()
     }
   }

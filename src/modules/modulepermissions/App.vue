@@ -45,7 +45,7 @@ export default {
   methods: {
     getList () {
       this.isLoading = true
-      api.getPermissions().then(response => {
+      api.getModulePermissions().then(response => {
         this.isLoading = false
         this.list = response.data.list
       }, error => {

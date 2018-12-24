@@ -67,7 +67,7 @@
                   :props="editParentTreeDefaultProps"
                   clearable
                   change-on-select
-                  v-model="mainForm.parentIDPath" />
+                  v-model="mainForm.parentIdPath" />
               </el-form-item>
               <el-form-item
                 label="分组名称"
@@ -89,11 +89,11 @@
               label="限制角色" 
               name="second">
               <el-form-item label="限制角色">
-                <el-checkbox-group v-model="mainForm.availableRoleIDs">
+                <el-checkbox-group v-model="mainForm.availableRoleIds">
                   <el-checkbox 
                     v-for="role in editRoleListData"
-                    :label="role.roleID" 
-                    :key="role.roleID">{{ role.name }}</el-checkbox>
+                    :label="role.roleId" 
+                    :key="role.roleId">{{ role.name }}</el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
             </el-tab-pane>
@@ -101,11 +101,11 @@
               label="包含角色" 
               name="third">
               <el-form-item label="包含角色">
-                <el-checkbox-group v-model="mainForm.roleIDs">
+                <el-checkbox-group v-model="mainForm.roleIds">
                   <el-checkbox
                     v-for="role in editRoleListData"
-                    :label="role.roleID"
-                    :key="role.roleID">{{ role.name }}</el-checkbox>
+                    :label="role.roleId"
+                    :key="role.roleId">{{ role.name }}</el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
             </el-tab-pane>
@@ -153,13 +153,13 @@
           label-width="100px">
           <el-form-item
             label="目标节点"
-            prop="targetIDPath">
+            prop="targetIdPath">
             <el-cascader
               :options="editParentTreeData"
               :props="editParentTreeDefaultProps"
               clearable
               change-on-select
-              v-model="moveForm.targetIDPath" />
+              v-model="moveForm.targetIdPath" />
           </el-form-item>
           <el-form-item label="位置">
             <template>
@@ -220,20 +220,20 @@ export default {
       editActive: null,                   // 暂存编辑项，也可用来判断是否添加还是编辑
       mainFormDialogVisible: false,       // 添加/编辑对话框是否可见
       mainForm: {
-        groupID: null,                    // String
+        groupId: null,                    // String
         name: null,                       // String
-        roleIDs: [],                      // Array 不能设置为 null
-        permissionIDs: null,              // Array
-        availableRoleIDs: [],             // Array 不能设置为 null
-        parentIDPath: [],                 // Array 不能设置为 null 如果 parentIDPath 无值则作为顶级节点,否则作为子节点。给 cascader 组件使用。
-        parentID: null,                   // String
+        roleIds: [],                      // Array 不能设置为 null
+        permissionIds: null,              // Array
+        availableRoleIds: [],             // Array 不能设置为 null
+        parentIdPath: [],                 // Array 不能设置为 null 如果 parentIdPath 无值则作为顶级节点,否则作为子节点。给 cascader 组件使用。
+        parentId: null,                   // String
         isContainsUser: null,             // Bool 是否包含用户
         isDisabled: null                  // Bool 是否停用
       },
       moveForm: {
-        sourceID: null,
-        targetIDPath: null,               // Array 必须选择。给 cascader 组件使用。
-        targetID: null,
+        sourceId: null,
+        targetIdPath: null,               // Array 必须选择。给 cascader 组件使用。
+        targetId: null,
         isChild: false,
         movingLocation: 0                 // 0: Under, 1: Above 。 作为子节点，总是 Under；作为兄弟节点则可使用两值任一。
       },
@@ -244,7 +244,7 @@ export default {
         ]
       },
       moveFormRules: {
-        targetIDPath: [
+        targetIdPath: [
           { required: true, type: 'array', message: '请选择目标节点', trigger: 'change' }
         ]
       },
@@ -313,22 +313,22 @@ export default {
       if (!this.validateBaseData()) {
         return
       }
-      let parentIDPath = []
+      let parentIdPath = []
       if (data) {
-        parentIDPath = data.parentIDPath ? data.parentIDPath : []
-        parentIDPath.push(data.id)
+        parentIdPath = data.parentIdPath ? data.parentIdPath : []
+        parentIdPath.push(data.id)
       }
       this.activeTabName = 'first'
       this.editActive = null
       this.generateParentTree(null)
       this.mainFormDialogVisible = true
-      this.mainForm.groupID = null
+      this.mainForm.groupId = null
       this.mainForm.name = null
-      this.mainForm.parentIDPath = parentIDPath
-      this.mainForm.parentID = data ? data.id : null    // parentID 在提交数据前重新计算
-      this.mainForm.roleIDs = []            // 不能设置为 null
-      this.mainForm.permissionIDs = null
-      this.mainForm.availableRoleIDs = []       // 不能设置为 null
+      this.mainForm.parentIdPath = parentIdPath
+      this.mainForm.parentId = data ? data.id : null    // parentId 在提交数据前重新计算
+      this.mainForm.roleIds = []            // 不能设置为 null
+      this.mainForm.permissionIds = null
+      this.mainForm.availableRoleIds = []       // 不能设置为 null
       this.mainForm.isContainsUser = true    // 默认 true
       this.mainForm.isDisabled = false      // 默认 false
       this.$nextTick(() => {
@@ -345,17 +345,17 @@ export default {
       this.editActive = data
       this.generateParentTree(data)
       this.mainFormDialogVisible = true
-      this.mainForm.groupID = data.id
+      this.mainForm.groupId = data.id
       this.mainForm.name = data.name
-      this.mainForm.parentIDPath = data.parentIDPath
-      this.mainForm.parentID = data.parentID            // parentID 在提交数据前重新计算
-      this.mainForm.roleIDs = data.roles.map(m => m.roleID)
-      this.mainForm.permissionIDs = data.permissions.map(m => m.permissionID)
-      this.mainForm.availableRoleIDs = data.availableRoles.map(m => m.roleID)
+      this.mainForm.parentIdPath = data.parentIdPath
+      this.mainForm.parentId = data.parentId            // parentId 在提交数据前重新计算
+      this.mainForm.roleIds = data.roles.map(m => m.roleId)
+      this.mainForm.permissionIds = data.permissions.map(m => m.permissionId)
+      this.mainForm.availableRoleIds = data.availableRoles.map(m => m.roleId)
       this.mainForm.isContainsUser = data.isContainsUser
       this.mainForm.isDisabled = data.isDisabled
       this.$nextTick(() => {
-        this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
+        this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIds, true)
         this.clearValidate('mainForm')
       })
     },
@@ -393,8 +393,8 @@ export default {
       this.moveActive = data
       this.generateParentTree(data)
       this.moveFormDialogVisible = true
-      this.moveForm.sourceID = data.id
-      this.moveForm.targetIDPath = []
+      this.moveForm.sourceId = data.id
+      this.moveForm.targetIdPath = []
       this.moveForm.movingLocation = 0
       this.moveForm.isChild = false
       this.$nextTick(() => {
@@ -414,8 +414,8 @@ export default {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
-        this.mainForm.parentID = this.mainForm.parentIDPath && this.mainForm.parentIDPath.length
-          ? this.mainForm.parentIDPath[this.mainForm.parentIDPath.length - 1]
+        this.mainForm.parentId = this.mainForm.parentIdPath && this.mainForm.parentIdPath.length
+          ? this.mainForm.parentIdPath[this.mainForm.parentIdPath.length - 1]
           : null
         const params = this.mainForm
         api.addGroup(params).then(response => {
@@ -436,8 +436,8 @@ export default {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
-        this.mainForm.parentID = this.mainForm.parentIDPath && this.mainForm.parentIDPath.length
-          ? this.mainForm.parentIDPath[this.mainForm.parentIDPath.length - 1]
+        this.mainForm.parentId = this.mainForm.parentIdPath && this.mainForm.parentIdPath.length
+          ? this.mainForm.parentIdPath[this.mainForm.parentIdPath.length - 1]
           : null
         const params = this.mainForm
         api.editGroup(params).then(response => {
@@ -454,7 +454,7 @@ export default {
     remove () {
       if (!this.removeActive) return
       const params = {
-        groupID: this.removeActive.id
+        groupId: this.removeActive.id
       }
       this.isLoading = true
       api.removeGroup(params).then(response => {
@@ -471,8 +471,8 @@ export default {
       this.$refs.moveForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         const params = {
-          sourceID: this.moveActive.id,
-          targetID: this.moveForm.targetIDPath[this.moveForm.targetIDPath.length - 1],
+          sourceId: this.moveActive.id,
+          targetId: this.moveForm.targetIdPath[this.moveForm.targetIdPath.length - 1],
           isChild: this.moveForm.movingLocation === 0 ? this.moveForm.isChild : null,
           movingLocation: this.moveForm.movingLocation
         }
@@ -489,10 +489,10 @@ export default {
         })
       })
     },
-    moveQuickly (sourceID, targetID, isChild, movingLocation) {
+    moveQuickly (sourceId, targetId, isChild, movingLocation) {
       const params = {
-        sourceID: sourceID,
-        targetID: targetID,
+        sourceId: sourceId,
+        targetId: targetId,
         isChild: isChild,
         movingLocation: movingLocation
       }
@@ -518,8 +518,8 @@ export default {
     },
     handlePermissionTreeCheckChange (data, checked, indeterminate) {
       // console.log(data, checked, indeterminate)
-      this.mainForm.permissionIDs = this.$refs.editPermissionTree.getCheckedKeys()
-      // console.log(this.mainForm.permissionIDs)
+      this.mainForm.permissionIds = this.$refs.editPermissionTree.getCheckedKeys()
+      // console.log(this.mainForm.permissionIds)
     },
     generateParentTree (data) {
       // 在添加或编辑分组时，需要将系统分组排除

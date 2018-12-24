@@ -12,8 +12,8 @@
             :show-timeout="150">
             <span class="el-dropdown-link userinfo-inner">
               <img
-                :src="profileDisplay.headURL"
-                v-show="profileDisplay.headURL"> [ {{ profileDisplay.groups.map(m => m.name).join(' - ') }} ] {{ profileDisplay.displayName || profileDisplay.username }}</span>
+                :src="profileDisplay.headUrl"
+                v-show="profileDisplay.headUrl"> [ {{ profileDisplay.groups.map(m => m.name).join(' - ') }} ] {{ profileDisplay.displayName || profileDisplay.username }}</span>
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
               <el-dropdown-item @click.native="profile">我的资料</el-dropdown-item>
@@ -45,7 +45,7 @@
         </el-menu>
       </el-aside>
       <el-main><iframe
-        :src="mainFrameURL"
+        :src="mainFrameUrl"
         class="el-main-content"
         scrolling="auto" frameBorder="0" :width="iframeWidth" :height="iframeHeight" /></el-main>
     </el-container>
@@ -61,11 +61,11 @@ export default {
       isLoading: false,
       isGetMenusLoading: false,
       hasNewMessage: null,
-      mainFrameURL: '',
+      mainFrameUrl: '',
       profileDisplay: {
         username: '',
         displayName: '',
-        headURL: null,
+        headUrl: null,
         groups: []
       },
       menus: null,
@@ -98,7 +98,7 @@ export default {
     })
     api.getProfile().then(response => {
       // console.log(response.data)
-      this.profileDisplay = response.data.profile
+      this.profileDisplay = response.data.item
       this.connectNotifictionServer()
     }, error => {
       // console.log(error)
@@ -124,25 +124,26 @@ export default {
           } else if (currentMenu.linkTarget) {
             window.open(currentMenu.link, currentMenu.linkTarget)
           } else {
-            this.mainFrameURL = currentMenu.link
+            this.mainFrameUrl = currentMenu.link
           }
         } else {
           list = currentMenu.children
         }
       }
-      // console.log('handleSelect', index, indexPath, this.mainFrameURL)
+      // console.log('handleSelect', index, indexPath, this.mainFrameUrl)
     },
     profile () {
-      this.mainFrameURL = '/Manager/Admin/View?IsCore=true&Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=profile&Components=ckfinder'
+      this.mainFrameUrl = '/Admin/View?IsCore=true&Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=profile&Components=ckfinder'
     },
     resources () {
-      this.mainFrameURL = '/Manager/Admin/View?IsCore=true&Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=resources&Components=ckfinder'
+      this.mainFrameUrl = '/Admin/View?IsCore=true&Title=%E6%88%91%E7%9A%84%E8%B5%84%E6%96%99&Name=resources&Components=ckfinder'
     },
     logout () {
       this.isLoading = true
       api.logout().then(response => {
         // this.isLoading = false
         // httpClient 对 response.data.url 有拦截处理
+        localStorage.removeItem('token')
       }, error => {
         // console.log(error)
         this.isLoading = false
@@ -166,9 +167,11 @@ export default {
       const _this = this
       try {
         /* eslint-disable no-undef */
-        const hub = $.connection.notificationHub
-        hub.client.receviedMessage = function (data) {
-          // console.log(data)
+        const connection = new signalR.HubConnectionBuilder()
+        .withUrl('/hubs/notificationHub', { accessTokenFactory: () => localStorage.token })
+        .build()
+        connection.on('ReceiveMessage', function (data) {
+          console.log(data)
           // 错误码：
           // 200 连接通知成功 (暂未使用)
           // 201 新消息(可带url参数)
@@ -189,9 +192,10 @@ export default {
           } else if (data.code === 400) {
             _this.showErrorMessage(data.message)
           }
-        }
-        $.connection.hub.start().done(function () {
-          hub.server.join('@Token')
+        })
+
+        connection.start().catch(function (err) {
+          return console.error(err.toString())
         })
       } catch (e) {
         console.log(e.message)
@@ -199,7 +203,7 @@ export default {
     },
     handleNewMessage () {
       this.hasNewMessage = false
-      this.mainFrameURL = '/Manager/Admin/View?IsCore=true&Title=%E9%80%9A%E7%9F%A5%E4%B8%AD%E5%BF%83&Name=notification&t=' + (new Date().getTime())
+      this.mainFrameUrl = '/Admin/View?IsCore=true&Title=%E9%80%9A%E7%9F%A5%E4%B8%AD%E5%BF%83&Name=notification&t=' + (new Date().getTime())
     },
     showErrorMessage (message) {
       this.$message({

@@ -41,7 +41,7 @@
         placeholder="验证码"
         class="validationCode" />
       <img
-        :src="refreshValidationCodeURL"
+        :src="refreshValidationCodeUrl"
         @click="handleRefreshValidationCode"
         class="validationCodeImage">
     </el-form-item>
@@ -67,8 +67,8 @@ export default {
   data () {
     return {
       isLoading: false,
-      refreshValidationCodeURLBase: baseURL + '/Admin/GetValidationCode',
-      refreshValidationCodeURL: null,
+      refreshValidationCodeUrlBase: baseURL + '/Admin/GetValidationCode',
+      refreshValidationCodeUrl: null,
       mainForm: {
         account: defaultAccount,
         password: defaultPassword,
@@ -95,7 +95,7 @@ export default {
     }
   },
   mounted () {
-    this.refreshValidationCodeURL = this.refreshValidationCodeURLBase
+    this.refreshValidationCodeUrl = this.refreshValidationCodeUrlBase
   },
   methods: {
     handleReset (e) {
@@ -110,6 +110,7 @@ export default {
         api.login(params).then(response => {
           // this.isLoading = false
           // httpClient 对 response.data.url 有拦截处理
+          localStorage.token = response.data.token
         }, error => {
           this.isLoading = false
           this.showErrorMessage(error.message)
@@ -119,7 +120,7 @@ export default {
     },
     handleRefreshValidationCode (e) {
       // console.log('handleRefreshValidationCode')
-      this.refreshValidationCodeURL = this.refreshValidationCodeURLBase + '?' + (new Date().getTime())
+      this.refreshValidationCodeUrl = this.refreshValidationCodeUrlBase + '?' + (new Date().getTime())
       this.mainForm.validationCode = ''
       if (e) {
         this.$refs.validationCode.focus()

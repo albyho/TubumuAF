@@ -73,9 +73,9 @@ export default {
       editActive: null, // 暂存编辑项，也可用来判断是否添加还是编辑
       mainFormDialogVisible: false, // 添加/编辑对话框是否可见
       mainForm: {
-        roleID: null,
+        roleId: null,
         name: null,
-        permissionIDs: null
+        permissionIds: null
       },
       mainFormRules: {
         name: [{
@@ -133,9 +133,9 @@ export default {
       }
       this.editActive = null
       this.mainFormDialogVisible = true
-      this.mainForm.roleID = null
+      this.mainForm.roleId = null
       this.mainForm.name = null
-      this.mainForm.permissionIDs = null
+      this.mainForm.permissionIds = null
       this.$nextTick(() => {
         this.$refs.editPermissionTree.setCheckedKeys([], true)
         this.$refs.name.focus()
@@ -148,11 +148,11 @@ export default {
       }
       this.editActive = row
       this.mainFormDialogVisible = true
-      this.mainForm.roleID = row.roleID
+      this.mainForm.roleId = row.roleId
       this.mainForm.name = row.name
-      this.mainForm.permissionIDs = row.permissions.map(m => m.permissionID)
+      this.mainForm.permissionIds = row.permissions.map(m => m.permissionId)
       this.$nextTick(() => {
-        this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
+        this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIds, true)
         this.clearValidate('mainForm')
       })
     },
@@ -187,7 +187,7 @@ export default {
         this.isLoading = true
         const params = {
           name: this.mainForm.name,
-          permissionIDs: this.mainForm.permissionIDs
+          permissionIds: this.mainForm.permissionIds
         }
         api.addRole(params).then(response => {
           this.list.push(response.data.item)
@@ -208,9 +208,9 @@ export default {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
         const params = {
-          roleID: this.mainForm.roleID,
+          roleId: this.mainForm.roleId,
           name: this.mainForm.name,
-          permissionIDs: this.mainForm.permissionIDs
+          permissionIds: this.mainForm.permissionIds
         }
         api.editRole(params).then(response => {
           this.list.splice(this.list.indexOf(this.editActive), 1, response.data.item)
@@ -227,7 +227,7 @@ export default {
     remove () {
       if (!this.removeActive) return
       const params = {
-        roleID: this.removeActive.roleID
+        roleId: this.removeActive.roleId
       }
       this.isLoading = true
       api.removeRole(params).then(response => {
@@ -262,8 +262,8 @@ export default {
     },
     handlePermissionTreeCheckChange (data, checked, indeterminate) {
       // console.log(data, checked, indeterminate)
-      this.mainForm.permissionIDs = this.$refs.editPermissionTree.getCheckedKeys()
-      // console.log(this.mainForm.permissionIDs)
+      this.mainForm.permissionIds = this.$refs.editPermissionTree.getCheckedKeys()
+      // console.log(this.mainForm.permissionIds)
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()

@@ -71,7 +71,7 @@
               <div v-html="scope.row.message"></div>
             </template>
           </el-table-column>
-          <el-table-column prop="notificationID" label="#" width="60" sortable="custom"/>
+          <el-table-column prop="notificationId" label="#" width="60" sortable="custom"/>
           <el-table-column prop="title" label="标题"/>
           <el-table-column label="已读" width="100">
             <template slot-scope="scope">
@@ -130,9 +130,9 @@
       <el-pagination
         @size-change="handlePaginationSizeChange"
         @current-change="handlePaginationCurrentChange"
-        :current-page="pagingInfoForm.pageNumber"
+        :current-page="searchCriteriaForm.pagingInfo.pageNumber"
         :page-sizes="[20, 50, 100, 200, 400]"
-        :page-size="pagingInfoForm.pageSize"
+        :page-size="searchCriteriaForm.pagingInfo.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="page.totalItemCount"
         v-if="page.totalItemCount"
@@ -143,7 +143,6 @@
 
 <script>
 import api from '@/utils/api'
-import _ from 'lodash'
 
 export default {
   data () {
@@ -157,22 +156,23 @@ export default {
       },
       searchCriteriaForm: {
         keyword: null,
-        toUserID: null,
+        toUserId: null,
         creationDate: null,
         creationDateBegin: null,
         creationDateEnd: null,
-        isReaded: false
-      },
-      isReadedNumber: 1, // 1 未读 2 已读 undefined 全部
-      pagingInfoForm: {
-        pageNumber: 1,
-        pageSize: 20,
-        isExcludeMetaData: false,
-        sortInfo: {
-          sort: 'NotificationID',
-          sortDir: 'DESC'
+        isReaded: false,
+        pagingInfo: {
+          pageNumber: 1,
+          pageSize: 20,
+          isExcludeMetaData: false,
+          sortInfo: {
+            sort: 'NotificationId',
+            sortDir: 'DESC'
+          }
         }
       },
+      isReadedNumber: 1, // 1 未读 2 已读 undefined 全部
+
       // 选中项
       selection: null,
       // 删除
@@ -186,7 +186,7 @@ export default {
       editActive: null, // 暂存编辑项，也可用来判断是否添加还是编辑
       mainFormDialogVisible: false, // 添加/编辑对话框是否可见
       mainForm: {
-        notificationID: null, // Int
+        notificationId: null, // Int
         title: null, // String
         message: null // String
       },
@@ -230,7 +230,7 @@ export default {
   methods: {
     getPage () {
       this.isLoading = true
-      const params = _.extend({}, this.pagingInfoForm, this.searchCriteriaForm)
+      const params = this.searchCriteriaForm
       api.getNotifications(params).then(
         response => {
           this.isLoading = false
@@ -243,23 +243,23 @@ export default {
       )
     },
     handlePaginationSizeChange (val) {
-      this.pagingInfoForm.pageSize = val
-      this.pagingInfoForm.pageNumber = 1
+      this.searchCriteriaForm.pagingInfo.pageSize = val
+      this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.getPage()
     },
     handlePaginationCurrentChange (val) {
-      this.pagingInfoForm.pageNumber = val
+      this.searchCriteriaForm.pagingInfo.pageNumber = val
       this.getPage()
     },
     handleSearchAll () {
-      this.pagingInfoForm.pageNumber = 1
+      this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.searchCriteriaForm.keyword = null
       this.searchCriteriaForm.creationDateBegin = null
       this.searchCriteriaForm.creationDateEnd = null
       this.getPage()
     },
     handleSearch () {
-      this.pagingInfoForm.pageNumber = 1
+      this.searchCriteriaForm.pagingInfo.pageNumber = 1
       if (
         this.searchCriteriaForm.creationDate &&
         this.searchCriteriaForm.creationDate.length === 2
@@ -304,15 +304,15 @@ export default {
     },
     deleteOne () {
       if (!this.deleteOneActive) return
-      this.delete([this.deleteOneActive.notificationID])
+      this.delete([this.deleteOneActive.notificationId])
     },
     deleteMultiple () {
-      this.delete(this.selection.map(m => m.notificationID))
+      this.delete(this.selection.map(m => m.notificationId))
     },
-    delete (notificationIDs) {
-      if (!notificationIDs || notificationIDs.length === 0) return
+    delete (notificationIds) {
+      if (!notificationIds || notificationIds.length === 0) return
       const params = {
-        notificationIDs: notificationIDs
+        notificationIds: notificationIds
       }
       this.isLoading = true
       api.deleteNotifications(params).then(
@@ -328,7 +328,7 @@ export default {
       )
     },
     handleReadOne (row) {
-      this.read([row.notificationID])
+      this.read([row.notificationId])
     },
     handleReadMultiple () {
       if (!this.selection || this.selection.length === 0) {
@@ -347,12 +347,12 @@ export default {
       }
     },
     readMultiple () {
-      this.read(this.selection.map(m => m.notificationID))
+      this.read(this.selection.map(m => m.notificationId))
     },
-    read (notificationIDs) {
-      if (!notificationIDs || notificationIDs.length === 0) return
+    read (notificationIds) {
+      if (!notificationIds || notificationIds.length === 0) return
       const params = {
-        notificationIDs: notificationIDs
+        notificationIds: notificationIds
       }
       // this.isLoading = true
       api.readNotifications(params).then(
@@ -361,8 +361,8 @@ export default {
           // 不重新获取数据，但设置 readTime 避免重复请求服务器
           // this.getPage()
           for (let item of this.page.list) {
-            for (let notificationID of notificationIDs) {
-              if (item.notificationID === notificationID) {
+            for (let notificationId of notificationIds) {
+              if (item.notificationId === notificationId) {
                 item.readTime = new Date()
                 continue
               }
@@ -388,10 +388,10 @@ export default {
       })
     },
     handleSortChange (val) {
-      this.pagingInfoForm.sortInfo.sort = val.prop
-      this.pagingInfoForm.sortInfo.sortDir =
+      this.searchCriteriaForm.pagingInfo.sortInfo.sort = val.prop
+      this.searchCriteriaForm.pagingInfo.sortInfo.sortDir =
         val.order === 'descending' ? 'DESC' : 'ASC'
-      this.pagingInfoForm.pageNumber = 1
+      this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.getPage()
     },
     handleSelectionChange (val) {

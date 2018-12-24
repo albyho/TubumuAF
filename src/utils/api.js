@@ -20,26 +20,14 @@ export default {
     return Vue.httpClient.get('/admin/getMenus')
   },
   // 系统管理
-  getServerInfo () {
-    return Vue.httpClient.get('/admin/getServerinfo')
-  },
-  getSiteConfig () {
-    return Vue.httpClient.get('/admin/getSiteconfig')
-  },
-  editSiteConfig (params) {
-    return Vue.httpClient.post('/admin/editSiteconfig', params)
-  },
   getBulletin () {
     return Vue.httpClient.get('/admin/getBulletin')
   },
   editBulletin (params) {
     return Vue.httpClient.post('/admin/editBulletin', params)
   },
-  getPermissions () {
-    return Vue.httpClient.get('/admin/getPermissions')
-  },
-  getModuleConfig () {
-    return Vue.httpClient.get('/admin/getModuleConfig')
+  getModulePermissions () {
+    return Vue.httpClient.get('/admin/getModulePermissions')
   },
   extractModulePermissions () {
     return Vue.httpClient.get('/admin/extractModulePermissions')

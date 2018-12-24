@@ -94,7 +94,7 @@ export default {
       formDialogVisible: false,     // 添加/编辑对话框是否可见
       form: {
         name: null,
-        permissionIDs: null
+        permissionIds: null
       },
       rules: {
         name: [
@@ -144,7 +144,7 @@ export default {
           const item = this.permissions[i]
           if (item.level === 1) {
             const node = {
-              id: item.permissionID,
+              id: item.permissionId,
               label: item.name
             }
             this.permissionTreeData.push(node)
@@ -161,12 +161,12 @@ export default {
     permissionTreeAddChildren (node, index) {
       for (let i = index + 1; i < this.permissions.length; i++) {
         const item = this.permissions[i]
-        if (item.parentID === node.id) {
+        if (item.parentId === node.id) {
           if (!node.children) {
             node.children = []
           }
           const child = {
-            id: item.permissionID,
+            id: item.permissionId,
             label: item.name
           }
           node.children.push(child)
@@ -203,7 +203,7 @@ export default {
     removeRole () {
       if (!this.removeActive) return
       const removeRoleParams = {
-        RoleID: this.removeActive.roleID
+        RoleId: this.removeActive.roleId
       }
       this.isLoading = true
       api.removeRole(removeRoleParams).then(response => {
@@ -235,7 +235,7 @@ export default {
       this.editActive = null
       this.formDialogVisible = true
       this.form.name = null
-      this.form.permissionIDs = null
+      this.form.permissionIds = null
       this.$nextTick(() => {
         this.$refs.permissionTree.setCheckedKeys([], true)
       })
@@ -245,9 +245,9 @@ export default {
       this.editActive = row
       this.formDialogVisible = true
       this.form.name = row.name
-      this.form.permissionIDs = row.permissions.map(m => m.permissionID)
+      this.form.permissionIds = row.permissions.map(m => m.permissionId)
       this.$nextTick(() => {
-        this.$refs.permissionTree.setCheckedKeys(this.form.permissionIDs, true)
+        this.$refs.permissionTree.setCheckedKeys(this.form.permissionIds, true)
       })
     },
     handleFormSure (sure) {
@@ -260,8 +260,8 @@ export default {
     },
     handlePermissionTreeCheckChange (data, checked, indeterminate) {
       // console.log(data, checked, indeterminate)
-      this.form.permissionIDs = this.$refs.permissionTree.getCheckedKeys()
-      // console.log(this.form.permissionIDs)
+      this.form.permissionIds = this.$refs.permissionTree.getCheckedKeys()
+      // console.log(this.form.permissionIds)
     },
     addRole () {
 

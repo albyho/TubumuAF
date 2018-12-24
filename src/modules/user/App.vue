@@ -30,7 +30,7 @@
               change-on-select
               filterable
               placeholder="分组"
-              v-model="searchCriteriaForm.groupIDPath" />
+              v-model="searchCriteriaForm.groupIdPath" />
           </el-form-item>
           <el-form-item>
             <xl-userStatusSelect v-model="searchCriteriaForm.status" />
@@ -69,28 +69,28 @@
           :empty-text="mainTableEmptyText"
           @sort-change="handleSortChange">
           <el-table-column
-            prop="UserID"
+            prop="userId"
             label="#"
             width="60"
             sortable="custom" />
           <el-table-column
-            prop="Username"
+            prop="username"
             label="用户名"
             width="160"
             sortable="custom" />
           <el-table-column
-            prop="Group.name"
+            prop="group.name"
             label="分组"
             width="160" />
           <el-table-column
             label="角色"
             width="100">
             <template slot-scope="scope">
-              <span>{{ scope.row.Role ? scope.row.Role.name : '' }}</span>
+              <span>{{ scope.row.role ? scope.row.role.name : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="DisplayName"
+            prop="displayName"
             label="昵称"
             width="100" />
           <el-table-column
@@ -99,8 +99,8 @@
             <template slot-scope="scope">
               <i
                 class="el-icon-question"
-                v-show="scope.row.RealName && !scope.row.RealNameIsValid" />
-              <span>{{ scope.row.RealName }}</span>
+                v-show="scope.row.realName && !scope.row.realNameIsValid" />
+              <span>{{ scope.row.realName }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -109,8 +109,8 @@
             <template slot-scope="scope">
               <i
                 class="el-icon-question"
-                v-show="scope.row.Mobile && !scope.row.MobileIsValid" />
-              <span>{{ scope.row.Mobile }}</span>
+                v-show="scope.row.mobile && !scope.row.mobileIsValid" />
+              <span>{{ scope.row.mobile }}</span>
             </template>
           </el-table-column>
           <el-table-column 
@@ -119,26 +119,26 @@
             <template slot-scope="scope">
               <i
                 class="el-icon-question"
-                v-show="scope.row.Email && !scope.row.EmailIsValid" />
-              <span>{{ scope.row.Email }}</span>
+                v-show="scope.row.email && !scope.row.emailIsValid" />
+              <span>{{ scope.row.email }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="StatusText"
+            prop="statusText"
             label="状态"
             width="60" />
           <el-table-column
-            prop="CreationDate"
+            prop="creationDate"
             label="创建时间"
             width="140" />
           <el-table-column label="开发" width="60">
             <template slot-scope="scope">
-              {{ scope.row.IsDeveloper ? '√' : '×' }}
+              {{ scope.row.isDeveloper ? '√' : '×' }}
             </template>
           </el-table-column>
           <el-table-column label="测试" width="60">
             <template slot-scope="scope">
-              {{ scope.row.IsTester ? '√' : '×' }}
+              {{ scope.row.isTester ? '√' : '×' }}
             </template>
           </el-table-column>
           <el-table-column
@@ -183,7 +183,7 @@
               name="first">
               <el-form-item
                 label="分组"
-                prop="groupIDPath">
+                prop="groupIdPath">
                 <el-cascader
                   :options="editGroupTreeData"
                   :props="editGroupTreeDefaultProps"
@@ -192,20 +192,20 @@
                   filterable
                   placeholder="请选择分组"
                   @change="handleGroupCascaderChange"
-                  v-model="mainForm.groupIDPath" />
+                  v-model="mainForm.groupIdPath" />
               </el-form-item>
               <el-form-item
                 label="角色"
-                prop="roleID">
+                prop="roleId">
                 <el-select
-                  v-model="mainForm.roleID"
+                  v-model="mainForm.roleId"
                   clearable
                   placeholder="请选择角色">
                   <el-option
                     v-for="role in editGroupRoleListData"
-                    :key="role.roleID"
+                    :key="role.roleId"
                     :label="role.name"
-                    :value="role.roleID" />
+                    :value="role.roleId" />
                 </el-select>
               </el-form-item>
               <el-form-item
@@ -281,30 +281,30 @@
               </el-form-item>
               <el-form-item
                 label="头像"
-                prop="headURL">
+                prop="headUrl">
                 <el-input
-                  ref="headURL"
-                  v-model.trim="mainForm.headURL"
+                  ref="headUrl"
+                  v-model.trim="mainForm.headUrl"
                   autocomplete="off"
-                  placeholder="请输入头像 URL">
+                  placeholder="请输入头像 Url">
                   <el-button
                     slot="append"
                     icon="el-icon-search"
-                    @click="handleChangeHeadURLBrowser" />
+                    @click="handleChangeHeadUrlBrowser" />
                 </el-input>
               </el-form-item>
               <el-form-item
                 label="Logo"
-                prop="logoURL">
+                prop="logoUrl">
                 <el-input
-                  ref="logoURL"
-                  v-model.trim="mainForm.logoURL"
+                  ref="logoUrl"
+                  v-model.trim="mainForm.logoUrl"
                   autocomplete="off"
-                  placeholder="请输入Logo URL">
+                  placeholder="请输入Logo Url">
                   <el-button
                     slot="append"
                     icon="el-icon-search"
-                    @click="handleChangeLogoURLBrowser" />
+                    @click="handleChangeLogoUrlBrowser" />
                 </el-input>
               </el-form-item>
               <el-form-item label="是否是开发人员">
@@ -334,11 +334,11 @@
               label="附加角色"
               name="third">
               <el-form-item label="附加角色">
-                <el-checkbox-group v-model="mainForm.roleIDs">
+                <el-checkbox-group v-model="mainForm.roleIds">
                   <el-checkbox
                     v-for="role in editRoleListData"
-                    :label="role.roleID"
-                    :key="role.roleID">{{ role.name }}</el-checkbox>
+                    :label="role.roleId"
+                    :key="role.roleId">{{ role.name }}</el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
             </el-tab-pane>
@@ -375,9 +375,9 @@
       <el-pagination
         @size-change="handlePaginationSizeChange"
         @current-change="handlePaginationCurrentChange"
-        :current-page="pagingInfoForm.pageNumber"
+        :current-page="searchCriteriaForm.pagingInfo.pageNumber"
         :page-sizes="[20, 50, 100, 200, 400]"
-        :page-size="pagingInfoForm.pageSize"
+        :page-size="searchCriteriaForm.pagingInfo.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="page.totalItemCount"
         v-if="page.totalItemCount" />
@@ -432,20 +432,20 @@ export default {
       isSearchCriteriaFormExpand: false,
       searchCriteriaForm: {
         keyword: null,
-        groupIDs: null,         // 服务器期待一个数组
+        groupIds: null,         // 服务器期待一个数组
         creationDate: null,
         creationDateBegin: null,
         creationDateEnd: null,
         status: null,
-        groupIDPath: []
-      },
-      pagingInfoForm: {
-        pageNumber: 1,
-        pageSize: 20,
-        isExcludeMetaData: false,
-        sortInfo: {
-          sort: 'UserID',
-          sortDir: 'ASC'
+        groupIdPath: [],
+        pagingInfo: {
+          pageNumber: 1,
+          pageSize: 20,
+          isExcludeMetaData: false,
+          sortInfo: {
+            sort: 'userId',
+            sortDir: 'ASC'
+          }
         }
       },
       // 删除
@@ -455,7 +455,7 @@ export default {
       editActive: null,                   // 暂存编辑项，也可用来判断是否添加还是编辑
       mainFormDialogVisible: false,       // 添加/编辑对话框是否可见
       mainForm: {
-        userID: null,                     // Int
+        userId: null,                     // Int
         status: null,                     // Int
         username: null,                   // String
         displayName: null,                // String
@@ -465,17 +465,17 @@ export default {
         emailIsValid: false,              // bool
         mobile: null,                     // String
         mobileIsValid: false,             // bool
-        groupIDPath: [],                  // Array 不能设置为 null。给 cascader 组件使用。
-        groupID: null,                    // String
-        groupIDs: [],                     // Array 不能设置为 null
-        roleID: null,                     // String
-        roleIDs: [],                      // Array 不能设置为 null
-        permissionIDs: null,              // Array
+        groupIdPath: [],                  // Array 不能设置为 null。给 cascader 组件使用。
+        groupId: null,                    // String
+        groupIds: [],                     // Array 不能设置为 null
+        roleId: null,                     // String
+        roleIds: [],                      // Array 不能设置为 null
+        permissionIds: null,              // Array
         password: null,                   // String
         passwordConfirm: null,            // String
         description: null,                // String
-        headURL: null,                    // String
-        logoURL: null,                    // String
+        headUrl: null,                    // String
+        logoUrl: null,                    // String
         isDeveloper: false,               // bool
         isTester: false                   // bool
       },
@@ -496,7 +496,7 @@ export default {
         email: [
           { pattern: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/, message: '请输入正确的邮箱', trigger: 'blur' }
         ],
-        groupIDPath: [
+        groupIdPath: [
           { required: true, type: 'array', message: '请选择分组', trigger: 'change' }
         ],
         password: [
@@ -538,7 +538,7 @@ export default {
   methods: {
     getPage () {
       this.isLoading = true
-      const params = _.extend({}, this.pagingInfoForm, this.searchCriteriaForm)
+      const params = this.searchCriteriaForm
       api.getUsers(params).then(response => {
         this.isLoading = false
         this.page = response.data.page
@@ -548,12 +548,12 @@ export default {
       })
     },
     handlePaginationSizeChange (val) {
-      this.pagingInfoForm.pageSize = val
-      this.pagingInfoForm.pageNumber = 1
+      this.searchCriteriaForm.pagingInfo.pageSize = val
+      this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.getPage()
     },
     handlePaginationCurrentChange (val) {
-      this.pagingInfoForm.pageNumber = val
+      this.searchCriteriaForm.pagingInfo.pageNumber = val
       this.getPage()
     },
     getGroupTree () {
@@ -578,24 +578,24 @@ export default {
       })
     },
     handleSearchAll () {
-      this.pagingInfoForm.pageNumber = 1
+      this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.searchCriteriaForm.keyword = null
-      this.searchCriteriaForm.groupIDs = null
+      this.searchCriteriaForm.groupIds = null
       this.searchCriteriaForm.creationDate = null
       this.searchCriteriaForm.creationDateBegin = null
       this.searchCriteriaForm.creationDateEnd = null
       this.searchCriteriaForm.status = null
-      this.searchCriteriaForm.groupIDPath = []
+      this.searchCriteriaForm.groupIdPath = []
       this.getPage()
     },
     handleSearch () {
-      this.pagingInfoForm.pageNumber = 1
+      this.searchCriteriaForm.pagingInfo.pageNumber = 1
       if (this.searchCriteriaForm.creationDate && this.searchCriteriaForm.creationDate.length === 2) {
         this.searchCriteriaForm.creationDateBegin = this.searchCriteriaForm.creationDate[0]
         this.searchCriteriaForm.creationDateEnd = this.searchCriteriaForm.creationDate[1]
       }
-      this.searchCriteriaForm.groupIDs = this.searchCriteriaForm.groupIDPath && this.searchCriteriaForm.groupIDPath.length
-          ? [this.searchCriteriaForm.groupIDPath[this.searchCriteriaForm.groupIDPath.length - 1]]
+      this.searchCriteriaForm.groupIds = this.searchCriteriaForm.groupIdPath && this.searchCriteriaForm.groupIdPath.length
+          ? [this.searchCriteriaForm.groupIdPath[this.searchCriteriaForm.groupIdPath.length - 1]]
           : null
       this.getPage()
     },
@@ -606,7 +606,7 @@ export default {
       this.activeTabName = 'first'
       this.editActive = null
       this.mainFormDialogVisible = true
-      this.mainForm.userID = null
+      this.mainForm.userId = null
       this.mainForm.status = 'Normal'            // 默认 正常
       this.mainForm.username = null
       this.mainForm.displayName = null
@@ -616,18 +616,18 @@ export default {
       this.mainForm.emailIsValid = false
       this.mainForm.mobile = null
       this.mainForm.mobileIsValid = false
-      this.mainForm.groupIDPath = []
-      this.mainForm.groupID = null
-      this.mainForm.groupIDs = []               // 不能设置为 null
-      this.mainForm.roleID = null
+      this.mainForm.groupIdPath = []
+      this.mainForm.groupId = null
+      this.mainForm.groupIds = []               // 不能设置为 null
+      this.mainForm.roleId = null
       this.editGroupRoleListData = []
-      this.mainForm.roleIDs = []                // 不能设置为 null
-      this.mainForm.permissionIDs = null
+      this.mainForm.roleIds = []                // 不能设置为 null
+      this.mainForm.permissionIds = null
       this.mainForm.password = null
       this.mainForm.passwordConfirm = null
       this.mainForm.description = null
-      this.mainForm.headURL = null
-      this.mainForm.logoURL = null
+      this.mainForm.headUrl = null
+      this.mainForm.logoUrl = null
       this.mainForm.isDeveloper = false
       this.mainForm.isTester = false
       this.$nextTick(() => {
@@ -644,33 +644,33 @@ export default {
       this.activeTabName = 'first'
       this.editActive = row
       this.mainFormDialogVisible = true
-      this.mainForm.userID = row.UserID
-      this.mainForm.status = row.Status            // 默认 正常
-      this.mainForm.username = row.Username
-      this.mainForm.displayName = row.DisplayName
-      this.mainForm.realName = row.RealName
-      this.mainForm.realNameIsValid = row.RealNameIsValid
-      this.mainForm.email = row.Email
-      this.mainForm.emailIsValid = row.EmailIsValid
-      this.mainForm.mobile = row.Mobile
-      this.mainForm.mobileIsValid = row.MobileIsValid
-      this.getGroupIDPath(this.editGroupTreeData, row.Group.groupID)
-      this.mainForm.groupID = row.Group.groupID
-      this.mainForm.groupIDs = row.Groups.map(m => m.groupID)
-      this.mainForm.roleID = row.Role ? row.Role.roleID : null
-      this.getGroupAvailableRoles(this.editGroupTreeData, row.Group.groupID)
-      this.mainForm.roleIDs = row.Roles.map(m => m.roleID)
-      this.mainForm.permissionIDs = row.Permissions.map(m => m.permissionID)
+      this.mainForm.userId = row.userId
+      this.mainForm.status = row.status            // 默认 正常
+      this.mainForm.username = row.username
+      this.mainForm.displayName = row.displayName
+      this.mainForm.realName = row.realName
+      this.mainForm.realNameIsValid = row.realNameIsValid
+      this.mainForm.email = row.email
+      this.mainForm.emailIsValid = row.emailIsValid
+      this.mainForm.mobile = row.mobile
+      this.mainForm.mobileIsValid = row.mobileIsValid
+      this.getGroupIdPath(this.editGroupTreeData, row.group.groupId)
+      this.mainForm.groupId = row.group.groupId
+      this.mainForm.groupIds = row.groups.map(m => m.groupId)
+      this.mainForm.roleId = row.role ? row.role.roleId : null
+      this.getGroupAvailableRoles(this.editGroupTreeData, row.group.groupId)
+      this.mainForm.roleIds = row.roles.map(m => m.roleId)
+      this.mainForm.permissionIds = row.permissions.map(m => m.permissionId)
       this.mainForm.password = null
       this.mainForm.passwordConfirm = null
-      this.mainForm.description = row.Description
-      this.mainForm.headURL = row.HeadURL
-      this.mainForm.logoURL = row.LogoURL
-      this.mainForm.isDeveloper = row.IsDeveloper
-      this.mainForm.isTester = row.IsTester
+      this.mainForm.description = row.description
+      this.mainForm.headUrl = row.headUrl
+      this.mainForm.logoUrl = row.logoUrl
+      this.mainForm.isDeveloper = row.isDeveloper
+      this.mainForm.isTester = row.isTester
       this.$nextTick(() => {
-        this.$refs.editGroupTree.setCheckedKeys(this.mainForm.groupIDs, true)
-        this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIDs, true)
+        this.$refs.editGroupTree.setCheckedKeys(this.mainForm.groupIds, true)
+        this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIds, true)
         this.clearValidate('mainForm')
       })
     },
@@ -702,7 +702,7 @@ export default {
     },
     handleGroupCascaderChange (value) {
       console.log(value)
-      this.mainForm.roleID = null
+      this.mainForm.roleId = null
       this.editGroupRoleListData = []
       if (value.length === 0) return
       this.getGroupAvailableRoles(this.editGroupTreeData, value[value.length - 1])
@@ -711,7 +711,7 @@ export default {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
-        this.mainForm.groupID = this.mainForm.groupIDPath[this.mainForm.groupIDPath.length - 1]
+        this.mainForm.groupId = this.mainForm.groupIdPath[this.mainForm.groupIdPath.length - 1]
         const params = _.cloneDeep(this.mainForm)
         if (this.params.password) {
           params.password = md5(params.password)
@@ -737,7 +737,7 @@ export default {
       this.$refs.mainForm.validate(valid => {
         if (!valid) return false // 客户端校验未通过
         this.isLoading = true
-        this.mainForm.groupID = this.mainForm.groupIDPath[this.mainForm.groupIDPath.length - 1]
+        this.mainForm.groupId = this.mainForm.groupIdPath[this.mainForm.groupIdPath.length - 1]
         const params = _.cloneDeep(this.mainForm)
         if (params.password) {
           params.password = md5(params.password)
@@ -759,7 +759,7 @@ export default {
     remove () {
       if (!this.removeActive) return
       const params = {
-        userID: this.removeActive.UserID
+        userId: this.removeActive.userId
       }
       this.isLoading = true
       api.removeUser(params).then(response => {
@@ -788,23 +788,23 @@ export default {
     },
     handleGroupTreeCheckChange (data, checked, indeterminate) {
       // console.log(data, checked, indeterminate)
-      this.mainForm.groupIDs = this.$refs.editGroupTree.getCheckedKeys()
-      // console.log(this.mainForm.permissionIDs)
+      this.mainForm.groupIds = this.$refs.editGroupTree.getCheckedKeys()
+      // console.log(this.mainForm.permissionIds)
     },
     handlePermissionTreeCheckChange (data, checked, indeterminate) {
       // console.log(data, checked, indeterminate)
-      this.mainForm.permissionIDs = this.$refs.editPermissionTree.getCheckedKeys()
-      // console.log(this.mainForm.permissionIDs)
+      this.mainForm.permissionIds = this.$refs.editPermissionTree.getCheckedKeys()
+      // console.log(this.mainForm.permissionIds)
     },
-    getGroupIDPath (tree, id) {
+    getGroupIdPath (tree, id) {
       if (!tree) return
       for (let node of tree) {
         if (node.id === id) {
-          this.mainForm.groupIDPath = node.parentIDPath ? node.parentIDPath.concat() : []
-          this.mainForm.groupIDPath.push(id)
+          this.mainForm.groupIdPath = node.parentIdPath ? node.parentIdPath.concat() : []
+          this.mainForm.groupIdPath.push(id)
           break
         } else {
-          this.getGroupIDPath(node.children, id)
+          this.getGroupIdPath(node.children, id)
         }
       }
     },
@@ -833,16 +833,16 @@ export default {
       })
     },
     handleSortChange (val) {
-      this.pagingInfoForm.sortInfo.sort = val.prop
-      this.pagingInfoForm.sortInfo.sortDir = val.order === 'descending' ? 'DESC' : 'ASC'
-      this.pagingInfoForm.pageNumber = 1
+      this.searchCriteriaForm.pagingInfo.sortInfo.sort = val.prop
+      this.searchCriteriaForm.pagingInfo.sortInfo.sortDir = val.order === 'descending' ? 'DESC' : 'ASC'
+      this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.getPage()
     },
-    handleChangeHeadURLBrowser () {
-      this.popupCKFinder('headURL')
+    handleChangeHeadUrlBrowser () {
+      this.popupCKFinder('headUrl')
     },
-    handleChangeLogoURLBrowser () {
-      this.popupCKFinder('logoURL')
+    handleChangeLogoUrlBrowser () {
+      this.popupCKFinder('logoUrl')
     },
     popupCKFinder (name) {
       const _this = this

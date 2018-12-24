@@ -12,14 +12,14 @@
           <el-form-item label="昵称" prop="displayName">
             <el-input ref="displayName" v-model.trim="changeProfileForm.displayName" auto-complete="off" placeholder="请输入昵称" />
           </el-form-item>
-          <el-form-item label="头像" prop="headURL">
-            <el-input ref="headURL" v-model.trim="changeProfileForm.headURL" auto-complete="off" placeholder="请输入头像 URL">
-              <el-button slot="append" icon="el-icon-search" @click="handleChangeHeadURLBrowser" />
+          <el-form-item label="头像" prop="headUrl">
+            <el-input ref="headUrl" v-model.trim="changeProfileForm.headUrl" auto-complete="off" placeholder="请输入头像 Url">
+              <el-button slot="append" icon="el-icon-search" @click="handleChangeHeadUrlBrowser" />
             </el-input>
           </el-form-item>
-          <el-form-item label="Logo" prop="logoURL">
-            <el-input v-model.trim="changeProfileForm.logoURL" auto-complete="off" placeholder="请输入Logo URL" ref="logoURL">
-              <el-button slot="append" icon="el-icon-search" @click="handleChangeLogoURLBrowser" />
+          <el-form-item label="Logo" prop="logoUrl">
+            <el-input v-model.trim="changeProfileForm.logoUrl" auto-complete="off" placeholder="请输入Logo Url" ref="logoUrl">
+              <el-button slot="append" icon="el-icon-search" @click="handleChangeLogoUrlBrowser" />
             </el-input>
           </el-form-item>
           <el-form-item>
@@ -59,8 +59,8 @@ export default {
       activeTabName: 'first',
       changeProfileForm: {
         displayName: null,
-        headURL: null,
-        logoURL: null
+        headUrl: null,
+        logoUrl: null
       },
       changeProfileFormRules: {
         displayName: [{
@@ -152,8 +152,8 @@ export default {
         this.isLoading = false
         const profile = response.data.profile
         this.changeProfileForm.displayName = profile.displayName
-        this.changeProfileForm.headURL = profile.headURL
-        this.changeProfileForm.logoURL = profile.logoURL
+        this.changeProfileForm.headUrl = profile.headUrl
+        this.changeProfileForm.logoUrl = profile.logoUrl
       }, error => {
         this.isLoading = false
         this.showErrorMessage(error.message)
@@ -200,11 +200,11 @@ export default {
         })
       })
     },
-    handleChangeHeadURLBrowser () {
-      this.popupCKFinder('headURL')
+    handleChangeHeadUrlBrowser () {
+      this.popupCKFinder('headUrl')
     },
-    handleChangeLogoURLBrowser () {
-      this.popupCKFinder('logoURL')
+    handleChangeLogoUrlBrowser () {
+      this.popupCKFinder('logoUrl')
     },
     popupCKFinder (name) {
       const _this = this
