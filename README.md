@@ -1,6 +1,6 @@
-# Tubumu Admin Fronted
+# Tubumu Admin Frontend
 
-> Tubumu Admin Fronted
+> Tubumu Admin Frontend
 
 ## Build Setup
 
