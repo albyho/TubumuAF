@@ -1,6 +1,6 @@
-# AT
+# Tubumu Admin Template
 
-> The Admin Template
+> Tubumu Admin Template
 
 ## Build Setup
 
