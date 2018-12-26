@@ -1,7 +1,7 @@
 {
-  "name": "tubumuat",
+  "name": "tubumuaf",
   "version": "1.0.0",
-  "description": "The Tubumu Admin Template",
+  "description": "The Tubumu Admin Frontend",
   "author": "alby <alby@foxmail.com>",
   "private": true,
   "scripts": {

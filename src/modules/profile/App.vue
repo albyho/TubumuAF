@@ -150,7 +150,7 @@ export default {
       this.isLoading = true
       api.getProfile().then(response => {
         this.isLoading = false
-        const profile = response.data.profile
+        const profile = response.item.profile
         this.changeProfileForm.displayName = profile.displayName
         this.changeProfileForm.headUrl = profile.headUrl
         this.changeProfileForm.logoUrl = profile.logoUrl
@@ -201,12 +201,12 @@ export default {
       })
     },
     handleChangeHeadUrlBrowser () {
-      this.popupCKFinder('headUrl')
+      this.popupFileManager('headUrl')
     },
     handleChangeLogoUrlBrowser () {
-      this.popupCKFinder('logoUrl')
+      this.popupFileManager('logoUrl')
     },
-    popupCKFinder (name) {
+    popupFileManager (name) {
       const _this = this
       try {
         /* eslint-disable no-undef */

@@ -369,6 +369,26 @@
             @click="handleMainFormSure(true)">确 定</el-button>
         </div>
       </el-dialog>
+      <el-dialog
+        :visible.sync="fileManagerDialogVisible"
+        @submit.native.prevent
+        :close-on-click-modal="false"
+        width="800px">
+        <span slot="title">
+          {{ '选择图片' }}
+        </span>
+        <iframe
+        :src="fileManagerUrl"
+        class="el-main-content"
+        scrolling="no" frameBorder="0" width="760" height="560" />
+        <div
+          slot="footer"
+          class="dialog-footer">
+          <el-button
+            type="primary"
+            @click="handleCloseFileManager()">关 闭</el-button>
+        </div>
+      </el-dialog>
     </el-main>
     <el-footer class="footer">
       <el-pagination
@@ -517,7 +537,11 @@ export default {
         children: 'children',
         value: 'id',
         label: 'name'
-      }
+      },
+      // 图片选择器
+      fileManagerDialogVisible: false,
+      fileManagerUrlFormat: 'http://localhost:5000/lib/fileman/index.html?integration=custom&noselect=true&field=',
+      fileManagerUrl: null
     }
   },
   mounted () {
@@ -837,33 +861,20 @@ export default {
       this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.getPage()
     },
-    handleChangeHeadURLBrowser () {
-      this.popupFileManager('headURL')
+    handleCloseFileManager () {
+      this.fileManagerDialogVisible = false
     },
-    handleChangeLogoURLBrowser () {
-      this.popupFileManager('logoURL')
+    handleChangeHeadUrlBrowser () {
+      this.fileManagerUrlFileld = 'headUrl'
+      this.popupFileManager()
+    },
+    handleChangeLogoUrlBrowser () {
+      this.fileManagerUrlFileld = 'logoUrl'
+      this.popupFileManager()
     },
     popupFileManager (name) {
-      const _this = this
-      try {
-        /* eslint-disable no-undef */
-        CKFinder.popup({
-          chooseFiles: true,
-          width: 800,
-          height: 600,
-          onInit: function (finder) {
-            finder.on('files:choose', function (evt) {
-              const file = evt.data.files.first()
-              _this.mainForm[name] = file.getUrl()
-            })
-            finder.on('file:choose:resizedImage', function (evt) {
-              _this.mainForm[name] = evt.data.resizedUrl
-            })
-          }
-        })
-      } catch (e) {
-        console.log(e.message)
-      }
+      this.fileManagerUrl = this.fileManagerUrlFormat + this.fileManagerUrlFileld
+      this.fileManagerDialogVisible = true
     }
   }
 }
