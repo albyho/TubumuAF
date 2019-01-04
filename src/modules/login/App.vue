@@ -110,7 +110,7 @@ export default {
         api.login(params).then(response => {
           // this.isLoading = false
           // httpClient 对 response.data.url 有拦截处理
-          localStorage.token = response.data.token
+          // httpClient 对 response.data.token 有拦截处理
         }, error => {
           this.isLoading = false
           this.showErrorMessage(error.message)

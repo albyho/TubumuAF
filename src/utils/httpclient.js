@@ -111,9 +111,13 @@ httpClient.interceptors.response.use(
     if (json) {
       if (json.url) {
         top.location = json.url
+        return
       } else if (json.code !== SuccessCode) {
         console.log(json)
         return Promise.reject(new ApiError(json.message))
+      }
+      if (json.token) {
+        localStorage.token = json.token
       }
     }
 
