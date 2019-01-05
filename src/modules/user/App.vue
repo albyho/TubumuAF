@@ -182,7 +182,7 @@
               label="基本信息"
               name="first">
               <el-form-item
-                label="分组"
+                label="主要分组"
                 prop="groupIdPath">
                 <el-cascader
                   :options="editGroupTreeData"
@@ -190,17 +190,17 @@
                   clearable
                   change-on-select
                   filterable
-                  placeholder="请选择分组"
+                  placeholder="请选择主要分组"
                   @change="handleGroupCascaderChange"
                   v-model="mainForm.groupIdPath" />
               </el-form-item>
               <el-form-item
-                label="角色"
+                label="主要角色"
                 prop="roleId">
                 <el-select
                   v-model="mainForm.roleId"
                   clearable
-                  placeholder="请选择角色">
+                  placeholder="请选择主要角色">
                   <el-option
                     v-for="role in editGroupRoleListData"
                     :key="role.roleId"
@@ -496,7 +496,7 @@ export default {
           { pattern: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/, message: '请输入正确的邮箱', trigger: 'blur' }
         ],
         groupIdPath: [
-          { required: true, type: 'array', message: '请选择分组', trigger: 'change' }
+          { required: true, type: 'array', message: '请选择主要分组', trigger: 'change' }
         ],
         password: [
           { validator: validatePassord, trigger: 'blur' }
