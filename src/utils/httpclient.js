@@ -109,6 +109,12 @@ httpClient.interceptors.response.use(
     }
 
     if (json) {
+      if (json.token) {
+        localStorage.token = json.token
+      }
+      if (json.refreshToken) {
+        localStorage.refreshToken = json.refreshToken
+      }
       if (json.url) {
         top.location = json.url
         return
@@ -116,15 +122,23 @@ httpClient.interceptors.response.use(
         console.log(json)
         return Promise.reject(new ApiError(json.message))
       }
-      if (json.token) {
-        localStorage.token = json.token
-      }
     }
 
     return response
   },
   error => {
-    // 返回 response 里的错误信息
+    console.log(error.response.headers)
+    if (error.response.status === 401) {
+      if (error.response.headers['token-expired'] && localStorage.token && localStorage.refreshToken) {
+        console.log('Refresh Token')
+        const params = {
+          token: localStorage.token,
+          refreshToken: localStorage.refreshToken
+        }
+        httpClient.post('/admin/refreshToken', params)
+        return Promise.reject(new ApiError('Token 刷新，请重试', ErrorType.Sysetem, error))
+      }
+    }
     return Promise.reject(new ApiError(error.message, ErrorType.Sysetem, error))
   }
 )

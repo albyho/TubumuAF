@@ -4,6 +4,9 @@ export default {
   login (params) {
     return Vue.httpClient.post('/admin/login', params)
   },
+  refreshToken (params) {
+    return Vue.httpClient.post('/admin/refreshToken', params)
+  },
   logout () {
     return Vue.httpClient.post('/admin/logout')
   },
