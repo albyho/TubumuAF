@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
-import { baseURL } from './config.js'
+import { baseUrl } from './config.js'
 
 const SuccessCode = 200
 
@@ -40,7 +40,7 @@ function transformData (data, headers) {
 */
 
 const httpClient = axios.create({
-  baseURL: baseURL,
+  baseURL: baseUrl,
   timeout: 20000,
   // 响应的数据格式 json / blob / document / arraybuffer / text / stream
   responseType: 'json',
@@ -135,8 +135,10 @@ httpClient.interceptors.response.use(
           token: localStorage.token,
           refreshToken: localStorage.refreshToken
         }
+        localStorage.removeItem('token')
+        localStorage.removeItem('refreshToken')
         httpClient.post('/admin/refreshToken', params)
-        return Promise.reject(new ApiError('Token 刷新，请重试', ErrorType.Sysetem, error))
+        return Promise.reject(new ApiError('登录超时，自动登录中......', ErrorType.Sysetem, error))
       }
     }
     return Promise.reject(new ApiError(error.message, ErrorType.Sysetem, error))

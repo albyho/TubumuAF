@@ -837,11 +837,11 @@ export default {
       this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.getPage()
     },
-    handleChangeHeadURLBrowser () {
-      this.popupFileManager('headURL')
+    handleChangeHeadUrlBrowser () {
+      this.popupFileManager('headUrl')
     },
-    handleChangeLogoURLBrowser () {
-      this.popupFileManager('logoURL')
+    handleChangeLogoUrlBrowser () {
+      this.popupFileManager('logoUrl')
     },
     popupFileManager (name) {
       const _this = this

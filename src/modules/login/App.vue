@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { baseURL, defaultAccount, defaultPassword } from '@/utils/config'
+import { baseUrl, defaultAccount, defaultPassword } from '@/utils/config'
 import _ from 'lodash'
 import api from '@/utils/api'
 import md5 from 'js-md5'
@@ -67,7 +67,7 @@ export default {
   data () {
     return {
       isLoading: false,
-      refreshValidationCodeUrlBase: baseURL + '/Admin/GetValidationCode',
+      refreshValidationCodeUrlBase: baseUrl + '/Admin/GetValidationCode',
       refreshValidationCodeUrl: null,
       mainForm: {
         account: defaultAccount,
