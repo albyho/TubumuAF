@@ -144,6 +144,7 @@ export default {
         // this.isLoading = false
         // httpClient 对 response.data.url 有拦截处理
         localStorage.removeItem('token')
+        localStorage.removeItem('refreshToken')
       }, error => {
         // console.log(error)
         this.isLoading = false
