@@ -150,7 +150,7 @@ export default {
       this.isLoading = true
       api.getProfile().then(response => {
         this.isLoading = false
-        const profile = response.item.profile
+        const profile = response.data.item
         this.changeProfileForm.displayName = profile.displayName
         this.changeProfileForm.headUrl = profile.headUrl
         this.changeProfileForm.logoUrl = profile.logoUrl
