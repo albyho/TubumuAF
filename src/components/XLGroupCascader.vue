@@ -4,10 +4,9 @@
     :props="defaultProps"
     clearable
     filterable
-    placeholder="选择分组"
+    placeholder="请选择分组"
     change-on-select
     @change="handleChange"
-    @active-item-change="handleActiveItemChange"
     v-model="currentValue" />
 </template>
 
@@ -24,7 +23,8 @@ export default {
   data () {
     return {
       currentValue: this.value,
-      treeData: [],                       // 用于搜索 cascader / 编辑对话框内显示的分组树
+      tempValue: [],                      // 用于根据最后的子节点 id 和树生成路径 id
+      treeData: [],
       defaultProps: {
         children: 'children',
         value: 'id',
@@ -46,7 +46,12 @@ export default {
   methods: {
     getGroupTree () {
       api.getGroupTree().then(response => {
-        this.treeData = response.data.tree
+        const tree = response.data.tree
+        this.treeData = tree
+        if (this.currentValue && this.currentValue.length === 1) {
+          this.getIdPath(tree, this.currentValue[0])
+          this.currentValue = this.tempValue
+        }
       }, error => {
         this.$message({
           message: error.message,
@@ -54,11 +59,20 @@ export default {
         })
       })
     },
+    getIdPath (tree, id) {
+      if (!tree) return
+      for (let node of tree) {
+        if (node.id === id) {
+          this.tempValue = node.parentIdPath ? node.parentIdPath.concat() : []
+          this.tempValue.push(id)
+          break
+        } else {
+          this.getIdPath(node.children, id)
+        }
+      }
+    },
     handleChange (value) {
       this.$emit('change', value)
-    },
-    handleActiveItemChange (value) {
-      this.$emit('active-item-change', value)
     }
   }
 }

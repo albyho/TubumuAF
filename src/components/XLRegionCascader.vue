@@ -61,7 +61,7 @@ export default {
       if (this.currentValue && this.currentValue.length > 0) {
         this.getRegiontParentTree(this.currentValue[this.currentValue.length - 1])
       } else if (!this.treeData || this.treeData.length === 0) {
-        this.getRegiontTreeNodeList(null)
+        this.getRegiontTreeChildNodeList(null)
       }
     },
     getRegiontParentTree (regionId) {
@@ -73,15 +73,15 @@ export default {
         const tree = response.data.tree
         this.fixChildren(tree)
         this.treeData = tree
-        this.getRegionIdPath(tree, regionId)
+        this.getIdPath(tree, regionId)
         console.log('RegionCascader: getRegiontParentTree', this.tempValue)
         this.currentValue = this.tempValue
       }, error => {
         this.showErrorMessage(error.message)
       })
     },
-    getRegiontTreeNodeList (parentId) {
-      console.log('RegionCascader: getRegiontTreeNodeList', parentId)
+    getRegiontTreeChildNodeList (parentId) {
+      console.log('RegionCascader: getRegiontTreeChildNodeList', parentId)
       let currentNode
       if (parentId && this.treeData && this.treeData.length > 0) {
         currentNode = this.findNode(this.treeData, parentId)
@@ -101,7 +101,7 @@ export default {
       const params = {
         parentId: parentId
       }
-      api.getRegiontTreeNodeList(params).then(response => {
+      api.getRegiontTreeChildNodeList(params).then(response => {
         let list = response.data.list
         this.fixChildren(list)
         if (!parentId) {
@@ -140,7 +140,7 @@ export default {
       }
       return node
     },
-    getRegionIdPath (tree, id) {
+    getIdPath (tree, id) {
       if (!tree) return
       for (let node of tree) {
         if (node.id === id) {
@@ -148,13 +148,13 @@ export default {
           this.tempValue.push(id)
           break
         } else {
-          this.getRegionIdPath(node.children, id)
+          this.getIdPath(node.children, id)
         }
       }
     },
     handleActiveItemChange (value) {
       console.log('RegionCascader: handleActiveItemChange:', value)
-      this.getRegiontTreeNodeList(value[value.length - 1])
+      this.getRegiontTreeChildNodeList(value[value.length - 1])
       this.$emit('active-item-change', value)
       this.$emit('input', value)
     },
