@@ -523,7 +523,7 @@ export default {
   mounted () {
     this.getPage()
     this.getGroupTree()
-    this.getRoleBases()
+    this.getRoleBaseList()
     this.getPermissionTree()
   },
   computed: {
@@ -538,7 +538,7 @@ export default {
     getPage () {
       this.isLoading = true
       const params = this.searchCriteriaForm
-      api.getUsers(params).then(response => {
+      api.getUserPage(params).then(response => {
         this.isLoading = false
         this.page = response.data.page
       }, error => {
@@ -562,8 +562,8 @@ export default {
         this.showErrorMessage(error.message)
       })
     },
-    getRoleBases () {
-      api.getRoleBases().then(response => {
+    getRoleBaseList () {
+      api.getRoleBaseList().then(response => {
         this.editRoleListData = response.data.list
       }, error => {
         this.showErrorMessage(error.message)

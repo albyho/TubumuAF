@@ -264,7 +264,7 @@ export default {
   },
   mounted () {
     this.getTree()
-    this.getRoleBases()
+    this.getRoleBaseList()
     this.getPermissionTree()
   },
   computed: {
@@ -294,8 +294,8 @@ export default {
       }
       return data.name.indexOf(value) !== -1
     },
-    getRoleBases () {
-      api.getRoleBases().then(response => {
+    getRoleBaseList () {
+      api.getRoleBaseList().then(response => {
         this.editRoleListData = response.data.list
       }, error => {
         this.showErrorMessage(error.message)

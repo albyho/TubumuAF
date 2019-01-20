@@ -29,8 +29,8 @@ export default {
   editBulletin (params) {
     return Vue.httpClient.post('/admin/editBulletin', params)
   },
-  getModulePermissions () {
-    return Vue.httpClient.get('/admin/getModulePermissions')
+  getModuleMetaDatas () {
+    return Vue.httpClient.get('/admin/getModuleMetaDatas')
   },
   extractModuleMetaDatas () {
     return Vue.httpClient.get('/admin/extractModuleMetaDatas')
@@ -39,8 +39,8 @@ export default {
     return Vue.httpClient.get('/admin/clearModulePermissions')
   },
   // 角色
-  getRoles () {
-    return Vue.httpClient.get('/admin/getRoles')
+  getRoleList () {
+    return Vue.httpClient.get('/admin/getRoleList')
   },
   addRole (params) {
     return Vue.httpClient.post('/admin/addRole', params)
@@ -74,9 +74,9 @@ export default {
     return Vue.httpClient.post('/admin/moveGroup', params)
   },
   // 用户
-  getUsers (params) {
-    // return Vue.httpClient.get('/admin/getUsers', { params: params })
-    return Vue.httpClient.post('/admin/getUsers', params)
+  getUserPage (params) {
+    // return Vue.httpClient.get('/admin/getUserPage', { params: params })
+    return Vue.httpClient.post('/admin/getUserPage', params)
   },
   addUser (params) {
     return Vue.httpClient.post('/admin/addUser', params)
@@ -87,8 +87,8 @@ export default {
   removeUser (params) {
     return Vue.httpClient.post('/admin/removeUser', params)
   },
-  getUserStatus () {
-    return Vue.httpClient.get('/admin/getUserStatus')
+  getUserStatuList () {
+    return Vue.httpClient.get('/admin/getUserStatuList')
   },
   // 通知
   getNotificationsForManager (params) {
@@ -116,12 +116,12 @@ export default {
     return Vue.httpClient.post('/admin/getNewestNotification', params)
   },
   // 暂未使用
-  getGroups () {
-    return Vue.httpClient.get('/admin/getGroups')
+  getGroupList () {
+    return Vue.httpClient.get('/admin/getGroupList')
   },
   // 基础数据
-  getRoleBases () {
-    return Vue.httpClient.get('/admin/getRoleBases')
+  getRoleBaseList () {
+    return Vue.httpClient.get('/admin/getRoleBaseList')
   },
   getPermissionTree () {
     return Vue.httpClient.get('/admin/getPermissionTree')

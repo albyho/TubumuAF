@@ -109,7 +109,7 @@ export default {
   methods: {
     getList () {
       this.isLoading = true
-      api.getRoles().then(response => {
+      api.getRoleList().then(response => {
         this.isLoading = false
         this.list = response.data.list
         this.$nextTick(() => {
