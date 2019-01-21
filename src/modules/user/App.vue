@@ -629,6 +629,7 @@ export default {
       this.mainForm.logoUrl = null
       this.mainForm.isDeveloper = false
       this.mainForm.isTester = false
+      
       this.$nextTick(() => {
         this.$refs.editGroupTree.setCheckedKeys([], true)
         this.$refs.editPermissionTree.setCheckedKeys([], true)
@@ -667,6 +668,7 @@ export default {
       this.mainForm.logoUrl = row.logoUrl
       this.mainForm.isDeveloper = row.isDeveloper
       this.mainForm.isTester = row.isTester
+
       this.$nextTick(() => {
         this.$refs.editGroupTree.setCheckedKeys(this.mainForm.groupIds, true)
         this.$refs.editPermissionTree.setCheckedKeys(this.mainForm.permissionIds, true)
@@ -788,7 +790,7 @@ export default {
     handleGroupTreeCheckChange (data, checked, indeterminate) {
       // console.log(data, checked, indeterminate)
       this.mainForm.groupIds = this.$refs.editGroupTree.getCheckedKeys()
-      // console.log(this.mainForm.permissionIds)
+      // console.log(this.mainForm.groupIds)
     },
     handlePermissionTreeCheckChange (data, checked, indeterminate) {
       // console.log(data, checked, indeterminate)
