@@ -13,7 +13,7 @@
           <el-input placeholder="关键字(标题)" clearable v-model="searchCriteriaForm.keyword" class="filterText" />
         </el-form-item>
         <el-form-item>
-          <el-date-picker v-model="searchCriteriaForm.creationDate" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="创建日期开始" end-placeholder="创建日期结束" />
+          <el-date-picker v-model="searchCriteriaForm.creationTime" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="创建日期开始" end-placeholder="创建日期结束" />
         </el-form-item>
         <el-form-item>
           <el-button-group>
@@ -53,7 +53,7 @@
             <span>{{ scope.row.deleteTime ? '√' : '' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="creationDate" label="创建时间" width="160" />
+        <el-table-column prop="creationTime" label="创建时间" width="160" />
         <el-table-column align="center" fixed="right" width="84">
           <template slot-scope="scope">
             <el-button type="text" size="small" icon="el-icon-edit" @click.stop="handleEdit(scope.row)" />
@@ -115,9 +115,9 @@ export default {
       searchCriteriaForm: {
         keyword: null,
         toUserId: null,
-        creationDate: null,
-        creationDateBegin: null,
-        creationDateEnd: null,
+        creationTime: null,
+        creationTimeBegin: null,
+        creationTimeEnd: null,
         pagingInfo: {
           pageNumber: 1,
           pageSize: 20,
@@ -204,9 +204,9 @@ export default {
     },
     handleSearch () {
       this.searchCriteriaForm.pageInfo.pageNumber = 1
-      if (this.searchCriteriaForm.creationDate && this.searchCriteriaForm.creationDate.length === 2) {
-        this.searchCriteriaForm.creationDateBegin = this.searchCriteriaForm.creationDate[0]
-        this.searchCriteriaForm.creationDateEnd = this.searchCriteriaForm.creationDate[1]
+      if (this.searchCriteriaForm.creationTime && this.searchCriteriaForm.creationTime.length === 2) {
+        this.searchCriteriaForm.creationTimeBegin = this.searchCriteriaForm.creationTime[0]
+        this.searchCriteriaForm.creationTimeEnd = this.searchCriteriaForm.creationTime[1]
       }
       this.getPage()
     },

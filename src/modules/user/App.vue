@@ -58,7 +58,7 @@
         </el-row>
         <el-row v-show="isSearchCriteriaFormExpand">
           <el-form-item>
-            <xl-datePicker v-model="searchCriteriaForm.creationDate" />
+            <xl-datePicker v-model="searchCriteriaForm.creationTime" />
           </el-form-item>
         </el-row>
       </el-form>
@@ -128,7 +128,7 @@
             label="状态"
             width="60" />
           <el-table-column
-            prop="creationDate"
+            prop="creationTime"
             label="创建时间"
             width="160" />
           <el-table-column label="开发" width="60">
@@ -432,9 +432,9 @@ export default {
       searchCriteriaForm: {
         keyword: null,
         groupIds: null,         // 服务器期待一个数组
-        creationDate: null,
-        creationDateBegin: null,
-        creationDateEnd: null,
+        creationTime: null,
+        creationTimeBegin: null,
+        creationTimeEnd: null,
         status: null,
         groupIdPath: [],
         pagingInfo: {
@@ -580,18 +580,18 @@ export default {
       this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.searchCriteriaForm.keyword = null
       this.searchCriteriaForm.groupIds = null
-      this.searchCriteriaForm.creationDate = null
-      this.searchCriteriaForm.creationDateBegin = null
-      this.searchCriteriaForm.creationDateEnd = null
+      this.searchCriteriaForm.creationTime = null
+      this.searchCriteriaForm.creationTimeBegin = null
+      this.searchCriteriaForm.creationTimeEnd = null
       this.searchCriteriaForm.status = null
       this.searchCriteriaForm.groupIdPath = []
       this.getPage()
     },
     handleSearch () {
       this.searchCriteriaForm.pagingInfo.pageNumber = 1
-      if (this.searchCriteriaForm.creationDate && this.searchCriteriaForm.creationDate.length === 2) {
-        this.searchCriteriaForm.creationDateBegin = this.searchCriteriaForm.creationDate[0]
-        this.searchCriteriaForm.creationDateEnd = this.searchCriteriaForm.creationDate[1]
+      if (this.searchCriteriaForm.creationTime && this.searchCriteriaForm.creationTime.length === 2) {
+        this.searchCriteriaForm.creationTimeBegin = this.searchCriteriaForm.creationTime[0]
+        this.searchCriteriaForm.creationTimeEnd = this.searchCriteriaForm.creationTime[1]
       }
       this.searchCriteriaForm.groupIds = this.searchCriteriaForm.groupIdPath && this.searchCriteriaForm.groupIdPath.length
           ? [this.searchCriteriaForm.groupIdPath[this.searchCriteriaForm.groupIdPath.length - 1]]

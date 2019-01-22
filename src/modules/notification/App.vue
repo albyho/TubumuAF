@@ -30,7 +30,7 @@
           </el-form-item>
           <el-form-item>
             <el-date-picker
-              v-model="searchCriteriaForm.creationDate"
+              v-model="searchCriteriaForm.creationTime"
               value-format="yyyy-MM-dd"
               type="daterange"
               range-separator="至"
@@ -88,7 +88,7 @@
               <span>{{ scope.row.toUser ? scope.row.toUser.displayName : '全部' }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="creationDate" label="创建时间" width="160"/>
+          <el-table-column prop="creationTime" label="创建时间" width="160"/>
           <el-table-column align="center" width="42">
             <template slot-scope="scope">
               <el-button
@@ -157,9 +157,9 @@ export default {
       searchCriteriaForm: {
         keyword: null,
         toUserId: null,
-        creationDate: null,
-        creationDateBegin: null,
-        creationDateEnd: null,
+        creationTime: null,
+        creationTimeBegin: null,
+        creationTimeEnd: null,
         isReaded: false,
         pagingInfo: {
           pageNumber: 1,
@@ -254,18 +254,18 @@ export default {
     handleSearchAll () {
       this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.searchCriteriaForm.keyword = null
-      this.searchCriteriaForm.creationDateBegin = null
-      this.searchCriteriaForm.creationDateEnd = null
+      this.searchCriteriaForm.creationTimeBegin = null
+      this.searchCriteriaForm.creationTimeEnd = null
       this.getPage()
     },
     handleSearch () {
       this.searchCriteriaForm.pagingInfo.pageNumber = 1
       if (
-        this.searchCriteriaForm.creationDate &&
-        this.searchCriteriaForm.creationDate.length === 2
+        this.searchCriteriaForm.creationTime &&
+        this.searchCriteriaForm.creationTime.length === 2
       ) {
-        this.searchCriteriaForm.creationDateBegin = this.searchCriteriaForm.creationDate[0]
-        this.searchCriteriaForm.creationDateEnd = this.searchCriteriaForm.creationDate[1]
+        this.searchCriteriaForm.creationTimeBegin = this.searchCriteriaForm.creationTime[0]
+        this.searchCriteriaForm.creationTimeEnd = this.searchCriteriaForm.creationTime[1]
       }
       this.getPage()
     },
