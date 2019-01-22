@@ -629,7 +629,7 @@ export default {
       this.mainForm.logoUrl = null
       this.mainForm.isDeveloper = false
       this.mainForm.isTester = false
-      
+
       this.$nextTick(() => {
         this.$refs.editGroupTree.setCheckedKeys([], true)
         this.$refs.editPermissionTree.setCheckedKeys([], true)
