@@ -129,6 +129,10 @@ httpClient.interceptors.response.use(
   error => {
     console.log(error.response.headers)
     if (error.response.status === 401) {
+      if (error.response.headers['content-type'].indexOf('json') !== -1 && error.response.data.url) {
+        top.location = error.response.data.url
+        return
+      }
       if (error.response.headers['token-expired'] && localStorage.token && localStorage.refreshToken) {
         console.log('Refresh Token')
         const params = {
