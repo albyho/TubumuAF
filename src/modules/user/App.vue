@@ -229,7 +229,7 @@
                 <el-input
                   v-model="mainForm.password"
                   type="password"
-                  :placeholder="editActive ? '如果不修改密码，请保持为空' : '请输入登录密码'" />
+                  :placeholder="editActive ? '如果不修改密码，请保持为空' : '请输入登录密码'" show-password/>
               </el-form-item>
               <el-form-item
                 label="确认密码"
@@ -238,7 +238,7 @@
                 <el-input
                   v-model="mainForm.passwordConfirm"
                   type="password"
-                  :placeholder="editActive ? '如果不修改密码，请保持为空' : '请输入确认密码'" />
+                  :placeholder="editActive ? '如果不修改密码，请保持为空' : '请输入确认密码'" show-password/>
               </el-form-item>
               <el-form-item label="昵称">
                 <el-input
