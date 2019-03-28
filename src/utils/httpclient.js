@@ -101,7 +101,6 @@ httpClient.interceptors.response.use(
       // 返回的数据是 arraybuffer，内容是 json
       // 备注：可能内容不是 json，这里暂未处理
       const text = Buffer.from(response.data).toString('utf8')
-      console.log(text)
       json = JSON.parse(text)
     } else {
       // 备注：不是 arraybuffer 可能会是 blob 等，这里暂未处理
@@ -109,12 +108,15 @@ httpClient.interceptors.response.use(
     }
 
     if (json) {
-      if (json.token) {
-        localStorage.token = json.token
+      if (json.data) {
+        if (json.data.token) {
+          localStorage.token = json.data.token
+        }
+        if (json.data.refreshToken) {
+          localStorage.refreshToken = json.data.refreshToken
+        }
       }
-      if (json.refreshToken) {
-        localStorage.refreshToken = json.refreshToken
-      }
+
       if (json.url) {
         top.location = json.url
         return
