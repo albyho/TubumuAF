@@ -6,48 +6,49 @@
       <el-col :span="8" class="userinfo">
         <el-badge value="new" :hidden="!hasNewMessage">
           <i class="el-icon-message newMessage" @click="handleNewMessage" />
-          </el-badge>
-          <el-dropdown
-            trigger="hover"
-            :show-timeout="150">
-            <span class="el-dropdown-link userinfo-inner">
-              <img
-                :src="profileDisplay.headUrl"
-                v-show="profileDisplay.headUrl"> [ {{ profileDisplay.groups.map(m => m.name).join(' - ') }} ] {{ profileDisplay.displayName || profileDisplay.username }}</span>
-            <el-dropdown-menu slot="dropdown">
-              <!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
-              <el-dropdown-item @click.native="profile">我的资料</el-dropdown-item>
-              <el-dropdown-item @click.native="resources">我的文件</el-dropdown-item>
-              <el-dropdown-item
-                divided
-                @click.native="logout">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </el-col>
-      </el-row>
-    </el-header>
-    <el-container class="el-container-inner">
-      <el-aside
-        width="200"
-        v-loading="isGetMenusLoading">
-        <el-menu
-          unique-opened
-          default-active="menuActiveIndex"
-          class="el-menu-vertical-main"
-          @open="handleOpen"
-          @close="handleClose"
-          @select="handleSelect">
-          <xl-menu
-            v-for="(item, itemindex) in menus"
-            :key="itemindex"
-            :model="item"
-            :index="itemindex.toString()" />
-        </el-menu>
-      </el-aside>
-      <el-main><iframe
-        :src="mainFrameUrl"
-        class="el-main-content"
-        scrolling="auto" frameBorder="0" :width="iframeWidth" :height="iframeHeight" /></el-main>
+        </el-badge>
+        <el-dropdown
+          trigger="hover"
+          :show-timeout="150">
+          <span class="el-dropdown-link userinfo-inner">
+            <img
+              :src="profileDisplay.headUrl"
+              v-show="profileDisplay.headUrl" /> [ {{ profileDisplay.groups.map(m => m.name).join(' - ') }} ] {{ profileDisplay.displayName || profileDisplay.username }}
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
+            <el-dropdown-item @click.native="profile">我的资料</el-dropdown-item>
+            <!-- <el-dropdown-item @click.native="resources">我的文件</el-dropdown-item> -->
+            <el-dropdown-item
+              divided
+              @click.native="logout">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </el-col>
+    </el-row>
+  </el-header>
+  <el-container class="el-container-inner">
+    <el-aside
+      width="200"
+      v-loading="isGetMenusLoading">
+      <el-menu
+        unique-opened
+        default-active="menuActiveIndex"
+        class="el-menu-vertical-main"
+        @open="handleOpen"
+        @close="handleClose"
+        @select="handleSelect">
+        <xl-menu
+          v-for="(item, itemindex) in menus"
+          :key="itemindex"
+          :model="item"
+          :index="itemindex.toString()" />
+      </el-menu>
+    </el-aside>
+    <el-main><iframe
+      :src="mainFrameUrl"
+      class="el-main-content"
+      scrolling="auto" frameBorder="0" :width="iframeWidth" :height="iframeHeight" /></el-main>
     </el-container>
   </el-container>
 </template>
@@ -257,6 +258,10 @@ body {
         .newMessage {
           cursor: pointer;
         }
+      }
+
+      .el-dropdown {
+        line-height: 32px;
       }
 
       .userinfo {
