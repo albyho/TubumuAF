@@ -282,7 +282,7 @@ export default {
       this.isLoading = true
       api.getGroupTree().then(response => {
         this.isLoading = false
-        this.treeData = response.data.tree
+        this.treeData = response.data.data
       }, error => {
         this.isLoading = false
         this.showErrorMessage(error.message)
@@ -296,14 +296,14 @@ export default {
     },
     getRoleBaseList () {
       api.getRoleBaseList().then(response => {
-        this.editRoleListData = response.data.list
+        this.editRoleListData = response.data.data
       }, error => {
         this.showErrorMessage(error.message)
       })
     },
     getPermissionTree () {
       api.getPermissionTree().then(response => {
-        this.editPermissionTreeData = response.data.tree
+        this.editPermissionTreeData = response.data.data
       }, error => {
         this.showErrorMessage(error.message)
       })

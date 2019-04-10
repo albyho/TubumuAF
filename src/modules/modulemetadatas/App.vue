@@ -81,9 +81,9 @@ export default {
       this.isLoading = true
       api.getModuleMetaDatas().then(response => {
         this.isLoading = false
-        this.permissionList = response.data.item.permissions
-        this.roleList = response.data.item.roles
-        this.groupTreeData = response.data.item.groups
+        this.permissionList = response.data.data.permissions
+        this.roleList = response.data.data.roles
+        this.groupTreeData = response.data.data.groups
       }, error => {
         this.isLoading = false
         this.showErrorMessage(error.message)

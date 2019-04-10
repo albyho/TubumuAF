@@ -234,7 +234,7 @@ export default {
       api.getNotifications(params).then(
         response => {
           this.isLoading = false
-          this.page = response.data.page
+          this.page = response.data.data
         },
         error => {
           this.isLoading = false

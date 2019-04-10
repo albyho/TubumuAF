@@ -111,7 +111,7 @@ export default {
       this.isLoading = true
       api.getRoleList().then(response => {
         this.isLoading = false
-        this.list = response.data.list
+        this.list = response.data.data
         this.$nextTick(() => {
           this.setupSortable()
         })
@@ -122,7 +122,7 @@ export default {
     },
     getPermissionTree () {
       api.getPermissionTree().then(response => {
-        this.editPermissionTreeData = response.data.tree
+        this.editPermissionTreeData = response.data.data
       }, error => {
         this.showErrorMessage(error.message)
       })
@@ -190,7 +190,7 @@ export default {
           permissionIds: this.mainForm.permissionIds
         }
         api.addRole(params).then(response => {
-          this.list.push(response.data.item)
+          this.list.push(response.data.data)
           this.isLoading = false
           this.mainFormDialogVisible = false
         }, error => {
@@ -213,8 +213,8 @@ export default {
           permissionIds: this.mainForm.permissionIds
         }
         api.editRole(params).then(response => {
-          this.list.splice(this.list.indexOf(this.editActive), 1, response.data.item)
-          // Vue.set(this.list, this.list.indexOf(this.editActive), response.data.item)
+          this.list.splice(this.list.indexOf(this.editActive), 1, response.data.data)
+          // Vue.set(this.list, this.list.indexOf(this.editActive), response.data.data)
           this.isLoading = false
           this.editActive = null
           this.mainFormDialogVisible = false

@@ -90,7 +90,7 @@ export default {
     this.isGetMenusLoading = true
     api.getMenus().then(response => {
       this.isGetMenusLoading = false
-      this.menus = response.data.list
+      this.menus = response.data.data
       // console.log(response.data)
     }, error => {
       // console.log(error)
@@ -99,7 +99,7 @@ export default {
     })
     api.getProfile().then(response => {
       // console.log(response.data)
-      this.profileDisplay = response.data.item
+      this.profileDisplay = response.data.data
       this.connectNotifictionServer()
     }, error => {
       // console.log(error)

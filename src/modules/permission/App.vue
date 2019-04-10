@@ -50,7 +50,7 @@ export default {
       this.isLoading = true
       api.getPermissionTree().then(response => {
         this.isLoading = false
-        this.treeData = response.data.tree
+        this.treeData = response.data.data
       }, error => {
         this.isLoading = false
         this.showErrorMessage(error.message)

@@ -540,7 +540,7 @@ export default {
       const params = this.searchCriteriaForm
       api.getUserPage(params).then(response => {
         this.isLoading = false
-        this.page = response.data.page
+        this.page = response.data.data
       }, error => {
         this.isLoading = false
         this.showErrorMessage(error.message)
@@ -557,21 +557,21 @@ export default {
     },
     getGroupTree () {
       api.getGroupTree().then(response => {
-        this.editGroupTreeData = response.data.tree
+        this.editGroupTreeData = response.data.data
       }, error => {
         this.showErrorMessage(error.message)
       })
     },
     getRoleBaseList () {
       api.getRoleBaseList().then(response => {
-        this.editRoleListData = response.data.list
+        this.editRoleListData = response.data.data
       }, error => {
         this.showErrorMessage(error.message)
       })
     },
     getPermissionTree () {
       api.getPermissionTree().then(response => {
-        this.editPermissionTreeData = response.data.tree
+        this.editPermissionTreeData = response.data.data
       }, error => {
         this.showErrorMessage(error.message)
       })

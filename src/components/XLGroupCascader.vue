@@ -46,7 +46,7 @@ export default {
   methods: {
     getGroupTree () {
       api.getGroupTree().then(response => {
-        const tree = response.data.tree
+        const tree = response.data.data
         this.treeData = tree
         if (this.currentValue && this.currentValue.length === 1) {
           this.getIdPath(tree, this.currentValue[0])

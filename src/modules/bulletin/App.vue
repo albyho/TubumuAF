@@ -72,7 +72,7 @@ export default {
       this.isLoading = true
       api.getBulletin().then(response => {
         this.isLoading = false
-        this.mainForm = response.data.item
+        this.mainForm = response.data.data
       }, error => {
         this.isLoading = false
         this.showErrorMessage(error.message)

@@ -70,7 +70,7 @@ export default {
         regionId: regionId
       }
       api.getRegiontParentTree(params).then(response => {
-        const tree = response.data.tree
+        const tree = response.data.data
         this.fixChildren(tree)
         this.treeData = tree
         this.getIdPath(tree, regionId)
@@ -102,7 +102,7 @@ export default {
         parentId: parentId
       }
       api.getRegiontTreeChildNodeList(params).then(response => {
-        let list = response.data.list
+        let list = response.data.data
         this.fixChildren(list)
         if (!parentId) {
           this.treeData = list
