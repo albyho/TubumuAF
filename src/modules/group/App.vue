@@ -285,7 +285,7 @@ export default {
         this.treeData = response.data.data
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     filterNode (value, data) {
@@ -298,14 +298,14 @@ export default {
       api.getRoleBaseList().then(response => {
         this.editRoleListData = response.data.data
       }, error => {
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     getPermissionTree () {
       api.getPermissionTree().then(response => {
         this.editPermissionTreeData = response.data.data
       }, error => {
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     handleAdd (node, data) {
@@ -424,13 +424,13 @@ export default {
           this.getTree()
         }, error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         })
       })
     },
     edit () {
       if (!this.editActive) {
-        this.showErrorMessage('异常：无编辑目标')
+        this.$message.error('异常：无编辑目标')
         return
       }
       this.$refs.mainForm.validate(valid => {
@@ -447,7 +447,7 @@ export default {
           this.getTree()
         }, error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         })
       })
     },
@@ -463,7 +463,7 @@ export default {
         this.getTree()
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     move () {
@@ -485,7 +485,7 @@ export default {
           this.getTree()
         }, error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         })
       })
     },
@@ -502,16 +502,16 @@ export default {
         this.getTree()
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     validateBaseData () {
       if (!this.editRoleListData) {
-        this.showErrorMessage('基础数据缺失：角色列表')
+        this.$message.error('基础数据缺失：角色列表')
         return false
       }
       if (!this.editPermissionTreeData) {
-        this.showErrorMessage('基础数据缺失：权限列表')
+        this.$message.error('基础数据缺失：权限列表')
         return false
       }
       return true
@@ -556,12 +556,6 @@ export default {
     },
     clearValidate (formName) {
       this.$refs[formName].clearValidate()
-    },
-    showErrorMessage (message) {
-      this.$message({
-        message: message,
-        type: 'error'
-      })
     },
     renderContent (h, { node, data, store }) {
       return (

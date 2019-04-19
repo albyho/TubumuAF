@@ -113,7 +113,7 @@ export default {
           // httpClient 对 response.data.token 有拦截处理
         }, error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
           this.handleRefreshValidationCode(null)
         })
       })
@@ -129,12 +129,6 @@ export default {
     handleFocus (el) {
       this.$refs[el].focus()
     },
-    showErrorMessage (message) {
-      this.$message({
-        message: message,
-        type: 'error'
-      })
-    },
     testDownload () {
       this.isLoading = true
       const url = 'http://192.168.0.108:9005/manager/api/Project/Report/ImportAttendance'
@@ -147,7 +141,7 @@ export default {
         fileDownload(response.data, 'test.xlsx')
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     }
   }

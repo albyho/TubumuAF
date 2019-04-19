@@ -53,10 +53,7 @@ export default {
           this.currentValue = this.tempValue
         }
       }, error => {
-        this.$message({
-          message: error.message,
-          type: 'error'
-        })
+        this.$message.error(error.message)
       })
     },
     getIdPath (tree, id) {

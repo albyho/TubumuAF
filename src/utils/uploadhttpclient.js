@@ -1,5 +1,4 @@
 import axios from 'axios'
-import qs from 'qs'
 import { baseUrl } from './config.js'
 
 const SuccessCode = 200
@@ -20,25 +19,6 @@ function ApiError (message, errorType, innerError) {
 ApiError.prototype = Object.create(Error.prototype)
 ApiError.prototype.constructor = ApiError
 
-/*
-function transformResponse(data, headers) {
-  /* eslint no-param-reassign:0 * /
-  if (typeof data === 'string') {
-    try {
-      data = JSON.parse(data)
-    } catch (e) { /* Ignore * / }
-  }
-  return data
-}
-function transformData (data, headers) {
-  if (headers['content-type'].indexOf('json') >= 0) {
-    return JSON.parse(data, dateReviver)
-  } else {
-    // Do something meaningful here
-  }
-}
-*/
-
 const httpClient = axios.create({
   baseURL: baseUrl,
   timeout: 20000,
@@ -51,29 +31,9 @@ const httpClient = axios.create({
 httpClient.interceptors.request.use(
   config => {
     // 在发送请求之前做某件事
-    if (
-      config.method === 'post' ||
-      config.method === 'put' ||
-      config.method === 'patch'
-    ) {
-      // Content-Type 对于 POST、PUT 和 PATCH 才有意义
+    if (config.method === 'post') {
       config.headers = {
-        // 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        'Content-Type': 'application/json; charset=UTF-8'
-      }
-      // 序列化
-      config.data = JSON.stringify(config.data)
-    } else if (
-      config.method === 'delete' ||
-      config.method === 'get' ||
-      config.method === 'head'
-    ) {
-      // QueryString 序列化器
-      config.paramsSerializer = function (params) {
-        // arrayFormat: indices brackets repeat
-        return qs.stringify(params, {
-          arrayFormat: 'indices'
-        })
+        'Content-Type': 'multipart/form-data'
       }
     }
 
@@ -117,10 +77,7 @@ httpClient.interceptors.response.use(
         }
       }
 
-      if (json.url) {
-        top.location = json.url
-        return
-      } else if (json.code !== SuccessCode) {
+      if (json.code !== SuccessCode) {
         console.log(json)
         return Promise.reject(new ApiError(json.message))
       }
@@ -155,8 +112,8 @@ httpClient.interceptors.response.use(
 export default {
   install: function (Vue, option = {}) {
     // 1.通过 Vue.httpClient 调用
-    Vue.httpClient = httpClient
+    Vue.uploadHttpClient = httpClient
     // 2.通过 this.$httpClient 调用
-    Vue.prototype.$httpClient = httpClient
+    Vue.prototype.$uploadHttpClient = httpClient
   }
 }

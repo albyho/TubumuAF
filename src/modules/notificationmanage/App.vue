@@ -185,7 +185,7 @@ export default {
         this.page = response.data.data
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     handlePaginationSizeChange (val) {
@@ -267,13 +267,13 @@ export default {
           this.getPage()
         }, error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         })
       })
     },
     edit () {
       if (!this.editActive) {
-        this.showErrorMessage('异常：无编辑目标')
+        this.$message.error('异常：无编辑目标')
         return
       }
       this.$refs.mainForm.validate(valid => {
@@ -287,7 +287,7 @@ export default {
           this.getPage()
         }, error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         })
       })
     },
@@ -303,7 +303,7 @@ export default {
         this.getPage()
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     resetForm (formName) {
@@ -311,12 +311,6 @@ export default {
     },
     clearValidate (formName) {
       this.$refs[formName].clearValidate()
-    },
-    showErrorMessage (message) {
-      this.$message({
-        message: message,
-        type: 'error'
-      })
     },
     handleRowClick (row, event, column) {
       if (column.id === 'el-table_1_column_1') return

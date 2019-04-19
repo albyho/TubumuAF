@@ -156,7 +156,7 @@ export default {
         this.changeProfileForm.logoUrl = profile.logoUrl
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     handleChangeProfile () {
@@ -166,13 +166,10 @@ export default {
         const params = this.changeProfileForm
         api.changeProfile(params).then(response => {
           this.isLoading = false
-          this.$message({
-            message: response.data.message,
-            type: 'success'
-          })
+          this.$message.success(response.data.message)
         }, error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         })
       })
     },
@@ -190,13 +187,10 @@ export default {
           this.changePasswordForm.currentPassword = null
           this.changePasswordForm.newPassword = null
           this.changePasswordForm.newPasswordConfirm = null
-          this.$message({
-            message: response.data.message,
-            type: 'success'
-          })
+          this.$message.success(response.data.message)
         }, error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         })
       })
     },
@@ -227,12 +221,6 @@ export default {
       } catch (e) {
         console.log(e.message)
       }
-    },
-    showErrorMessage (message) {
-      this.$message({
-        message: message,
-        type: 'error'
-      })
     }
   }
 }

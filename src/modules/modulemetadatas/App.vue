@@ -86,7 +86,7 @@ export default {
         this.groupTreeData = response.data.data.groups
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     handleExtractModuleMetaDatas () {
@@ -94,13 +94,10 @@ export default {
       api.extractModuleMetaDatas().then(response => {
         this.isLoading = false
         this.getModuleMetaDatas()
-        this.$message({
-          message: response.data.message,
-          type: 'success'
-        })
+        this.$message.success(response.data.message)
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     handleClearModulePermissions () {
@@ -108,19 +105,10 @@ export default {
       api.clearModulePermissions().then(response => {
         this.isLoading = false
         this.getModuleMetaDatas()
-        this.$message({
-          message: response.data.message,
-          type: 'success'
-        })
+        this.$message.success(response.data.message)
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
-      })
-    },
-    showErrorMessage (message) {
-      this.$message({
-        message: message,
-        type: 'error'
+        this.$message.error(error.message)
       })
     }
   }

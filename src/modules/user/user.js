@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import HttpClient from '@/utils/httpclient.js'
+import UploadHttpClient from '@/utils/uploadhttpclient.js'
 import ElementUI from 'element-ui'
 import XLUserStatusSelect from '@/components/XLUserStatusSelect.vue'
 import XLUserStatusRadioGroup from '@/components/XLUserStatusRadioGroup.vue'
@@ -13,6 +14,7 @@ import router from './router'
 Vue.config.productionTip = false
 
 Vue.use(HttpClient)
+Vue.use(UploadHttpClient)
 Vue.use(ElementUI, { size: 'mini' })
 
 // 全局注册

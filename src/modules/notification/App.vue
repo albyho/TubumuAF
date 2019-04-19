@@ -238,7 +238,7 @@ export default {
         },
         error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         }
       )
     },
@@ -288,10 +288,7 @@ export default {
     },
     handleDeleteMultiple () {
       if (!this.selection || this.selection.length === 0) {
-        this.$message({
-          message: '请选择要删除的记录',
-          type: 'warning'
-        })
+        this.$message.warning('请选择要删除的记录')
         return
       }
       this.deleteMultipleConfirmDialogVisible = true
@@ -323,7 +320,7 @@ export default {
         },
         error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         }
       )
     },
@@ -332,10 +329,7 @@ export default {
     },
     handleReadMultiple () {
       if (!this.selection || this.selection.length === 0) {
-        this.$message({
-          message: '请选择要设置为已读的记录',
-          type: 'warning'
-        })
+        this.$message.warning('请选择要设置为已读的记录')
         return
       }
       this.readMultipleConfirmDialogVisible = true
@@ -371,7 +365,7 @@ export default {
         },
         error => {
           // this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         }
       )
     },
@@ -380,12 +374,6 @@ export default {
     },
     clearValidate (formName) {
       this.$refs[formName].clearValidate()
-    },
-    showErrorMessage (message) {
-      this.$message({
-        message: message,
-        type: 'error'
-      })
     },
     handleSortChange (val) {
       this.searchCriteriaForm.pagingInfo.sortInfo.sort = val.prop

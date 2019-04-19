@@ -75,7 +75,7 @@ export default {
         this.mainForm = response.data.data
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     handleEditBulletin () {
@@ -88,20 +88,11 @@ export default {
         const params = this.mainForm
         api.editBulletin(params).then(response => {
           this.isLoading = false
-          this.$message({
-            message: response.data.message,
-            type: 'success'
-          })
+          this.$message.success(response.data.message)
         }, error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         })
-      })
-    },
-    showErrorMessage (message) {
-      this.$message({
-        message: message,
-        type: 'error'
       })
     }
   }

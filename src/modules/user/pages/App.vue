@@ -144,8 +144,18 @@
           <el-table-column
             align="center"
             fixed="right"
-            width="84">
+            width="126">
             <template slot-scope="scope">
+              <el-button
+                type="text"
+                size="small"
+                icon="el-icon-news"
+                @click="handleChangeAvatar(scope.row)" />
+              <el-button
+                type="text"
+                size="small"
+                icon="el-icon-picture-outline"
+                @click="handleChangeLogo(scope.row)" />
               <el-button
                 type="text"
                 size="small"
@@ -160,6 +170,23 @@
           </el-table-column>
         </el-table>
       </el-row>
+
+    <el-dialog :visible.sync="uploadImageDialogVisible" @submit.native.prevent :close-on-click-modal="false" width="200px">
+      <span slot="title">
+          {{ this.uploadImageTypeId === 1 ? '修改用户头像' : '修改用户 Logo' }}
+        </span>
+        <el-upload
+          ref="uploader"
+          class="uploader"
+          action=""
+          :auto-upload="true"
+          :show-file-list="false"
+          :before-upload="beforeUpload"
+          :http-request="uploadImage">
+          <img v-if="uploadImagePreviewUrl" :src="uploadImagePreviewUrl" class="uploaderPreview">
+          <i v-else class="el-icon-plus uploader-icon"></i>
+        </el-upload>
+    </el-dialog>
 
       <el-dialog
         :visible.sync="mainFormDialogVisible"
@@ -450,6 +477,13 @@ export default {
       // 删除
       removeActive: null,                 // 暂存删除项
 
+      // 修改头像/Logo
+      uploadImageTypeId: null,
+      uploadImageDialogVisible: false,
+      uploadImagePreviewUrl: null,
+      uploadImageForm: {
+        userId: null
+      },
       // 添加/编辑
       editActive: null,                   // 暂存编辑项，也可用来判断是否添加还是编辑
       mainFormDialogVisible: false,       // 添加/编辑对话框是否可见
@@ -473,7 +507,7 @@ export default {
         password: null,                   // String
         passwordConfirm: null,            // String
         description: null,                // String
-        avatarUrl: null,                    // String
+        avatarUrl: null,                  // String
         logoUrl: null,                    // String
         isDeveloper: false,               // bool
         isTester: false                   // bool
@@ -543,7 +577,7 @@ export default {
         this.page = response.data.data
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     handlePaginationSizeChange (val) {
@@ -559,21 +593,21 @@ export default {
       api.getGroupTree().then(response => {
         this.editGroupTreeData = response.data.data
       }, error => {
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     getRoleBaseList () {
       api.getRoleBaseList().then(response => {
         this.editRoleListData = response.data.data
       }, error => {
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     getPermissionTree () {
       api.getPermissionTree().then(response => {
         this.editPermissionTreeData = response.data.data
       }, error => {
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     handleSearchAll () {
@@ -726,13 +760,13 @@ export default {
           this.getPage()
         }, error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         })
       })
     },
     edit () {
       if (!this.editActive) {
-        this.showErrorMessage('异常：无编辑目标')
+        this.$message.error('异常：无编辑目标')
         return
       }
       this.$refs.mainForm.validate(valid => {
@@ -753,7 +787,7 @@ export default {
           this.getPage()
         }, error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         })
       })
     },
@@ -769,20 +803,20 @@ export default {
         this.getPage()
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     validateBaseData () {
       if (!this.editGroupTreeData || this.editGroupTreeData.length === 0) {
-        this.showErrorMessage('基础数据缺失：分组列表')
+        this.$message.error('基础数据缺失：分组列表')
         return false
       }
       if (!this.editRoleListData) {
-        this.showErrorMessage('基础数据缺失：角色列表')
+        this.$message.error('基础数据缺失：角色列表')
         return false
       }
       if (!this.editPermissionTreeData) {
-        this.showErrorMessage('基础数据缺失：权限列表')
+        this.$message.error('基础数据缺失：权限列表')
         return false
       }
       return true
@@ -827,12 +861,6 @@ export default {
     clearValidate (formName) {
       this.$refs[formName].clearValidate()
     },
-    showErrorMessage (message) {
-      this.$message({
-        message: message,
-        type: 'error'
-      })
-    },
     handleSortChange (val) {
       this.searchCriteriaForm.pagingInfo.sortInfo.sort = val.prop
       this.searchCriteriaForm.pagingInfo.sortInfo.sortDir = val.order === 'descending' ? 'DESC' : 'ASC'
@@ -866,6 +894,53 @@ export default {
       } catch (e) {
         console.log(e.message)
       }
+    },
+    // 头像
+    handleChangeAvatar (row) {
+      this.handleChangeImage(row, 1)
+    },
+    // Logo
+    handleChangeLogo (row) {
+      this.handleChangeImage(row, 2)
+    },
+    handleChangeImage (row, uploadImageTypeId) {
+      this.uploadImageTypeId = uploadImageTypeId
+      this.uploadImageForm.userId = row.userId
+      let previewUrl = uploadImageTypeId === 1 ? row.avatarUrl : row.logoUrl
+      this.uploadImagePreviewUrl = previewUrl ? previewUrl + '?' + (new Date().getTime()) : null
+      this.uploadImageDialogVisible = true
+    },
+    beforeUpload (file) {
+      console.log('beforeUpload')
+      const isJPGorPNG = file.type === 'image/jpeg' || file.type === 'image/png'
+      const isLt1M = file.size / 1024 / 1024 < 1
+
+      if (!isJPGorPNG) {
+        this.$message.error('上传图片只能是 JPG 或 PNG 格式')
+      }
+      if (!isLt1M) {
+        this.$message.error('上传图片大小不能超过 1MB')
+      }
+      return isJPGorPNG && isLt1M
+    },
+    uploadImage (f) {
+      if (this.uploadImageTypeId !== 1 && this.uploadImageTypeId !== 2) {
+        this.$message.error('未知图片类型')
+        return
+      }
+      this.isLoading = true
+      let params = new FormData()
+      params.append('userId', this.uploadImageForm.userId)
+      params.append('file', f.file)
+      const func = this.uploadImageTypeId === 1 ? api.changeUserAvatar : api.changeUserLogo
+      func(params).then(response => {
+        this.isLoading = false
+        this.uploadImagePreviewUrl = response.data.url + '?' + (new Date().getTime())
+        this.getPage()
+      }, error => {
+        this.isLoading = false
+        this.$message.error(error.message)
+      })
     }
   }
 }
@@ -904,6 +979,32 @@ export default {
 .el-checkbox {
   display: block;
   margin: 0;
+}
+
+.uploader {
+  .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  }
+  .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 160px;
+  height: 160px;
+  line-height: 160px;
+  text-align: center;
+  }
+  .uploaderPreview {
+    width: 160px;
+    height: 160px;
+    display: block;
+  }
 }
 
 </style>

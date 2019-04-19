@@ -117,14 +117,14 @@ export default {
         })
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     getPermissionTree () {
       api.getPermissionTree().then(response => {
         this.editPermissionTreeData = response.data.data
       }, error => {
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     handleAdd () {
@@ -144,7 +144,7 @@ export default {
     },
     handleEdit (row) {
       if (!this.validateBaseData()) {
-        this.showErrorMessage('基础数据缺失：权限列表')
+        this.$message.error('基础数据缺失：权限列表')
       }
       this.editActive = row
       this.mainFormDialogVisible = true
@@ -195,13 +195,13 @@ export default {
           this.mainFormDialogVisible = false
         }, error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         })
       })
     },
     edit () {
       if (!this.editActive) {
-        this.showErrorMessage('异常：无编辑目标')
+        this.$message.error('异常：无编辑目标')
         return
       }
       this.$refs.mainForm.validate(valid => {
@@ -220,7 +220,7 @@ export default {
           this.mainFormDialogVisible = false
         }, error => {
           this.isLoading = false
-          this.showErrorMessage(error.message)
+          this.$message.error(error.message)
         })
       })
     },
@@ -237,7 +237,7 @@ export default {
         this.removeActive = null
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     move (sourceDisplayOrder, targetDisplayOrder) {
@@ -250,12 +250,12 @@ export default {
         this.isLoading = false
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     validateBaseData () {
       if (!this.editPermissionTreeData) {
-        this.showErrorMessage('基础数据缺失：权限列表')
+        this.$message.error('基础数据缺失：权限列表')
         return false
       }
       return true
@@ -270,12 +270,6 @@ export default {
     },
     clearValidate (formName) {
       this.$refs[formName].clearValidate()
-    },
-    showErrorMessage (message) {
-      this.$message({
-        message: message,
-        type: 'error'
-      })
     },
     setupSortable () {
       const el = document.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]

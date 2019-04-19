@@ -90,6 +90,12 @@ export default {
   getUserStatuList () {
     return Vue.httpClient.get('/admin/getUserStatuList')
   },
+  changeUserAvatar (params) {
+    return Vue.uploadHttpClient.post('/admin/ChangeUserAvatar', params)
+  },
+  changeUserLogo (params) {
+    return Vue.uploadHttpClient.post('/admin/ChangeUserLogo', params)
+  },
   // 通知
   getNotificationsForManager (params) {
     return Vue.httpClient.post('/admin/getNotificationsForManager', params)

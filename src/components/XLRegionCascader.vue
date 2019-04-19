@@ -77,7 +77,7 @@ export default {
         console.log('RegionCascader: getRegiontParentTree', this.tempValue)
         this.currentValue = this.tempValue
       }, error => {
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     getRegiontTreeChildNodeList (parentId) {
@@ -110,7 +110,7 @@ export default {
           currentNode.children = list
         }
       }, error => {
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     fixChildren (tree) {
@@ -157,12 +157,6 @@ export default {
       this.getRegiontTreeChildNodeList(value[value.length - 1])
       this.$emit('active-item-change', value)
       this.$emit('input', value)
-    },
-    showErrorMessage (message) {
-      this.$message({
-        message: message,
-        type: 'error'
-      })
     }
   }
 }

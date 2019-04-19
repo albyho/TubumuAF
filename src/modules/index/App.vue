@@ -95,7 +95,7 @@ export default {
     }, error => {
       // console.log(error)
       this.isGetMenusLoading = false
-      this.showErrorMessage(error.message)
+      this.$message.error(error.message)
     })
     api.getProfile().then(response => {
       // console.log(response.data)
@@ -103,7 +103,7 @@ export default {
       this.connectNotifictionServer()
     }, error => {
       // console.log(error)
-      this.showErrorMessage(error.message)
+      this.$message.error(error.message)
     })
   },
   methods: {
@@ -149,20 +149,17 @@ export default {
       }, error => {
         // console.log(error)
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     callDirectly (url) {
       this.isLoading = true
       api.callDirectly(url).then(response => {
         this.isLoading = false
-        this.$message({
-          message: response.data.message,
-          type: 'success'
-        })
+        this.$message.success(response.data.message)
       }, error => {
         this.isLoading = false
-        this.showErrorMessage(error.message)
+        this.$message.error(error.message)
       })
     },
     connectNotifictionServer () {
@@ -192,7 +189,7 @@ export default {
             // 暂未使用 202
             _this.hasNewMessage = false
           } else if (data.code === 400) {
-            _this.showErrorMessage(data.message)
+            _this.$message.error(data.message)
           }
         })
 
@@ -206,12 +203,6 @@ export default {
     handleNewMessage () {
       this.hasNewMessage = false
       this.mainFrameUrl = '/Admin/View?IsCore=true&Title=%E9%80%9A%E7%9F%A5%E4%B8%AD%E5%BF%83&Name=notification&t=' + (new Date().getTime())
-    },
-    showErrorMessage (message) {
-      this.$message({
-        message: message,
-        type: 'error'
-      })
     }
   }
 }
@@ -277,7 +268,7 @@ body {
             width: 40px;
             height: 40px;
             border-radius: 20px;
-            margin: 10px 0px 10px 10px;
+            margin: 0px 0px 0px 10px;
             float: right;
           }
         }
