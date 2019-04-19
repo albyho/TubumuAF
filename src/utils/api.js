@@ -16,6 +16,12 @@ export default {
   changeProfile (params) {
     return Vue.httpClient.post('/admin/changeProfile', params)
   },
+  changeAvatar (params) {
+    return Vue.uploadHttpClient.post('/admin/ChangeAvatar', params)
+  },
+  changeLogo (params) {
+    return Vue.uploadHttpClient.post('/admin/ChangeLogo', params)
+  },
   changePassword (params) {
     return Vue.httpClient.post('/admin/changePassword', params)
   },

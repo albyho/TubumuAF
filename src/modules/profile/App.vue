@@ -7,27 +7,43 @@
   </el-header>
   <el-main class="main">
     <el-tabs v-model="activeTabName" type="card">
-      <el-tab-pane label="修改资料" name="first">
+      <el-tab-pane label="修改资料" name="pane01">
         <el-form ref="changeProfileForm" :model="changeProfileForm" :rules="changeProfileFormRules" label-position="right" label-width="120px">
           <el-form-item label="昵称" prop="displayName">
             <el-input ref="displayName" v-model.trim="changeProfileForm.displayName" auto-complete="off" placeholder="请输入昵称" />
-          </el-form-item>
-          <el-form-item label="头像" prop="avatarUrl">
-            <el-input ref="avatarUrl" v-model.trim="changeProfileForm.avatarUrl" auto-complete="off" placeholder="请输入头像 Url">
-              <el-button slot="append" icon="el-icon-search" @click="handleChangeAvatarUrlBrowser" />
-            </el-input>
-          </el-form-item>
-          <el-form-item label="Logo" prop="logoUrl">
-            <el-input v-model.trim="changeProfileForm.logoUrl" auto-complete="off" placeholder="请输入Logo Url" ref="logoUrl">
-              <el-button slot="append" icon="el-icon-search" @click="handleChangeLogoUrlBrowser" />
-            </el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleChangeProfile">修改资料</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="修改密码" name="second">
+      <el-tab-pane label="修改头像" name="pane02">
+        <el-upload
+          ref="avatarUploader"
+          class="uploader"
+          action=""
+          :auto-upload="true"
+          :show-file-list="false"
+          :before-upload="beforeUpload"
+          :http-request="uploadAvatar">
+          <img v-if="uploadImageAvatarPreviewUrl" :src="uploadImageAvatarPreviewUrl" class="uploaderPreview">
+          <i v-else class="el-icon-plus uploader-icon"></i>
+        </el-upload>
+      </el-tab-pane>
+      <el-tab-pane label="修改 Logo" name="pane03">
+        <el-upload
+          ref="logoUploader"
+          class="uploader"
+          action=""
+          :auto-upload="true"
+          :show-file-list="false"
+          :before-upload="beforeUpload"
+          :http-request="uploadLogo">
+          <img v-if="uploadImageLogoPreviewUrl" :src="uploadImageLogoPreviewUrl" class="uploaderPreview">
+          <i v-else class="el-icon-plus uploader-icon"></i>
+        </el-upload>
+      </el-tab-pane>
+      <el-tab-pane label="修改密码" name="pane04">
         <el-form ref="changePasswordForm" :model="changePasswordForm" :rules="changePasswordFormRules" label-position="right" label-width="120px">
           <el-form-item label="当前密码" prop="currentPassword">
             <el-input ref="currentPassword" type="password" v-model.trim="changePasswordForm.currentPassword" auto-complete="off" placeholder="请输入当前密码" />
@@ -56,11 +72,13 @@ export default {
   data () {
     return {
       isLoading: false,
-      activeTabName: 'first',
+      activeTabName: 'pane01',
+
+      uploadImageAvatarPreviewUrl: null,
+      uploadImageLogoPreviewUrl: null,
+
       changeProfileForm: {
-        displayName: null,
-        avatarUrl: null,
-        logoUrl: null
+        displayName: null
       },
       changeProfileFormRules: {
         displayName: [{
@@ -73,17 +91,7 @@ export default {
           message: '昵称包含非法字符',
           trigger: 'blur'
         }
-        ],
-        head: [{
-          max: 200,
-          message: '最多支持200个字符',
-          trigger: 'blur'
-        }],
-        logo: [{
-          max: 200,
-          message: '最多支持200个字符',
-          trigger: 'blur'
-        }]
+        ]
       },
       changePasswordForm: {
         currentPassword: null,
@@ -152,8 +160,8 @@ export default {
         this.isLoading = false
         const profile = response.data.data
         this.changeProfileForm.displayName = profile.displayName
-        this.changeProfileForm.avatarUrl = profile.avatarUrl
-        this.changeProfileForm.logoUrl = profile.logoUrl
+        this.uploadImageAvatarPreviewUrl = profile.avatarUrl
+        this.uploadImageLogoPreviewUrl = profile.logoUrl
       }, error => {
         this.isLoading = false
         this.$message.error(error.message)
@@ -221,6 +229,44 @@ export default {
       } catch (e) {
         console.log(e.message)
       }
+    },
+    // 头像 / Logo
+    beforeUpload (file) {
+      console.log('beforeUpload')
+      const isJPGorPNG = file.type === 'image/jpeg' || file.type === 'image/png'
+      const isLt1M = file.size / 1024 / 1024 < 1
+
+      if (!isJPGorPNG) {
+        this.$message.error('上传图片只能是 JPG 或 PNG 格式')
+      }
+      if (!isLt1M) {
+        this.$message.error('上传图片大小不能超过 1MB')
+      }
+      return isJPGorPNG && isLt1M
+    },
+    uploadAvatar (f) {
+      this.isLoading = true
+      let params = new FormData()
+      params.append('file', f.file)
+      api.changeAvatar(params).then(response => {
+        this.isLoading = false
+        this.uploadImageAvatarPreviewUrl = response.data.url + '?' + (new Date().getTime())
+      }, error => {
+        this.isLoading = false
+        this.$message.error(error.message)
+      })
+    },
+    uploadLogo (f) {
+      this.isLoading = true
+      let params = new FormData()
+      params.append('file', f.file)
+      api.changeLogo(params).then(response => {
+        this.isLoading = false
+        this.uploadImageLogoPreviewUrl = response.data.url + '?' + (new Date().getTime())
+      }, error => {
+        this.isLoading = false
+        this.$message.error(error.message)
+      })
     }
   }
 }
@@ -229,5 +275,30 @@ export default {
 <style lang="scss">
 .el-tab-pane {
   width: 600px;
+}
+.uploader {
+  .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  }
+  .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 160px;
+  height: 160px;
+  line-height: 160px;
+  text-align: center;
+  }
+  .uploaderPreview {
+    width: 160px;
+    height: 160px;
+    display: block;
+  }
 }
 </style>
