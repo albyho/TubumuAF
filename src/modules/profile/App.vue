@@ -12,9 +12,9 @@
           <el-form-item label="昵称" prop="displayName">
             <el-input ref="displayName" v-model.trim="changeProfileForm.displayName" auto-complete="off" placeholder="请输入昵称" />
           </el-form-item>
-          <el-form-item label="头像" prop="headUrl">
-            <el-input ref="headUrl" v-model.trim="changeProfileForm.headUrl" auto-complete="off" placeholder="请输入头像 Url">
-              <el-button slot="append" icon="el-icon-search" @click="handleChangeHeadUrlBrowser" />
+          <el-form-item label="头像" prop="avatarUrl">
+            <el-input ref="avatarUrl" v-model.trim="changeProfileForm.avatarUrl" auto-complete="off" placeholder="请输入头像 Url">
+              <el-button slot="append" icon="el-icon-search" @click="handleChangeAvatarUrlBrowser" />
             </el-input>
           </el-form-item>
           <el-form-item label="Logo" prop="logoUrl">
@@ -59,7 +59,7 @@ export default {
       activeTabName: 'first',
       changeProfileForm: {
         displayName: null,
-        headUrl: null,
+        avatarUrl: null,
         logoUrl: null
       },
       changeProfileFormRules: {
@@ -152,7 +152,7 @@ export default {
         this.isLoading = false
         const profile = response.data.data
         this.changeProfileForm.displayName = profile.displayName
-        this.changeProfileForm.headUrl = profile.headUrl
+        this.changeProfileForm.avatarUrl = profile.avatarUrl
         this.changeProfileForm.logoUrl = profile.logoUrl
       }, error => {
         this.isLoading = false
@@ -200,8 +200,8 @@ export default {
         })
       })
     },
-    handleChangeHeadUrlBrowser () {
-      this.popupFileManager('headUrl')
+    handleChangeAvatarUrlBrowser () {
+      this.popupFileManager('avatarUrl')
     },
     handleChangeLogoUrlBrowser () {
       this.popupFileManager('logoUrl')

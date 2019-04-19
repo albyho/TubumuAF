@@ -12,8 +12,8 @@
           :show-timeout="150">
           <span class="el-dropdown-link userinfo-inner">
             <img
-              :src="profileDisplay.headUrl"
-              v-show="profileDisplay.headUrl" /> [ {{ profileDisplay.groups.map(m => m.name).join(' - ') }} ] {{ profileDisplay.displayName || profileDisplay.username }}
+              :src="profileDisplay.avatarUrl"
+              v-show="profileDisplay.avatarUrl" /> [ {{ profileDisplay.groups.map(m => m.name).join(' - ') }} ] {{ profileDisplay.displayName || profileDisplay.username }}
           </span>
           <el-dropdown-menu slot="dropdown">
             <!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
@@ -66,7 +66,7 @@ export default {
       profileDisplay: {
         username: '',
         displayName: '',
-        headUrl: null,
+        avatarUrl: null,
         groups: []
       },
       menus: null,

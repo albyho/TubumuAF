@@ -281,16 +281,16 @@
               </el-form-item>
               <el-form-item
                 label="头像"
-                prop="headUrl">
+                prop="avatarUrl">
                 <el-input
-                  ref="headUrl"
-                  v-model.trim="mainForm.headUrl"
+                  ref="avatarUrl"
+                  v-model.trim="mainForm.avatarUrl"
                   autocomplete="off"
                   placeholder="请输入头像 Url">
                   <el-button
                     slot="append"
                     icon="el-icon-search"
-                    @click="handleChangeHeadUrlBrowser" />
+                    @click="handleChangeAvatarUrlBrowser" />
                 </el-input>
               </el-form-item>
               <el-form-item
@@ -473,7 +473,7 @@ export default {
         password: null,                   // String
         passwordConfirm: null,            // String
         description: null,                // String
-        headUrl: null,                    // String
+        avatarUrl: null,                    // String
         logoUrl: null,                    // String
         isDeveloper: false,               // bool
         isTester: false                   // bool
@@ -625,7 +625,7 @@ export default {
       this.mainForm.password = null
       this.mainForm.passwordConfirm = null
       this.mainForm.description = null
-      this.mainForm.headUrl = null
+      this.mainForm.avatarUrl = null
       this.mainForm.logoUrl = null
       this.mainForm.isDeveloper = false
       this.mainForm.isTester = false
@@ -664,7 +664,7 @@ export default {
       this.mainForm.password = null
       this.mainForm.passwordConfirm = null
       this.mainForm.description = row.description
-      this.mainForm.headUrl = row.headUrl
+      this.mainForm.avatarUrl = row.avatarUrl
       this.mainForm.logoUrl = row.logoUrl
       this.mainForm.isDeveloper = row.isDeveloper
       this.mainForm.isTester = row.isTester
@@ -839,8 +839,8 @@ export default {
       this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.getPage()
     },
-    handleChangeHeadUrlBrowser () {
-      this.popupFileManager('headUrl')
+    handleChangeAvatarUrlBrowser () {
+      this.popupFileManager('avatarUrl')
     },
     handleChangeLogoUrlBrowser () {
       this.popupFileManager('logoUrl')

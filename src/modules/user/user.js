@@ -8,7 +8,7 @@ import XLDatepicker from '@/components/XLDatepicker.vue'
 import 'element-ui/lib/theme-chalk/index.css'
 import '../../styles/inner.scss'
 
-import App from './App.vue'
+import router from './router'
 
 Vue.config.productionTip = false
 
@@ -24,5 +24,6 @@ Vue.component('xl-datePicker', XLDatepicker)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  render: h => h(App)
+  router,
+  template: '<router-view/>'
 })
