@@ -306,34 +306,6 @@
                   :rows="2"
                   v-model.trim="mainForm.description" />
               </el-form-item>
-              <el-form-item
-                label="头像"
-                prop="avatarUrl">
-                <el-input
-                  ref="avatarUrl"
-                  v-model.trim="mainForm.avatarUrl"
-                  autocomplete="off"
-                  placeholder="请输入头像 Url">
-                  <el-button
-                    slot="append"
-                    icon="el-icon-search"
-                    @click="handleChangeAvatarUrlBrowser" />
-                </el-input>
-              </el-form-item>
-              <el-form-item
-                label="Logo"
-                prop="logoUrl">
-                <el-input
-                  ref="logoUrl"
-                  v-model.trim="mainForm.logoUrl"
-                  autocomplete="off"
-                  placeholder="请输入Logo Url">
-                  <el-button
-                    slot="append"
-                    icon="el-icon-search"
-                    @click="handleChangeLogoUrlBrowser" />
-                </el-input>
-              </el-form-item>
               <el-form-item label="是否是开发人员">
                 <el-switch v-model="mainForm.isDeveloper" />
               </el-form-item>
@@ -507,8 +479,6 @@ export default {
         password: null,                   // String
         passwordConfirm: null,            // String
         description: null,                // String
-        avatarUrl: null,                  // String
-        logoUrl: null,                    // String
         isDeveloper: false,               // bool
         isTester: false                   // bool
       },
@@ -659,8 +629,6 @@ export default {
       this.mainForm.password = null
       this.mainForm.passwordConfirm = null
       this.mainForm.description = null
-      this.mainForm.avatarUrl = null
-      this.mainForm.logoUrl = null
       this.mainForm.isDeveloper = false
       this.mainForm.isTester = false
 
@@ -698,8 +666,6 @@ export default {
       this.mainForm.password = null
       this.mainForm.passwordConfirm = null
       this.mainForm.description = row.description
-      this.mainForm.avatarUrl = row.avatarUrl
-      this.mainForm.logoUrl = row.logoUrl
       this.mainForm.isDeveloper = row.isDeveloper
       this.mainForm.isTester = row.isTester
 
@@ -866,34 +832,6 @@ export default {
       this.searchCriteriaForm.pagingInfo.sortInfo.sortDir = val.order === 'descending' ? 'DESC' : 'ASC'
       this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.getPage()
-    },
-    handleChangeAvatarUrlBrowser () {
-      this.popupFileManager('avatarUrl')
-    },
-    handleChangeLogoUrlBrowser () {
-      this.popupFileManager('logoUrl')
-    },
-    popupFileManager (name) {
-      const _this = this
-      try {
-        /* eslint-disable no-undef */
-        CKFinder.popup({
-          chooseFiles: true,
-          width: 800,
-          height: 600,
-          onInit: function (finder) {
-            finder.on('files:choose', function (evt) {
-              const file = evt.data.files.first()
-              _this.mainForm[name] = file.getUrl()
-            })
-            finder.on('file:choose:resizedImage', function (evt) {
-              _this.mainForm[name] = evt.data.resizedUrl
-            })
-          }
-        })
-      } catch (e) {
-        console.log(e.message)
-      }
     },
     // 头像
     handleChangeAvatar (row) {
