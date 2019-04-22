@@ -171,22 +171,22 @@
         </el-table>
       </el-row>
 
-    <el-dialog :visible.sync="uploadImageDialogVisible" @submit.native.prevent :close-on-click-modal="false" width="200px">
-      <span slot="title">
-          {{ this.uploadImageTypeId === 1 ? '修改用户头像' : '修改用户 Logo' }}
-        </span>
-        <el-upload
-          ref="uploader"
-          class="uploader"
-          action=""
-          :auto-upload="true"
-          :show-file-list="false"
-          :before-upload="beforeUpload"
-          :http-request="uploadImage">
-          <img v-if="uploadImagePreviewUrl" :src="uploadImagePreviewUrl" class="uploaderPreview">
-          <i v-else class="el-icon-plus uploader-icon"></i>
-        </el-upload>
-    </el-dialog>
+      <el-dialog :visible.sync="uploadImageDialogVisible" @submit.native.prevent :close-on-click-modal="false" width="200px">
+        <span slot="title">
+            {{ this.uploadImageTypeId === 1 ? '修改用户头像' : '修改用户 Logo' }}
+          </span>
+          <el-upload
+            ref="uploader"
+            class="uploader"
+            action=""
+            :auto-upload="true"
+            :show-file-list="false"
+            :before-upload="beforeUpload"
+            :http-request="uploadImage">
+            <img v-if="uploadImagePreviewUrl" :src="uploadImagePreviewUrl" class="uploaderPreview">
+            <i v-else class="el-icon-plus uploader-icon"></i>
+          </el-upload>
+      </el-dialog>
 
       <el-dialog
         :visible.sync="mainFormDialogVisible"
