@@ -189,21 +189,21 @@ export default {
       })
     },
     handlePaginationSizeChange (val) {
-      this.searchCriteriaForm.pageInfo.pageSize = val
-      this.searchCriteriaForm.pageInfo.pageNumber = 1
+      this.searchCriteriaForm.pagingInfo.pageSize = val
+      this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.getPage()
     },
     handlePaginationCurrentChange (val) {
-      this.searchCriteriaForm.pageInfo.pageNumber = val
+      this.searchCriteriaForm.pagingInfo.pageNumber = val
       this.getPage()
     },
     handleSearchAll () {
-      this.searchCriteriaForm.pageInfo.pageNumber = 1
+      this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.searchCriteriaForm.keyword = null
       this.getPage()
     },
     handleSearch () {
-      this.searchCriteriaForm.pageInfo.pageNumber = 1
+      this.searchCriteriaForm.pagingInfo.pageNumber = 1
       if (this.searchCriteriaForm.creationTime && this.searchCriteriaForm.creationTime.length === 2) {
         this.searchCriteriaForm.creationTimeBegin = this.searchCriteriaForm.creationTime[0]
         this.searchCriteriaForm.creationTimeEnd = this.searchCriteriaForm.creationTime[1]
@@ -317,9 +317,9 @@ export default {
       this.$refs.mainTable.toggleRowExpansion(row)
     },
     handleSortChange (val) {
-      this.searchCriteriaForm.pageInfo.sortInfo.sort = val.prop
-      this.searchCriteriaForm.pageInfo.sortInfo.sortDir = val.order === 'descending' ? 'DESC' : 'ASC'
-      this.searchCriteriaForm.pageInfo.pageNumber = 1
+      this.searchCriteriaForm.pagingInfo.sortInfo.sort = val.prop
+      this.searchCriteriaForm.pagingInfo.sortInfo.sortDir = val.order === 'descending' ? 'DESC' : 'ASC'
+      this.searchCriteriaForm.pagingInfo.pageNumber = 1
       this.getPage()
     }
   }
