@@ -15,7 +15,7 @@
         <quill-editor v-model="mainForm.content" ref="content" :options="editorOption" />
       </el-form-item>
       <el-form-item label="发布日期" prop="publishDate">
-        <el-date-picker v-model="mainForm.publishDate" align="right" type="date" placeholder="选择发布日期" :picker-options="publishDatePickerOptions" ref="publishDate" />
+        <el-date-picker v-model="mainForm.publishDate" align="right" type="date" placeholder="选择发布日期" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :picker-options="publishDatePickerOptions" ref="publishDate" />
       </el-form-item>
       <el-form-item label="是否显示" prop="isShow">
         <el-switch v-model="mainForm.isShow" ref="isShow" />

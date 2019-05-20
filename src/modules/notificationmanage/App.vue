@@ -13,7 +13,7 @@
           <el-input placeholder="关键字(标题)" clearable v-model="searchCriteriaForm.keyword" class="filterText" />
         </el-form-item>
         <el-form-item>
-          <el-date-picker v-model="searchCriteriaForm.creationTime" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="创建日期开始" end-placeholder="创建日期结束" />
+          <el-date-picker v-model="searchCriteriaForm.creationTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="daterange" range-separator="至" start-placeholder="创建日期开始" end-placeholder="创建日期结束" />
         </el-form-item>
         <el-form-item>
           <el-button-group>

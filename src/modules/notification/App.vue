@@ -31,6 +31,7 @@
           <el-form-item>
             <el-date-picker
               v-model="searchCriteriaForm.creationTime"
+              format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
               type="daterange"
               range-separator="至"
