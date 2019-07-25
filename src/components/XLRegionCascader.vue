@@ -1,12 +1,12 @@
 <template>
   <el-cascader
-    :options="treeData"
+    :options="list"
     :props="defaultProps"
     clearable
     filterable
     placeholder="请选择区域"
     v-model="currentValue"
-    @active-item-change="handleActiveItemChange"/>
+    @change="handleChange"/>
 </template>
 
 <script>
@@ -21,15 +21,20 @@ export default {
     }
   },
   data () {
+    const self = this
     return {
       isInitialized: false,
       currentValue: this.value,
       tempValue: [], // 用于根据最后的子节点 id 和树生成路径 id
-      treeData: [],
+      list: [],
       defaultProps: {
         children: 'children',
         value: 'id',
-        label: 'name'
+        label: 'name',
+        lazy: true,
+        lazyLoad (node, resolve) {
+          self.getRegiontTreeChildNodeList(node.value, resolve)
+        }
       }
     }
   },
@@ -40,8 +45,9 @@ export default {
     },
     currentValue (val) {
       console.log('RegionCascader: currentValue', val, this.isInitialized)
-      this.$emit('input', val)
-      if (!this.isInitialized) {
+      if (this.isInitialized) {
+        this.$emit('input', val)
+      } else {
         this.isInitialized = true
         this.getInitializationTree()
       }
@@ -60,7 +66,7 @@ export default {
       console.log('RegionCascader: getInitializationTree')
       if (this.currentValue && this.currentValue.length > 0) {
         this.getRegiontParentTree(this.currentValue[this.currentValue.length - 1])
-      } else if (!this.treeData || this.treeData.length === 0) {
+      } else if (!this.list || this.list.length === 0) {
         this.getRegiontTreeChildNodeList(null)
       }
     },
@@ -70,34 +76,18 @@ export default {
         regionId: regionId
       }
       api.getRegiontParentTree(params).then(response => {
-        const tree = response.data.data
-        this.fixChildren(tree)
-        this.treeData = tree
-        this.getIdPath(tree, regionId)
+        const list = response.data.data
+        this.fixChildren(list)
+        this.list = list
+        this.generateIdPath(list, regionId)
         console.log('RegionCascader: getRegiontParentTree', this.tempValue)
         this.currentValue = this.tempValue
       }, error => {
         this.$message.error(error.message)
       })
     },
-    getRegiontTreeChildNodeList (parentId) {
+    getRegiontTreeChildNodeList (parentId, callback) {
       console.log('RegionCascader: getRegiontTreeChildNodeList', parentId)
-      let currentNode
-      if (parentId && this.treeData && this.treeData.length > 0) {
-        currentNode = this.findNode(this.treeData, parentId)
-        if (!currentNode) {
-          console.log('RegionCascader: findNode Error: cannot find', parentId)
-          return
-        }
-        if (!currentNode.hasChildren) {
-          console.log('RegionCascader: findNode Error: has no children')
-          return
-        }
-        if (currentNode.children && currentNode.children.length > 0) {
-          console.log('RegionCascader: findNode: reused')
-          return
-        }
-      }
       const params = {
         parentId: parentId
       }
@@ -105,57 +95,42 @@ export default {
         let list = response.data.data
         this.fixChildren(list)
         if (!parentId) {
-          this.treeData = list
-        } else {
-          currentNode.children = list
+          this.list = list
+        }
+        // 对于非根节点的子节点列表 el-cascader 会自行缓存
+        if (callback) {
+          callback(list)
         }
       }, error => {
         this.$message.error(error.message)
       })
     },
-    fixChildren (tree) {
-      for (let i = 0; i < tree.length; i++) {
-        if (tree[i].hasChildren) {
-          if (!tree[i].children) {
-            Vue.set(tree[i], 'children', [])
+    fixChildren (list) {
+      for (let i = 0; i < list.length; i++) {
+        list[i].leaf = !list[i].hasChildren
+        if (list[i].hasChildren) {
+          if (!list[i].children) {
+            Vue.set(list[i], 'children', [])
           } else {
-            this.fixChildren(tree[i].children)
+            this.fixChildren(list[i].children)
           }
         }
       }
     },
-    findNode (tree, id) {
-      let node = null
-      for (let i = 0; i < tree.length; i++) {
-        if (tree[i].id === id) {
-          node = tree[i]
-          break
-        } else if (tree[i].hasChildren && tree[i].children != null && tree[i].children.length > 0) {
-          let child = this.findNode(tree[i].children, id)
-          if (child) {
-            node = child
-            break
-          }
-        }
-      }
-      return node
-    },
-    getIdPath (tree, id) {
-      if (!tree) return
-      for (let node of tree) {
+    generateIdPath (list, id) {
+      if (!list) return
+      for (let node of list) {
         if (node.id === id) {
           this.tempValue = node.parentIdPath ? node.parentIdPath.concat() : []
           this.tempValue.push(id)
           break
         } else {
-          this.getIdPath(node.children, id)
+          this.generateIdPath(node.children, id)
         }
       }
     },
-    handleActiveItemChange (value) {
-      console.log('RegionCascader: handleActiveItemChange:', value)
-      this.getRegiontTreeChildNodeList(value[value.length - 1])
-      this.$emit('active-item-change', value)
+    handleChange (value) {
+      console.log('RegionCascader: handleChange:', value)
       this.$emit('input', value)
     }
   }
