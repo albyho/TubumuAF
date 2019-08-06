@@ -543,11 +543,18 @@ export default {
         const item = tree[i]
         // tree 通过 clone 而来，不能直接比较对象
         if (item.id === data.id) {
-          // 在第一级就找到
+          // 在第一级就找到，将自身删除
           tree.splice(i, 1)
           break
         } else if (item.children) {
-          this.filterTree(item.children, data)
+          if (item.children.length === 0) {
+            item.children = null
+          } else if (item.children[0].id === data.id) {
+            item.children = null
+            break
+          } else {
+            this.filterTree(item.children, data)
+          }
         }
       }
     },

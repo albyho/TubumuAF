@@ -76,7 +76,7 @@
           <el-table-column
             prop="username"
             label="用户名"
-            width="160"
+            width="200"
             sortable="custom" />
           <el-table-column
             prop="group.name"
