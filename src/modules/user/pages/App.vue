@@ -115,7 +115,7 @@
           </el-table-column>
           <el-table-column 
             label="Email"
-            width="140">
+            width="200">
             <template slot-scope="scope">
               <i
                 class="el-icon-question"
@@ -242,7 +242,7 @@
                   ref="username"
                   v-model.trim="mainForm.username"
                   autocomplete="off"
-                  placeholder="请输入用户名" />
+                  placeholder="请输入用户名"/>
               </el-form-item>
               <el-form-item
                 label="状态"
@@ -394,6 +394,7 @@ export default {
       // 编辑时未输入密码，无需验证
       if (this.editActive && (!value || value.length === 0)) {
         callback()
+        return
       }
       if (!value) {
         callback(new Error('请输入登录密码'))
@@ -409,6 +410,7 @@ export default {
       // 编辑时未输入密码，无需验证
       if (this.editActive && (!this.mainForm.password || this.mainForm.password.length === 0)) {
         callback()
+        return
       }
       if (!value) {
         callback(new Error('请输入确认密码'))
@@ -417,6 +419,51 @@ export default {
       } else {
         callback()
       }
+    }
+    const validateUsernameExists = (rule, value, callback) => {
+      if (!value) {
+        callback()
+        return
+      }
+      const params = {
+        userId: this.mainForm.userId,
+        username: value
+      }
+      api.validateUsernameExists(params).then(response => {
+        callback()
+      }, error => {
+        callback(new Error(error.message))
+      })
+    }
+    const validateMobileExists = (rule, value, callback) => {
+      if (!value) {
+        callback()
+        return
+      }
+      const params = {
+        userId: this.mainForm.userId,
+        mobile: value
+      }
+      api.validateMobileExists(params).then(response => {
+        callback()
+      }, error => {
+        callback(new Error(error.message))
+      })
+    }
+    const validateEmailExists = (rule, value, callback) => {
+      if (!value) {
+        callback()
+        return
+      }
+      const params = {
+        userId: this.mainForm.userId,
+        email: value
+      }
+      api.validateEmailExists(params).then(response => {
+        callback()
+      }, error => {
+        callback(new Error(error.message))
+      })
     }
     return {
       // 主要数据
@@ -485,7 +532,8 @@ export default {
       mainFormRules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { max: 20, message: '最多支持20个字符', trigger: 'blur' }
+          { max: 20, message: '最多支持20个字符', trigger: 'blur' },
+          { validator: validateUsernameExists, trigger: 'blur' }
         ],
         displayName: [
           { max: 20, message: '最多支持20个字符', trigger: 'blur' }
@@ -494,10 +542,12 @@ export default {
           { max: 100, message: '最多支持100个字符', trigger: 'blur' }
         ],
         mobile: [
-          { pattern: /^1\d{10}$/, message: '请输入正确的手机号码', trigger: 'blur' }
+          { pattern: /^1\d{10}$/, message: '请输入正确的手机号码', trigger: 'blur' },
+          { validator: validateMobileExists, trigger: 'blur' }
         ],
         email: [
-          { pattern: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/, message: '请输入正确的邮箱', trigger: 'blur' }
+          { pattern: /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/, message: '请输入正确的邮箱', trigger: 'blur' },
+          { validator: validateEmailExists, trigger: 'blur' }
         ],
         groupIdPath: [
           { required: true, type: 'array', message: '请选择主要分组', trigger: 'change' }

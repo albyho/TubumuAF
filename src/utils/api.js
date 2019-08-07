@@ -96,6 +96,15 @@ export default {
   getUserStatuList () {
     return Vue.httpClient.get('/admin/getUserStatuList')
   },
+  validateUsernameExists (params) {
+    return Vue.httpClient.post('/admin/ValidateUsernameExists', params)
+  },
+  validateMobileExists (params) {
+    return Vue.httpClient.post('/admin/ValidateMobileExists', params)
+  },
+  validateEmailExists (params) {
+    return Vue.httpClient.post('/admin/ValidateEmailExists', params)
+  },
   changeUserAvatar (params) {
     return Vue.uploadHttpClient.post('/admin/ChangeUserAvatar', params)
   },
