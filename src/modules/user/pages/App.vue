@@ -407,8 +407,8 @@ export default {
       }
     }
     const validatePassordConfirm = (rule, value, callback) => {
-      // 编辑时未输入密码，无需验证
-      if (this.editActive && (!this.mainForm.password || this.mainForm.password.length === 0)) {
+      // 添加或编辑时，未输入密码，无需验证
+      if (!this.mainForm.password || this.mainForm.password.length === 0) {
         callback()
         return
       }

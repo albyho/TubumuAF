@@ -160,8 +160,8 @@ export default {
         this.isLoading = false
         const profile = response.data.data
         this.changeProfileForm.displayName = profile.displayName
-        this.uploadImageAvatarPreviewUrl = profile.avatarUrl + '?' + (new Date().getTime())
-        this.uploadImageLogoPreviewUrl = profile.logoUrl + '?' + (new Date().getTime())
+        this.uploadImageAvatarPreviewUrl = profile.avatarUrl ? profile.avatarUrl + '?' + (new Date().getTime()) : null
+        this.uploadImageLogoPreviewUrl = profile.logoUrl ? profile.logoUrl + '?' + (new Date().getTime()) : null
       }, error => {
         this.isLoading = false
         this.$message.error(error.message)
