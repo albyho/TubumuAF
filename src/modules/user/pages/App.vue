@@ -406,7 +406,7 @@ export default {
         callback()
       }
     }
-    const validatePassordConfirm = (rule, value, callback) => {
+    const validatePasswordConfirm = (rule, value, callback) => {
       // 添加或编辑时，未输入密码，无需验证
       if (!this.mainForm.password || this.mainForm.password.length === 0) {
         callback()
@@ -556,7 +556,7 @@ export default {
           { validator: validatePassord, trigger: 'blur' }
         ],
         passwordConfirm: [
-          { validator: validatePassordConfirm, trigger: 'blur' }
+          { validator: validatePasswordConfirm, trigger: 'blur' }
         ]
       },
       editPermissionTreeData: null,         // 用于编辑对话框内显示的权限树
