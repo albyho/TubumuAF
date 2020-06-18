@@ -33,7 +33,7 @@
               v-model="searchCriteriaForm.groupIdPath" />
           </el-form-item>
           <el-form-item>
-            <xl-userStatusSelect v-model="searchCriteriaForm.status" multiple/>
+            <xl-userStatusSelect v-model="searchCriteriaForm.statuses" multiple/>
           </el-form-item>
           <el-form-item>
             <el-button
@@ -481,7 +481,7 @@ export default {
         creationTime: null,
         creationTimeBegin: null,
         creationTimeEnd: null,
-        status: null,
+        statuses: [],
         groupIdPath: [],
         pagingInfo: {
           pageNumber: 1,
