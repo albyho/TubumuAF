@@ -33,7 +33,7 @@
               v-model="searchCriteriaForm.groupIdPath" />
           </el-form-item>
           <el-form-item>
-            <xl-userStatusSelect v-model="searchCriteriaForm.status" />
+            <xl-userStatusSelect v-model="searchCriteriaForm.status" multiple/>
           </el-form-item>
           <el-form-item>
             <el-button
@@ -958,7 +958,7 @@ export default {
   }
   // 用户状态
   .el-select {
-    width: 120px;
+    width: 200px;
     margin-right: 12px;
   }
 }

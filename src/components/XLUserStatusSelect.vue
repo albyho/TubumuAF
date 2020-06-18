@@ -1,6 +1,7 @@
 <template>
   <el-select
     v-model="currentValue"
+    :multiple="multiple"
     clearable
     placeholder="状态">
     <el-option
@@ -18,6 +19,10 @@ export default {
     value: {
       type: String,
       default: 'Normal'
+    },
+    multiple: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
