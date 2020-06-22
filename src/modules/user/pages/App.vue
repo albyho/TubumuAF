@@ -398,11 +398,32 @@ export default {
       }
       if (!value) {
         callback(new Error('请输入登录密码'))
-      } else if (value.length < 6) {
-        callback(new Error('请输入至少6位密码'))
+      } else if (value.length < 8) {
+        callback(new Error('请输入至少8位密码'))
       } else if (value.length > 32) {
         callback(new Error('密码请保持在32位以内'))
       } else {
+        if (value.match(/([\u4E00-\u9FA5])+/)) {
+          callback(new Error('密码不能包含中文字符'))
+          return
+        }
+        let ls = 0
+        if (value.match(/([a-z])+/)) {
+          ls++
+        }
+        if (value.match(/([A-Z])+/)) {
+          ls++
+        }
+        if (value.match(/([0-9])+/)) {
+          ls++
+        }
+        if (value.match(/([\W])+/)) {
+          ls++
+        }
+        if (ls !== 4) {
+          callback(new Error('密码请包含数字、小写字母、大写字母以及特殊字符'))
+          return
+        }
         callback()
       }
     }
